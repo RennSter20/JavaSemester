@@ -9,9 +9,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PricesScreenController {
 
@@ -25,9 +27,12 @@ public class PricesScreenController {
     private TableColumn<Procedure, String> priceColumn;
 
     @FXML
-    public void initialize(){
+    private TextField searchField;
 
-        List<Procedure> proceduresToShow = new ArrayList<>();
+    List<Procedure> proceduresToShow = new ArrayList<>();
+
+    @FXML
+    public void initialize(){
 
         try {
             Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
@@ -48,16 +53,7 @@ public class PricesScreenController {
             throw new RuntimeException(e);
         }
 
-        ObservableList<Procedure> observableList = FXCollections.observableArrayList(proceduresToShow);
-
-        descriptionColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(procedure.getValue().description());
-        });
-        priceColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(String.valueOf(procedure.getValue().price()) + " EUR");
-        });
-
-        priceTable.setItems(observableList);
+        fillTable(proceduresToShow);
 
     }
 
@@ -69,5 +65,28 @@ public class PricesScreenController {
 
         return new Procedure(description, Double.valueOf(price));
 
+    }
+
+    public void searchProcedure(){
+        String inputString = searchField.getText();
+
+        List<Procedure> filteredProcedures = new ArrayList<>();
+
+        filteredProcedures = proceduresToShow.stream().filter(procedure -> procedure.description().toLowerCase().contains(inputString.toLowerCase()) || procedure.price().toString().contains(inputString.toLowerCase())).collect(Collectors.toList());
+
+        fillTable(filteredProcedures);
+    }
+
+    public void fillTable(List<Procedure> list){
+        ObservableList<Procedure> observableList = FXCollections.observableArrayList(list);
+
+        descriptionColumn.setCellValueFactory(procedure -> {
+            return new SimpleStringProperty(procedure.getValue().description());
+        });
+        priceColumn.setCellValueFactory(procedure -> {
+            return new SimpleStringProperty(procedure.getValue().price() + " EUR");
+        });
+
+        priceTable.setItems(observableList);
     }
 }
