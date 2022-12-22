@@ -1,2 +1,4 @@
-package com.example.renatojava.javasemester;public class MenuScreenController {
+package com.example.renatojava.javasemester;
+
+public class MenuScreenController {
 }

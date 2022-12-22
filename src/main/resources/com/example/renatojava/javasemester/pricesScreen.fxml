@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.PricesScreenController">
+   <fx:include source="menuBar.fxml" />
+   <bottom>
+      <TableView fx:id="priceTable" prefHeight="772.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="descriptionColumn" prefWidth="640.0" style="-fx-alignment: CENTER;" text="Description" />
+          <TableColumn fx:id="priceColumn" prefWidth="639.0" style="-fx-alignment: CENTER;" text="Price" />
+        </columns>
+      </TableView>
+   </bottom>
 
-</AnchorPane>
+</BorderPane>
