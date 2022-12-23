@@ -2,22 +2,15 @@ package com.example.renatojava.javasemester.entity;
 
 public abstract class Person {
 
-    private String id;
+
     private String name;
     private String surname;
+    private String gender;
 
-    public Person(String id, String name, String surname) {
-        this.id = id;
+    public Person(String name, String surname, String gender) {
         this.name = name;
         this.surname = surname;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.gender = gender;
     }
 
     public String getName() {
@@ -34,5 +27,13 @@ public abstract class Person {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

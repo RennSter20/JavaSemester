@@ -34,4 +34,26 @@ public class MenuBarController {
 
     }
 
+    public void showRegisterPatientScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("registerPatientScreen.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showAllPatientsScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("allPatientsScreen.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

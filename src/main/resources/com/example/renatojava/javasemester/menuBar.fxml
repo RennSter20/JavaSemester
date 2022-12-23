@@ -22,7 +22,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Patients">
             <items>
-              <MenuItem mnemonicParsing="false" text="All patients" />
+              <MenuItem mnemonicParsing="false" onAction="#showRegisterPatientScreen" text="Register a patient" />
+                  <MenuItem mnemonicParsing="false" onAction="#showAllPatientsScreen" text="All patients" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Doctors">
