@@ -1,11 +1,9 @@
 package com.example.renatojava.javasemester;
 
-import com.example.renatojava.javasemester.entity.Doctor;
-import com.example.renatojava.javasemester.entity.Person;
+import com.example.renatojava.javasemester.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -14,6 +12,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 
 public class LoginController {
@@ -50,7 +49,6 @@ public class LoginController {
         }
 
     }
-
     public void login(){
 
         String inputIdText = idTextField.getText();
@@ -58,6 +56,7 @@ public class LoginController {
 
         if(users.containsKey(inputIdText) && users.get(inputIdText).equals(inputPasswordText)){
             errorText.setText("");
+            Application.setLoggedUser(getUser(inputPasswordText));
             BorderPane root;
             try {
                 root = FXMLLoader.load(
@@ -73,6 +72,41 @@ public class LoginController {
         }
 
 
+
+    }
+    public User getUser(String pass){
+        User userToSet = null;
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM USERS WHERE PASSWORD=" + pass
+            );
+
+            while(proceduresResultSet.next()){
+                userToSet = getUserFromResult(proceduresResultSet);
+            }
+
+            conn.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return userToSet;
+    }
+    public static User getUserFromResult(ResultSet procedureSet) throws SQLException{
+
+        String id = procedureSet.getString("ID");
+        String password = procedureSet.getString("PASSWORD");
+        String name = procedureSet.getString("NAME");
+        String surname = procedureSet.getString("SURNAME");
+        String role = procedureSet.getString("ROLE");
+        String oib = procedureSet.getString("OIB");
+
+
+        return new User(id, password, name, surname, role, oib);
 
     }
 

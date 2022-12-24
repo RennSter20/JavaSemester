@@ -28,6 +28,8 @@ public class AllPatientsScreenController {
     private List<Patient> patients;
     public static List<Double> debts;
 
+    
+
     @FXML
     public void initialize(){
 
