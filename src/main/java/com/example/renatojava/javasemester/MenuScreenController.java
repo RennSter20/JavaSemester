@@ -10,6 +10,11 @@ public class MenuScreenController {
 
     @FXML
     public void initialize(){
-        welcomeText.setText(Application.getLoggedUser().getName());
+        String role = Application.getLoggedUser().getRole();
+        if(role.equals("Doctor")){
+            welcomeText.setText("Welcome back doctor " + Application.getLoggedUser().getSurname());
+        }else{
+            welcomeText.setText("Welcome back receptionist " + Application.getLoggedUser().getSurname());
+        }
     }
 }

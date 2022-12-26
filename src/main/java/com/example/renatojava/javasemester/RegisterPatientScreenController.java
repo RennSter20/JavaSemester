@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Patient;
-import com.example.renatojava.javasemester.entity.Procedure;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-public class RegisterPatientScreenController {
+public class RegisterPatientScreenController implements CheckObjects {
 
     @FXML
     private TextField nameField;
@@ -53,11 +52,11 @@ public class RegisterPatientScreenController {
             stmnt.setString(1, name);
             stmnt.setString(2, surname);
             stmnt.setString(3, gender);
-            stmnt.setString(4, "10");
+            stmnt.setString(4, "0");
             stmnt.setString(5, "");
             stmnt.setString(6, oib);
 
-            if(!checkIfPatientExists(oib)){
+            if(!CheckObjects.checkIfPatientExists(oib)){
                 stmnt.executeUpdate();
             }else{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -69,46 +68,6 @@ public class RegisterPatientScreenController {
         }
     }
 
-    private Boolean checkIfPatientExists(String oib){
-        List<Patient> patientsList = new ArrayList<>();
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
-            Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM PATIENTS WHERE OIB=" + oib
-            );
-
-            while(proceduresResultSet.next()){
-                Patient newPatient = getPatient(proceduresResultSet);
-                patientsList.add(newPatient);
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        if(patientsList.size() != 0){
-            return true;
-        }
-        return false;
-    }
-
-    public static Patient getPatient(ResultSet procedureSet) throws SQLException{
-
-        String name = procedureSet.getString("name");
-        String surname = procedureSet.getString("surname");
-        String gender = procedureSet.getString("gender");
-        String debt = procedureSet.getString("debt");
-        String procedures = procedureSet.getString("procedures");
-        String oib = procedureSet.getString("oib");
-
-
-        return new Patient.Builder().withName(name).withSurname(surname).withGender(gender).withOIB(oib).withDebt(Double.valueOf(debt)).withProcedures(procedures).build();
-
-    }
 
 
 }

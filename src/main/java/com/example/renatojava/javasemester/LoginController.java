@@ -23,12 +23,8 @@ public class LoginController {
 
     @FXML
     private TextField idTextField;
-
     @FXML
     private PasswordField passwordTextField;
-
-    @FXML
-    private Button loginButton;
     @FXML
     private Text errorText;
 
@@ -45,7 +41,7 @@ public class LoginController {
 
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
     }
@@ -91,7 +87,7 @@ public class LoginController {
             conn.close();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
         return userToSet;

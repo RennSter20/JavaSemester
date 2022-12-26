@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
-import com.example.renatojava.javasemester.entity.Procedure;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,12 +10,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllPatientsScreenController {
+public class AllPatientsScreenController implements Data {
 
     @FXML
     private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn, proceduresColumn;
@@ -26,55 +24,12 @@ public class AllPatientsScreenController {
     private TextField filterField;
 
     private List<Patient> patients;
-    public static List<Double> debts;
-
-    
 
     @FXML
     public void initialize(){
 
-        patients = new ArrayList<>();
-        debts = new ArrayList<>();
-
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
-            Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM PATIENTS"
-            );
-
-            while(proceduresResultSet.next()){
-                Patient newPatient = getProcedure(proceduresResultSet);
-                patients.add(newPatient);
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        for(int i = 0;i<debts.size();i++){
-            patients.get(i).setDebt(debts.get(i));
-        }
-
+        patients = Data.getAllPatients();
         fillTable(patients);
-
-    }
-
-    public static Patient getProcedure(ResultSet procedureSet) throws SQLException{
-
-        String name = procedureSet.getString("name");
-        String surname = procedureSet.getString("surname");
-        String gender = procedureSet.getString("gender");
-        String debt = procedureSet.getString("debt");
-        String procedures = procedureSet.getString("procedures");
-        String oib = procedureSet.getString("oib");
-
-        debts.add(Double.valueOf(debt));
-
-        return new Patient(null, name,surname,gender, Double.valueOf(debt),procedures,oib);
 
     }
 

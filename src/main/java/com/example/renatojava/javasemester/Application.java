@@ -7,9 +7,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Application extends javafx.application.Application {
 
+    public static final Logger logger = LoggerFactory.getLogger(Application.class);
     public static Stage mainStage;
     public static User loggedUser;
 

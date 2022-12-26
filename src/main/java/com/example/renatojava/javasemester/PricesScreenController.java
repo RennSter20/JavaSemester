@@ -1,7 +1,6 @@
 package com.example.renatojava.javasemester;
 
-import java.sql.*;
-
+import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Procedure;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PricesScreenController {
+public class PricesScreenController implements Data {
 
     @FXML
     private TableView<Procedure> priceTable;
@@ -34,36 +33,8 @@ public class PricesScreenController {
     @FXML
     public void initialize(){
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
-            Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM PROCEDURES"
-            );
-
-            while(proceduresResultSet.next()){
-                Procedure noviPregled = getProcedure(proceduresResultSet);
-                proceduresToShow.add(noviPregled);
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        proceduresToShow = Data.getAllProcedures();
         fillTable(proceduresToShow);
-
-    }
-
-    public static Procedure getProcedure(ResultSet procedureSet) throws SQLException{
-
-        String description = procedureSet.getString("description");
-        String price = procedureSet.getString("price");
-
-
-        return new Procedure(description, Double.valueOf(price));
 
     }
 

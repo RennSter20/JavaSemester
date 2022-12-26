@@ -52,7 +52,30 @@ public class MenuBarController {
                     getClass().getResource("allPatientsScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+    }
+
+    public void logout(){
+        Application.setLoggedUser(null);
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("loginScreen.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+    }
+
+    public void showManageCheckupsScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("manageCheckupsScreen.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
         }
     }
 
