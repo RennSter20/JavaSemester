@@ -17,8 +17,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Checkups">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Manage checkups" />
-                  <MenuItem mnemonicParsing="false" text="All checkups" />
+              <MenuItem mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Add checkup" />
+                  <MenuItem mnemonicParsing="false" text="Remove checkup" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Patients">

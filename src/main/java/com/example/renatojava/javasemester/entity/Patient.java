@@ -6,14 +6,14 @@ import java.util.List;
 public class Patient extends Person {
 
     private String id;
-    private Double debt;
+    private double debt;
     private String procedures;
     private String oib;
 
-    public Patient(String id, String name, String surname, String gender,Double debt, String procedures, String oib) {
+    public Patient(String id, String name, String surname, String gender,double debt, String procedures, String oib) {
         super(name, surname, gender);
         this.id = id;
-        debt = Double.valueOf(0);
+        this.debt = debt;
         this.procedures = procedures;
         this.oib = oib;
     }
@@ -60,11 +60,11 @@ public class Patient extends Person {
         }
     }
 
-    public Double getDebt() {
+    public double getDebt() {
         return debt;
     }
 
-    public void setDebt(Double debt) {
+    public void setDebt(double debt) {
         this.debt = debt;
     }
 

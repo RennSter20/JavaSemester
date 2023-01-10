@@ -42,7 +42,8 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO zasebne kartice za sve pacijente u povijesti sa povijesti bolesti
-//TODO Novi pregled
-//TODO doktori
-//TODO naplata na nacin da postoji dropdown iz kojeg se izabire operacija koja je napravljena te se ta odabrana dodaje na listview
+//TODO null na debt
+//TODO remove checkup
+//TODO billing
+//TODO naslovi
+//TODO confirmation window na svim

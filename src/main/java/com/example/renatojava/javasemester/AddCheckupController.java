@@ -7,19 +7,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ManageCheckupsController implements Data {
+public class AddCheckupController implements Data {
 
     @FXML
     private TableView<Patient> patientsTable;
@@ -77,10 +73,9 @@ public class ManageCheckupsController implements Data {
     }
 
     public void fillTableView(){
-        List<Procedure> proceduresFromPatient = Data.getAllProceduresFromPatient(patientsTable.getSelectionModel().getSelectedItem());
-        List<String> proc;
-        proc = proceduresFromPatient.stream().map(Procedure::description).collect(Collectors.toList());
-        ObservableList<String> observableList = FXCollections.observableArrayList(proc);
+        String proceduresFromPatient = Data.getAllProceduresFromPatient(patientsTable.getSelectionModel().getSelectedItem());
+        List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split("/"));
+        ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
         if(observableList.size() > 0){
             listView.setItems(observableList);
@@ -91,7 +86,30 @@ public class ManageCheckupsController implements Data {
     }
 
     public void addProcedure(){
-        Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem()));
+
+        List<String> errorArray = new ArrayList<>();
+
+        if(patientsTable.getSelectionModel().getSelectedItem() == null){
+                errorArray.add("No patient selected!");
+        }
+        if(procedureTable.getSelectionModel().getSelectedItem() == null){
+            errorArray.add("No procedure selected!");
+        }
+        if(errorArray.size() > 0){
+            String errorMessage = "";
+            for(String s : errorArray){
+                errorMessage = errorMessage + s + "\n";
+            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errors found!");
+            alert.setContentText(errorMessage);
+            alert.show();
+
+            return;
+        }
+
+        Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
+
         initialize();
     }
 }

@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class RegisterPatientScreenController implements CheckObjects {
         String name = nameField.getText();
         String surname = surnameField.getText();
         String gender;
+
         if(maleRadio.isSelected()){
             gender = "M";
         }else{
@@ -58,6 +60,10 @@ public class RegisterPatientScreenController implements CheckObjects {
 
             if(!CheckObjects.checkIfPatientExists(oib)){
                 stmnt.executeUpdate();
+                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+                alertConfirmation.setTitle("Success");
+                alertConfirmation.setHeaderText("Patient is now registered in system.");
+                alertConfirmation.show();
             }else{
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Info");
@@ -65,6 +71,9 @@ public class RegisterPatientScreenController implements CheckObjects {
                 alert.show();
             }
             veza.close();
+
+
+
         }
     }
 
