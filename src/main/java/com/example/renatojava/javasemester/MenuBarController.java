@@ -72,7 +72,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("addCheckup.fxml"));
+                    getClass().getResource("addProcedure.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
@@ -83,7 +83,18 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("removeCheckup.fxml"));
+                    getClass().getResource("removeProcedure.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+    }
+
+    public void showAllDoctorsScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("allDoctors.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));

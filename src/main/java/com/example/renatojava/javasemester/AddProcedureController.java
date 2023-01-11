@@ -15,7 +15,7 @@ import javafx.scene.control.TableView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddCheckupController implements Data {
+public class AddProcedureController implements Data {
 
     @FXML
     private TableView<Patient> patientsTable;
@@ -109,6 +109,13 @@ public class AddCheckupController implements Data {
         }
 
         Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
+
+        Alert success = new Alert(Alert.AlertType.INFORMATION);
+        success.setTitle("INFORMATION");
+        success.setHeaderText("Success!");
+        success.setContentText("Procedure successfully added to the system!");
+        success.show();
+
         initialize();
     }
 }

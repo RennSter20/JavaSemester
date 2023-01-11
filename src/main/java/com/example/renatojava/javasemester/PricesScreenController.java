@@ -41,7 +41,7 @@ public class PricesScreenController implements Data {
     public void searchProcedure(){
         String inputString = searchField.getText();
 
-        List<Procedure> filteredProcedures = new ArrayList<>();
+        List<Procedure> filteredProcedures;
 
         filteredProcedures = proceduresToShow.stream().filter(procedure -> procedure.description().toLowerCase().contains(inputString.toLowerCase()) || procedure.price().toString().contains(inputString.toLowerCase())).collect(Collectors.toList());
 

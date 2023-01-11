@@ -42,6 +42,7 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO remove checkup
 //TODO billing
-//TODO confirmation window na svim
+//TODO doctors
+//TODO .properties
+

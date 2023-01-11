@@ -6,13 +6,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.util.List;
 
-public class RemoveCheckupController {
+public class RemoveProcedureController {
 
     @FXML
     private TableView<Patient> patientTable;
@@ -59,6 +60,14 @@ public class RemoveCheckupController {
         if(procedureListView.getSelectionModel().getSelectedItem() != null){
             String selectedProcedure = procedureListView.getSelectionModel().getSelectedItem();
             Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getOib(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
+
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("INFORMATION");
+            success.setHeaderText("Success!");
+            success.setContentText("Procedure successfully removed from the system!");
+            success.show();
+
+            initialize();
         }
     }
 

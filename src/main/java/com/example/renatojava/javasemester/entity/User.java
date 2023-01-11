@@ -60,4 +60,8 @@ public class User {
     public void setOib(String oib) {
         this.oib = oib;
     }
+
+
+
+
 }

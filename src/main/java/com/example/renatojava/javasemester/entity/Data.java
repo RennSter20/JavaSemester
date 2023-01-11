@@ -108,12 +108,7 @@ public interface Data {
     }
     static Procedure getProcedureBasedOnDescription(String description){
         List<Procedure> allProcedures = getAllProcedures();
-        Procedure procedure = null;
-        for(Procedure p : allProcedures){
-            if(p.description().equals(description)){
-                procedure = p;
-            }
-        }
+        Procedure procedure = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(description)).findAny().orElse(null);
 
         return procedure;
     }
@@ -160,12 +155,9 @@ public interface Data {
             updateProcedures.executeUpdate();
 
             List<Procedure> allProcedures = getAllProcedures();
-            double debtToAdd = 0;
-            for(Procedure p : allProcedures){
-                if(p.description().equals(procedure)){
-                    debtToAdd = p.price();
-                }
-            }
+            Procedure procedureToFind = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(procedure)).findAny().orElse(null);
+            double debtToAdd = procedureToFind.price();
+
             double oldDebt = patientToUpdate.getDebt();
             double newDebt = oldDebt + debtToAdd;
 
@@ -227,8 +219,7 @@ public interface Data {
             PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + newProcedureString + "'" + "WHERE OIB='" + oib + "'");
             updateProcedures.executeUpdate();
 
-            double oldDebt = patient.getDebt();
-            double newDebt = oldDebt - procedure.price();
+            double newDebt = patient.getDebt() - procedure.price();
             PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patient.getOib() + "'");
             updateDebt.executeUpdate();
 
@@ -240,4 +231,41 @@ public interface Data {
 
     }
 
+    static List<Doctor> getAllDoctors(){
+        List<Doctor> doctorList = new ArrayList<>();
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM DOCTORS"
+            );
+
+            while(proceduresResultSet.next()){
+                Doctor newDoctor = getDoctor(proceduresResultSet);
+                doctorList.add(newDoctor);
+            }
+
+            conn.close();
+
+        } catch (SQLException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+
+        return doctorList;
+    }
+
+    static Doctor getDoctor(ResultSet procedureSet) throws SQLException{
+
+        String gender = procedureSet.getString("gender");
+        String name = procedureSet.getString("name");
+        String surname = procedureSet.getString("surname");
+        String room = procedureSet.getString("room");
+        String title = procedureSet.getString("title");
+
+
+        return new Doctor.Builder().withName(name).withSurname(surname).withGender(gender).withRoom(room).withTitle(title).build();
+
+    }
 }
