@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.MenuBarController">
    <children>
-      <MenuBar maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="291.0">
+      <MenuBar maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="28.0" prefWidth="1280.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -18,7 +18,7 @@
           <Menu mnemonicParsing="false" text="Checkups">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Add checkup" />
-                  <MenuItem mnemonicParsing="false" text="Remove checkup" />
+                  <MenuItem mnemonicParsing="false" onAction="#showRemoveCheckupScreen" text="Remove checkup" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Patients">

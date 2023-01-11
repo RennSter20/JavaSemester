@@ -1,6 +1,7 @@
 package com.example.renatojava.javasemester.entity;
 
 import com.example.renatojava.javasemester.Application;
+import javafx.scene.control.Alert;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -96,7 +97,7 @@ public interface Data {
 
         return procedureList;
     }
-     static Procedure getProcedure(ResultSet procedureSet) throws SQLException{
+    static Procedure getProcedure(ResultSet procedureSet) throws SQLException{
 
         String description = procedureSet.getString("description");
         String price = procedureSet.getString("price");
@@ -104,6 +105,17 @@ public interface Data {
 
         return new Procedure(description, Double.valueOf(price));
 
+    }
+    static Procedure getProcedureBasedOnDescription(String description){
+        List<Procedure> allProcedures = getAllProcedures();
+        Procedure procedure = null;
+        for(Procedure p : allProcedures){
+            if(p.description().equals(description)){
+                procedure = p;
+            }
+        }
+
+        return procedure;
     }
 
     static String getAllProceduresFromPatient(Patient patient){
@@ -165,6 +177,67 @@ public interface Data {
         } catch (SQLException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
+    }
+
+    static void addPatient(String name, String surname, String gender, String oib) throws SQLException {
+        Connection veza = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+
+        PreparedStatement stmnt = veza.prepareStatement("INSERT INTO PATIENTS(NAME, SURNAME, GENDER, DEBT, PROCEDURES, OIB) VALUES(?,?,?,?,?,?)");
+        stmnt.setString(1, name);
+        stmnt.setString(2, surname);
+        stmnt.setString(3, gender);
+        stmnt.setString(4, "0");
+        stmnt.setString(5, "");
+        stmnt.setString(6, oib);
+
+        if(!CheckObjects.checkIfPatientExists(oib)){
+            stmnt.executeUpdate();
+            Alert alertConfirmation = new Alert(Alert.AlertType.INFORMATION);
+            alertConfirmation.setTitle("Success");
+            alertConfirmation.setHeaderText("Patient is now registered in system.");
+            alertConfirmation.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText("Patient already exists in system.");
+            alert.show();
+        }
+        veza.close();
+    }
+
+    static void removeProcedure(String procedureDescription, String oib, String currentProcedures){
+        Patient patient = getCertainPatient(oib);
+        Procedure procedure = getProcedureBasedOnDescription(procedureDescription);
+
+        List<String> currentProceduresSplitted = List.of(currentProcedures.split("/"));;
+
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+
+            Boolean removed = false;
+            String newProcedureString = "";
+            for(String proc : currentProceduresSplitted){
+                if(proc.equals(procedureDescription) && !removed){
+                    removed = true;
+                }else{
+                    newProcedureString = newProcedureString + proc + "/";
+                }
+            }
+
+            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + newProcedureString + "'" + "WHERE OIB='" + oib + "'");
+            updateProcedures.executeUpdate();
+
+            double oldDebt = patient.getDebt();
+            double newDebt = oldDebt - procedure.price();
+            PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patient.getOib() + "'");
+            updateDebt.executeUpdate();
+
+            conn.close();
+
+        } catch (SQLException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+
     }
 
 }

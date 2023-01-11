@@ -42,8 +42,6 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO null na debt
 //TODO remove checkup
 //TODO billing
-//TODO naslovi
 //TODO confirmation window na svim

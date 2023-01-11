@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class AllPatientsScreenController implements Data {
 
     @FXML
-    private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn, proceduresColumn;
+    private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn;
 
     @FXML
     private TableView<Patient> patientsTable;
@@ -50,9 +50,6 @@ public class AllPatientsScreenController implements Data {
         });
         debtColumn.setCellValueFactory(patient -> {
             return new SimpleStringProperty(String.valueOf(patient.getValue().getDebt()));
-        });
-        proceduresColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getProcedures());
         });
 
         patientsTable.setItems(observableList);

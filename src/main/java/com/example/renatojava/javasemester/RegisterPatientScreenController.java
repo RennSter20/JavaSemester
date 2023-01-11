@@ -1,6 +1,7 @@
 package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.CheckObjects;
+import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -33,8 +34,10 @@ public class RegisterPatientScreenController implements CheckObjects {
 
         if(maleRadio.isSelected()){
             gender = "M";
-        }else{
+        }else if(femaleRadio.isSelected()){
             gender = "F";
+        }else{
+            gender = null;
         }
 
         String oib = oibField.getText();
@@ -42,41 +45,31 @@ public class RegisterPatientScreenController implements CheckObjects {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(oib);
 
+        List<String> errorMessages = new ArrayList<>();
+        if(name.equals("") || surname.equals("")){
+            errorMessages.add("Name and surname field cannot be empty!");
+        }
+        if(gender == null){
+            errorMessages.add("Gender must be selected!");
+        }
         if(oib.length() != 10 || !m.matches()){
+            errorMessages.add("OIB must have 10 numeric characters.");
+        }
+        if(errorMessages.size() > 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
-            alert.setHeaderText("OIB must have 10 numeric characters.");
-            alert.show();
-        }else{
-            Connection veza = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
-            PreparedStatement stmnt = veza.prepareStatement("INSERT INTO PATIENTS(NAME, SURNAME, GENDER, DEBT, PROCEDURES, OIB) VALUES(?,?,?,?,?,?)");
-            stmnt.setString(1, name);
-            stmnt.setString(2, surname);
-            stmnt.setString(3, gender);
-            stmnt.setString(4, "0");
-            stmnt.setString(5, "");
-            stmnt.setString(6, oib);
-
-            if(!CheckObjects.checkIfPatientExists(oib)){
-                stmnt.executeUpdate();
-                Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
-                alertConfirmation.setTitle("Success");
-                alertConfirmation.setHeaderText("Patient is now registered in system.");
-                alertConfirmation.show();
-            }else{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Info");
-                alert.setHeaderText("Patient already exists in system.");
-                alert.show();
+            String error = "";
+            for(String s : errorMessages){
+                error = error + s + "\n";
             }
-            veza.close();
-
-
-
+            alert.setHeaderText(error);
+            alert.show();
+            return;
+        }
+            try{
+                Data.addPatient(name, surname, gender, oib);
+            }catch (SQLException e){
+                Application.logger.info(String.valueOf(e.getStackTrace()));
+            }
         }
     }
-
-
-
-}

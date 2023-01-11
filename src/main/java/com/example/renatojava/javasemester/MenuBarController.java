@@ -72,7 +72,18 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("manageCheckupsScreen.fxml"));
+                    getClass().getResource("addCheckup.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+    }
+
+    public void showRemoveCheckupScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("removeCheckup.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));

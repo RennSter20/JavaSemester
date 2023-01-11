@@ -109,7 +109,6 @@ public class AddCheckupController implements Data {
         }
 
         Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
-
         initialize();
     }
 }
