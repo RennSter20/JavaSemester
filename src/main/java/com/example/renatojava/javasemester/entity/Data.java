@@ -1,20 +1,42 @@
 package com.example.renatojava.javasemester.entity;
 
 import com.example.renatojava.javasemester.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
 
 public interface Data {
+
+    String DATABASE_FILE = "database.properties";
+
+    private static Connection connectingToDatabase() throws IOException, SQLException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(DATABASE_FILE));
+        String url = properties.getProperty("url");
+        String user = properties.getProperty("user");
+        String pass = properties.getProperty("pass");
+        Connection conn = DriverManager.getConnection(url,
+                user,pass);
+        return conn;
+    }
+
 
     static List<Patient> getAllPatients(){
 
         List<Patient> patientList = new ArrayList<>();
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+        try (Connection conn = connectingToDatabase()){
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
@@ -28,13 +50,12 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
         return patientList;
     }
-
     static Patient getPatient(ResultSet procedureSet) throws SQLException{
 
         String name = procedureSet.getString("name");
@@ -50,11 +71,39 @@ public interface Data {
         return patientToAdd;
 
     }
+    static Boolean addPatient(String name, String surname, String gender, String oib) throws SQLException, IOException {
+        Connection veza = connectingToDatabase();
 
+        PreparedStatement stmnt = veza.prepareStatement("INSERT INTO PATIENTS(NAME, SURNAME, GENDER, DEBT, PROCEDURES, OIB) VALUES(?,?,?,?,?,?)");
+        stmnt.setString(1, name);
+        stmnt.setString(2, surname);
+        stmnt.setString(3, gender);
+        stmnt.setString(4, "0");
+        stmnt.setString(5, "");
+        stmnt.setString(6, oib);
+
+        if(CheckObjects.checkIfPatientExists(oib)){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText("Patient already exists in system.");
+            alert.show();
+            veza.close();
+            return false;
+        }else{
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("INFORMATION");
+            success.setHeaderText("Success!");
+            success.setContentText("Patient successfully added to the system!");
+            success.show();
+        }
+        stmnt.executeUpdate();
+        veza.close();
+        return true;
+    }
     static Patient getCertainPatient(String oib){
         Patient newPatient = null;
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+        try(Connection conn = connectingToDatabase()) {
+
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
@@ -67,17 +116,26 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
         return newPatient;
     }
+    static void removePatient(String oib) throws SQLException, IOException {
+        Connection veza = connectingToDatabase();
+
+        PreparedStatement stmnt = veza.prepareStatement("DELETE FROM PATIENTS WHERE OIB='" + oib + "'");
+
+        stmnt.executeUpdate();
+        veza.close();
+
+    }
+
 
     static List<Procedure> getAllProcedures(){
         List<Procedure> procedureList = new ArrayList<>();
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+        try (Connection conn = connectingToDatabase()){
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
@@ -91,7 +149,7 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
@@ -112,12 +170,10 @@ public interface Data {
 
         return procedure;
     }
-
     static String getAllProceduresFromPatient(Patient patient){
         String procedureList = "";
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+        try (Connection conn = connectingToDatabase()){
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
@@ -130,13 +186,12 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
         return procedureList;
     }
-
     static void addProcedureToPatient(String oib, String procedure){
 
         Patient patientToUpdate = getCertainPatient(oib);
@@ -148,9 +203,7 @@ public interface Data {
             procedures = procedures + procedure + "/";
         }
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
+        try(Connection conn = connectingToDatabase()) {
             PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + procedures + "'" + "WHERE OIB='" + oib + "'");
             updateProcedures.executeUpdate();
 
@@ -166,45 +219,17 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
     }
-
-    static void addPatient(String name, String surname, String gender, String oib) throws SQLException {
-        Connection veza = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
-        PreparedStatement stmnt = veza.prepareStatement("INSERT INTO PATIENTS(NAME, SURNAME, GENDER, DEBT, PROCEDURES, OIB) VALUES(?,?,?,?,?,?)");
-        stmnt.setString(1, name);
-        stmnt.setString(2, surname);
-        stmnt.setString(3, gender);
-        stmnt.setString(4, "0");
-        stmnt.setString(5, "");
-        stmnt.setString(6, oib);
-
-        if(!CheckObjects.checkIfPatientExists(oib)){
-            stmnt.executeUpdate();
-            Alert alertConfirmation = new Alert(Alert.AlertType.INFORMATION);
-            alertConfirmation.setTitle("Success");
-            alertConfirmation.setHeaderText("Patient is now registered in system.");
-            alertConfirmation.show();
-        }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
-            alert.setHeaderText("Patient already exists in system.");
-            alert.show();
-        }
-        veza.close();
-    }
-
     static void removeProcedure(String procedureDescription, String oib, String currentProcedures){
         Patient patient = getCertainPatient(oib);
         Procedure procedure = getProcedureBasedOnDescription(procedureDescription);
 
         List<String> currentProceduresSplitted = List.of(currentProcedures.split("/"));;
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
+        try (Connection conn = connectingToDatabase()){
 
             Boolean removed = false;
             String newProcedureString = "";
@@ -225,18 +250,17 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
     }
 
+
     static List<Doctor> getAllDoctors(){
         List<Doctor> doctorList = new ArrayList<>();
 
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
+        try(Connection conn = connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM DOCTORS"
@@ -249,13 +273,12 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
         return doctorList;
     }
-
     static Doctor getDoctor(ResultSet procedureSet) throws SQLException{
 
         String gender = procedureSet.getString("gender");
@@ -267,5 +290,22 @@ public interface Data {
 
         return new Doctor.Builder().withName(name).withSurname(surname).withGender(gender).withRoom(room).withTitle(title).build();
 
+    }
+
+    static Boolean confirmEdit(){
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("CONFIRMATION");
+        alert.setHeaderText("Are you sure you want to make this edit in database?");
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+        alert.setContentText("");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

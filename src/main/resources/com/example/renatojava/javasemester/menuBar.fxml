@@ -35,7 +35,7 @@
             <Menu mnemonicParsing="false" text="Billing">
                <items>
                   <MenuItem mnemonicParsing="false" text="Make a bill" />
-                  <MenuItem mnemonicParsing="false" onAction="#showPricesScreen" text="Prices" />
+                  <MenuItem mnemonicParsing="false" onAction="#showPricesScreen" text="Procedures" />
                </items>
             </Menu>
         </menus>

@@ -15,7 +15,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("pricesScreen.fxml"));
+                    getClass().getResource("proceduresScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,7 +52,7 @@ public class MenuBarController {
                     getClass().getResource("allPatientsScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            e.printStackTrace();
         }
     }
 
@@ -100,5 +100,4 @@ public class MenuBarController {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
     }
-
 }

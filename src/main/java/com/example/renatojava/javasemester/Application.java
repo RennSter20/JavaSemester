@@ -22,12 +22,16 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
         stage.setScene(scene);
+        stage.setFullScreen(false);
+        stage.setResizable(false);
         stage.show();
     }
 
     public static void setMainPage(BorderPane root) {
         Scene scene = new Scene(root,1280,800);
         mainStage.setScene(scene);
+        mainStage.setResizable(false);
+        mainStage.setFullScreen(false);
         mainStage.show();
     }
 
@@ -43,6 +47,5 @@ public class Application extends javafx.application.Application {
 }
 
 //TODO billing
-//TODO doctors
-//TODO .properties
+//TODO edit i remove patient + confirm
 

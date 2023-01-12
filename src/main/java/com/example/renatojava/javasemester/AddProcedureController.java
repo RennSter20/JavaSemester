@@ -72,7 +72,7 @@ public class AddProcedureController implements Data {
         procedureTable.setItems(observableList);
     }
 
-    public void fillTableView(){
+    public void fillListView(){
         String proceduresFromPatient = Data.getAllProceduresFromPatient(patientsTable.getSelectionModel().getSelectedItem());
         List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split("/"));
         ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
@@ -110,12 +110,21 @@ public class AddProcedureController implements Data {
 
         Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
 
-        Alert success = new Alert(Alert.AlertType.INFORMATION);
-        success.setTitle("INFORMATION");
-        success.setHeaderText("Success!");
-        success.setContentText("Procedure successfully added to the system!");
-        success.show();
-
+        if(!Data.confirmEdit()){
+            Alert failure = new Alert(Alert.AlertType.ERROR);
+            failure.setTitle("ERROR");
+            failure.setHeaderText("Failure!");
+            failure.setContentText("Procedure is not added to the system!");
+            failure.show();
+            return;
+        }else{
+            Alert success = new Alert(Alert.AlertType.INFORMATION);
+            success.setTitle("INFORMATION");
+            success.setHeaderText("Success!");
+            success.setContentText("Procedure successfully added to the system!");
+            success.show();
+        }
+        listView.setItems(null);
         initialize();
     }
 }

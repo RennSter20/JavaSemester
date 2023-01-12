@@ -9,6 +9,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class RegisterPatientScreenController implements CheckObjects {
     private RadioButton maleRadio, femaleRadio;
 
     @FXML
-    public void registerPatient() throws SQLException {
+    public void registerPatient() {
         String name = nameField.getText();
         String surname = surnameField.getText();
         String gender;
@@ -67,9 +68,21 @@ public class RegisterPatientScreenController implements CheckObjects {
             return;
         }
             try{
-                Data.addPatient(name, surname, gender, oib);
+                if(!Data.confirmEdit()){
+                    Alert failure = new Alert(Alert.AlertType.ERROR);
+                    failure.setTitle("ERROR");
+                    failure.setHeaderText("Failure!");
+                    failure.setContentText("Patient is not added to the system!");
+                    failure.show();
+                }else{
+
+                    Data.addPatient(name, surname, gender, oib);
+                }
+
             }catch (SQLException e){
                 Application.logger.info(String.valueOf(e.getStackTrace()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        }
+    }
     }

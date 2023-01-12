@@ -13,7 +13,7 @@ public interface CheckObjects {
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM PATIENTS WHERE OIB=" + oib
+                    "SELECT * FROM PATIENTS WHERE OIB='" + oib + "'"
             );
 
             while(proceduresResultSet.next()){
@@ -27,7 +27,7 @@ public interface CheckObjects {
             throw new RuntimeException(e);
         }
 
-        if(patientsList.size() != 0){
+        if(patientsList.size() > 0){
             return true;
         }
         return false;

@@ -59,6 +59,16 @@ public class RemoveProcedureController {
     public void remove(){
         if(procedureListView.getSelectionModel().getSelectedItem() != null){
             String selectedProcedure = procedureListView.getSelectionModel().getSelectedItem();
+
+            if(!Data.confirmEdit()){
+                Alert failure = new Alert(Alert.AlertType.ERROR);
+                failure.setTitle("ERROR");
+                failure.setHeaderText("Failure!");
+                failure.setContentText("Procedure is not removed from the system!");
+                failure.show();
+                return;
+            }
+
             Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getOib(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
 
             Alert success = new Alert(Alert.AlertType.INFORMATION);
@@ -67,6 +77,7 @@ public class RemoveProcedureController {
             success.setContentText("Procedure successfully removed from the system!");
             success.show();
 
+            procedureListView.setItems(null);
             initialize();
         }
     }
