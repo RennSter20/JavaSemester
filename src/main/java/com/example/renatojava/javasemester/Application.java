@@ -47,5 +47,5 @@ public class Application extends javafx.application.Application {
 }
 
 //TODO billing
-//TODO edit i remove patient + confirm
+
 

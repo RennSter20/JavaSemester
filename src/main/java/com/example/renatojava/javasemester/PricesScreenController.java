@@ -18,13 +18,10 @@ public class PricesScreenController implements Data {
 
     @FXML
     private TableView<Procedure> priceTable;
-
     @FXML
     private TableColumn<Procedure, String> descriptionColumn;
-
     @FXML
     private TableColumn<Procedure, String> priceColumn;
-
     @FXML
     private TextField searchField;
 
@@ -32,10 +29,8 @@ public class PricesScreenController implements Data {
 
     @FXML
     public void initialize(){
-
         proceduresToShow = Data.getAllProcedures();
         fillTable(proceduresToShow);
-
     }
 
     public void searchProcedure(){
@@ -55,7 +50,7 @@ public class PricesScreenController implements Data {
             return new SimpleStringProperty(procedure.getValue().description());
         });
         priceColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(procedure.getValue().price() + " EUR");
+            return new SimpleStringProperty(procedure.getValue().price().toString());
         });
 
         priceTable.setItems(observableList);
