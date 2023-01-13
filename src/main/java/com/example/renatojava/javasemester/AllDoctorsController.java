@@ -3,6 +3,7 @@ package com.example.renatojava.javasemester;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.exceptions.NoDoctorsException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +29,13 @@ public class AllDoctorsController {
     private TextField searchField;
 
     public void initialize(){
-        fillDoctorTable(Data.getAllDoctors());
+        try{
+            fillDoctorTable(Data.getAllDoctors());
+        }catch (SQLException | IOException e) {
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }catch (NoDoctorsException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
     }
 
     public void fillDoctorTable(List<Doctor> doctorList){
@@ -54,12 +63,18 @@ public class AllDoctorsController {
     public void search(){
         String searchText = searchField.getText();
 
-        List<Doctor> filteredDoctors;
+        List<Doctor> filteredDoctors = null;
 
-        filteredDoctors = Data.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(searchText.toLowerCase()) ||
-                doctor.getSurname().toLowerCase().contains(searchText.toLowerCase()) ||
-                doctor.getTitle().contains(searchText.toLowerCase()) ||
-                doctor.getRoom().contains(searchText.toLowerCase())).collect(Collectors.toList());
+        try{
+            filteredDoctors = Data.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+                    doctor.getSurname().toLowerCase().contains(searchText.toLowerCase()) ||
+                    doctor.getTitle().contains(searchText.toLowerCase()) ||
+                    doctor.getRoom().contains(searchText.toLowerCase())).collect(Collectors.toList());
+        } catch (SQLException | IOException e) {
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }catch (NoDoctorsException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
 
         fillDoctorTable(filteredDoctors);
     }

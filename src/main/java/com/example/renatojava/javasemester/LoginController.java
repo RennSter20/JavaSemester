@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.User;
+import com.example.renatojava.javasemester.exceptions.UserNotFoundException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -41,27 +41,32 @@ public class LoginController {
 
             }
         } catch (FileNotFoundException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
 
     }
-    public void login(){
+    public void login() throws UserNotFoundException {
 
         String inputIdText = idTextField.getText();
         String inputPasswordText = passwordTextField.getText();
 
-        if(users.containsKey(inputIdText) && users.get(inputIdText).equals(inputPasswordText)){
-            errorText.setText("");
-            Application.setLoggedUser(getUser(inputPasswordText));
-            BorderPane root;
-            try {
-                root = FXMLLoader.load(
-                        getClass().getResource("menuScreen.fxml"));
-                Application.setMainPage(root);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try{
+            if(users.containsKey(inputIdText) && users.get(inputIdText).equals(inputPasswordText)){
+                errorText.setText("");
+                Application.setLoggedUser(getUser(inputIdText));
+                BorderPane root;
+                try {
+                    root = FXMLLoader.load(
+                            getClass().getResource("menuScreen.fxml"));
+                    Application.setMainPage(root);
+                } catch (IOException e) {
+                    Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+                }
+            }else{
+                throw new UserNotFoundException("User not found!");
             }
-        }else{
+        }catch (UserNotFoundException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
             errorText.setText("User not found!");
             idTextField.setText("");
             passwordTextField.setText("");
@@ -70,14 +75,14 @@ public class LoginController {
 
 
     }
-    public User getUser(String pass){
+    public User getUser(String id){
         User userToSet = null;
         try {
             Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM USERS WHERE PASSWORD=" + pass
+                    "SELECT * FROM USERS WHERE ID='" + id + "'"
             );
 
             while(proceduresResultSet.next()){

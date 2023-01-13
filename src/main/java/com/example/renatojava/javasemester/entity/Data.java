@@ -1,11 +1,9 @@
 package com.example.renatojava.javasemester.entity;
 
 import com.example.renatojava.javasemester.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
 import java.io.FileReader;
@@ -71,7 +69,7 @@ public interface Data {
         return patientToAdd;
 
     }
-    static Boolean addPatient(String name, String surname, String gender, String oib) throws SQLException, IOException {
+    static void addPatient(String name, String surname, String gender, String oib) throws SQLException, IOException {
         Connection veza = connectingToDatabase();
 
         PreparedStatement stmnt = veza.prepareStatement("INSERT INTO PATIENTS(NAME, SURNAME, GENDER, DEBT, PROCEDURES, OIB) VALUES(?,?,?,?,?,?)");
@@ -82,23 +80,22 @@ public interface Data {
         stmnt.setString(5, "");
         stmnt.setString(6, oib);
 
-        if(CheckObjects.checkIfPatientExists(oib)){
+        try{
+            CheckObjects.checkIfPatientExists(oib);
+        } catch (ObjectExistsException e) {
+            Application.logger.info(e.getMessage(), e.getStackTrace());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
-            alert.setHeaderText("Patient already exists in system.");
+            alert.setHeaderText(e.getMessage());
             alert.show();
             veza.close();
-            return false;
-        }else{
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("INFORMATION");
-            success.setHeaderText("Success!");
-            success.setContentText("Patient successfully added to the system!");
-            success.show();
+            return;
         }
+
+        addedSuccessfully("Patient");
+
         stmnt.executeUpdate();
         veza.close();
-        return true;
     }
     static Patient getCertainPatient(String oib){
         Patient newPatient = null;
@@ -132,7 +129,7 @@ public interface Data {
     }
 
 
-    static List<Procedure> getAllProcedures(){
+    static List<Procedure> getAllProcedures() throws SQLException, IOException {
         List<Procedure> procedureList = new ArrayList<>();
 
         try (Connection conn = connectingToDatabase()){
@@ -146,11 +143,9 @@ public interface Data {
                 Procedure newProcedure = getProcedure(proceduresResultSet);
                 procedureList.add(newProcedure);
             }
-
-            conn.close();
-
-        } catch (SQLException | IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            if(procedureList.size() == 0){
+                throw new NoProceduresException("No procedures found in database!");
+            }
         }
 
         return procedureList;
@@ -165,9 +160,15 @@ public interface Data {
 
     }
     static Procedure getProcedureBasedOnDescription(String description){
-        List<Procedure> allProcedures = getAllProcedures();
-        Procedure procedure = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(description)).findAny().orElse(null);
-
+        Procedure procedure = null;
+        try{
+            List<Procedure> allProcedures = getAllProcedures();
+            procedure = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(description)).findAny().orElse(null);
+        }catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }catch (NoProceduresException e){
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+        }
         return procedure;
     }
     static String getAllProceduresFromPatient(Patient patient){
@@ -217,10 +218,10 @@ public interface Data {
             PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patientToUpdate.getOib() + "'");
             updateDebt.executeUpdate();
 
-            conn.close();
-
         } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
+        }catch (NoProceduresException e){
+            Application.logger.info(e.getMessage(), e.getStackTrace());
         }
     }
     static void removeProcedure(String procedureDescription, String oib, String currentProcedures){
@@ -257,7 +258,7 @@ public interface Data {
     }
 
 
-    static List<Doctor> getAllDoctors(){
+    static List<Doctor> getAllDoctors() throws SQLException, IOException {
         List<Doctor> doctorList = new ArrayList<>();
 
         try(Connection conn = connectingToDatabase()) {
@@ -273,8 +274,6 @@ public interface Data {
 
             conn.close();
 
-        } catch (SQLException | IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
         }
 
         return doctorList;
@@ -307,5 +306,12 @@ public interface Data {
         }else{
             return false;
         }
+    }
+    static void addedSuccessfully(String type){
+        Alert success = new Alert(Alert.AlertType.INFORMATION);
+        success.setTitle("INFORMATION");
+        success.setHeaderText("Success!");
+        success.setContentText(type + " successfully added to the system!");
+        success.show();
     }
 }

@@ -1,0 +1,2 @@
+2023-01-13 16:03:53,822 INFO [JavaFX Application Thread] c.e.r.j.Application [LoginController.java:69] Message: User not found!Stack trace: [Ljava.lang.StackTraceElement;@6180bb6e
+2023-01-13 16:04:28,188 INFO [JavaFX Application Thread] c.e.r.j.Application [LoginController.java:69] User not found!

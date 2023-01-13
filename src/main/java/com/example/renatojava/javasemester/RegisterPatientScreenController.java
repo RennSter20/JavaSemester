@@ -80,9 +80,9 @@ public class RegisterPatientScreenController implements CheckObjects {
                 }
 
             }catch (SQLException e){
-                Application.logger.info(String.valueOf(e.getStackTrace()));
+                Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
             }
     }
     }

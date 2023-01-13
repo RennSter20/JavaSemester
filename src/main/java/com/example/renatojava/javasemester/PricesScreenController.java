@@ -2,6 +2,7 @@ package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Procedure;
+import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +11,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +32,13 @@ public class PricesScreenController implements Data {
 
     @FXML
     public void initialize(){
-        proceduresToShow = Data.getAllProcedures();
+        try{
+            proceduresToShow = Data.getAllProcedures();
+        }catch (SQLException | IOException e) {
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }catch (NoProceduresException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
         fillTable(proceduresToShow);
     }
 

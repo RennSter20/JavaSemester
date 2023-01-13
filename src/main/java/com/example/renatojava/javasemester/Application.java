@@ -35,7 +35,7 @@ public class Application extends javafx.application.Application {
         mainStage.show();
     }
 
-    public static void setLoggedUser(User user){
+    public static void setLoggedUser(User user) {
         loggedUser = user;
     }
     public static User getLoggedUser(){

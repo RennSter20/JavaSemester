@@ -1,12 +1,14 @@
 package com.example.renatojava.javasemester.entity;
 
+import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public interface CheckObjects {
 
-    static Boolean checkIfPatientExists(String oib){
+    static void checkIfPatientExists(String oib) throws ObjectExistsException{
         List<Patient> patientsList = new ArrayList<>();
         try {
             Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
@@ -28,9 +30,8 @@ public interface CheckObjects {
         }
 
         if(patientsList.size() > 0){
-            return true;
+            throw new ObjectExistsException("Patient already exists in system!");
         }
-        return false;
     }
     static Patient getPatient(ResultSet procedureSet) throws SQLException{
 

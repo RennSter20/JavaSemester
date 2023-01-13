@@ -113,9 +113,9 @@ public class AllPatientsScreenController implements Data {
                 initialize();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -129,7 +129,7 @@ public class AllPatientsScreenController implements Data {
         try{
             Data.removePatient(patientsTable.getSelectionModel().getSelectedItem().getOib());
         }catch (SQLException | IOException e){
-
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
         initialize();
         clearFields();

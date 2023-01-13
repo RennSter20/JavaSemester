@@ -2,7 +2,6 @@ package com.example.renatojava.javasemester;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 
@@ -18,7 +17,7 @@ public class MenuBarController {
                     getClass().getResource("proceduresScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -41,7 +40,7 @@ public class MenuBarController {
                     getClass().getResource("registerPatientScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -52,19 +51,20 @@ public class MenuBarController {
                     getClass().getResource("allPatientsScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            e.printStackTrace();
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
-    public void logout(){
+    public void logout() {
         Application.setLoggedUser(null);
+
         BorderPane root;
         try {
             root = FXMLLoader.load(
                     getClass().getResource("loginScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -75,7 +75,7 @@ public class MenuBarController {
                     getClass().getResource("addProcedure.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -86,7 +86,7 @@ public class MenuBarController {
                     getClass().getResource("removeProcedure.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -97,7 +97,7 @@ public class MenuBarController {
                     getClass().getResource("allDoctors.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 }

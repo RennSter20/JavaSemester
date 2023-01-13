@@ -3,6 +3,7 @@ package com.example.renatojava.javasemester;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Procedure;
+import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,13 @@ public class AddProcedureController implements Data {
         patientList = Data.getAllPatients();
         fillPatientsTable(patientList);
 
-        procedureList = Data.getAllProcedures();
+        try{
+            procedureList = Data.getAllProcedures();
+        } catch (SQLException | IOException e) {
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }catch (NoProceduresException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
         fillProceduresTable(procedureList);
     }
 
