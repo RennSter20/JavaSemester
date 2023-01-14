@@ -1,12 +1,13 @@
 package com.example.renatojava.javasemester.entity;
 
+import com.example.renatojava.javasemester.RegisterPatientScreenController;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface CheckObjects {
+public sealed interface CheckObjects permits RegisterPatientScreenController {
 
     static void checkIfPatientExists(String oib) throws ObjectExistsException{
         List<Patient> patientsList = new ArrayList<>();

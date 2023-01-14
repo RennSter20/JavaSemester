@@ -15,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-public class RegisterPatientScreenController implements CheckObjects {
+public final class RegisterPatientScreenController implements CheckObjects {
 
     @FXML
     private TextField nameField;
@@ -59,10 +60,7 @@ public class RegisterPatientScreenController implements CheckObjects {
         if(errorMessages.size() > 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
-            String error = "";
-            for(String s : errorMessages){
-                error = error + s + "\n";
-            }
+            String error = errorMessages.stream().collect(Collectors.joining("\n"));
             alert.setHeaderText(error);
             alert.show();
             return;

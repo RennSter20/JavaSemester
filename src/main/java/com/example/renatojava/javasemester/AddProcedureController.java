@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddProcedureController implements Data {
 
@@ -101,19 +102,18 @@ public class AddProcedureController implements Data {
         if(patientsTable.getSelectionModel().getSelectedItem() == null){
                 errorArray.add("No patient selected!");
         }
+
         if(procedureTable.getSelectionModel().getSelectedItem() == null){
             errorArray.add("No procedure selected!");
         }
+
         if(errorArray.size() > 0){
-            String errorMessage = "";
-            for(String s : errorArray){
-                errorMessage = errorMessage + s + "\n";
-            }
+            String errorMessage = errorArray.stream().collect(Collectors.joining("\n"));
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Errors found!");
             alert.setContentText(errorMessage);
             alert.show();
-
             return;
         }
 

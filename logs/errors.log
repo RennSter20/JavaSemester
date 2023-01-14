@@ -1,2 +1,29 @@
 2023-01-13 16:03:53,822 INFO [JavaFX Application Thread] c.e.r.j.Application [LoginController.java:69] Message: User not found!Stack trace: [Ljava.lang.StackTraceElement;@6180bb6e
 2023-01-13 16:04:28,188 INFO [JavaFX Application Thread] c.e.r.j.Application [LoginController.java:69] User not found!
+2023-01-13 16:48:13,806 INFO [JavaFX Application Thread] c.e.r.j.Application [RegisterPatientScreenController.java:83] Message: com.example.renatojava.javasemester.entity.Patient Stack trace: [Ljava.lang.StackTraceElement;@69b4f233
+2023-01-13 19:13:19,955 INFO [JavaFX Application Thread] c.e.r.j.Application [MenuBarController.java:111] Message: 
+/C:/Users/renat/IdeaProjects/JavaSemester/target/classes/com/example/renatojava/javasemester/changesScreen.fxml
+ Stack trace: [Ljava.lang.StackTraceElement;@30b5130
+2023-01-13 19:13:21,737 INFO [JavaFX Application Thread] c.e.r.j.Application [MenuBarController.java:111] Message: 
+/C:/Users/renat/IdeaProjects/JavaSemester/target/classes/com/example/renatojava/javasemester/changesScreen.fxml
+ Stack trace: [Ljava.lang.StackTraceElement;@1a8a601
+2023-01-13 19:13:42,243 INFO [JavaFX Application Thread] c.e.r.j.Application [MenuBarController.java:111] Message: 
+/C:/Users/renat/IdeaProjects/JavaSemester/target/classes/com/example/renatojava/javasemester/changesScreen.fxml
+ Stack trace: [Ljava.lang.StackTraceElement;@11585d6b
+2023-01-13 19:14:43,301 INFO [JavaFX Application Thread] c.e.r.j.Application [MenuBarController.java:111] Message: 
+/C:/Users/renat/IdeaProjects/JavaSemester/target/classes/com/example/renatojava/javasemester/changesScreen.fxml
+ Stack trace: [Ljava.lang.StackTraceElement;@23225e55
+2023-01-14 15:20:11,978 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:52] invalid type code: AC
+2023-01-14 15:52:07,839 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:48] Stream closed
+2023-01-14 15:52:11,601 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] null
+2023-01-14 15:54:12,927 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] null
+2023-01-14 15:54:32,046 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:48] Stream closed
+2023-01-14 15:54:33,850 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] invalid type code: AC
+2023-01-14 15:57:57,202 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] invalid type code: AC
+2023-01-14 15:58:30,904 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:48] Stream closed
+2023-01-14 15:58:34,602 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] invalid type code: AC
+2023-01-14 15:58:55,035 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] null
+2023-01-14 15:59:09,970 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:48] Stream closed
+2023-01-14 15:59:13,187 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] null
+2023-01-14 15:59:39,411 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:48] Stream closed
+2023-01-14 15:59:44,300 INFO [JavaFX Application Thread] c.e.r.j.Application [ChangeWriter.java:68] null

@@ -25,6 +25,8 @@ public class Application extends javafx.application.Application {
         stage.setFullScreen(false);
         stage.setResizable(false);
         stage.show();
+
+
     }
 
     public static void setMainPage(BorderPane root) {
@@ -47,5 +49,6 @@ public class Application extends javafx.application.Application {
 }
 
 //TODO billing
+//TODO main screen statistics
 
 

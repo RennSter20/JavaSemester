@@ -9,10 +9,7 @@ import javafx.scene.control.ButtonType;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 public interface Data {
 
@@ -91,7 +88,8 @@ public interface Data {
             veza.close();
             return;
         }
-
+        ChangeWriter changeWriter = new ChangeWriter(null, new Patient(null, name, surname, gender, 0.0, "", oib));
+        changeWriter.writeChange();
         addedSuccessfully("Patient");
 
         stmnt.executeUpdate();
@@ -124,6 +122,10 @@ public interface Data {
         PreparedStatement stmnt = veza.prepareStatement("DELETE FROM PATIENTS WHERE OIB='" + oib + "'");
 
         stmnt.executeUpdate();
+        Patient patientToRemove = getCertainPatient(oib);
+        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), oib), null);
+        changeWriter.writeChange();
+
         veza.close();
 
     }
@@ -205,6 +207,9 @@ public interface Data {
         }
 
         try(Connection conn = connectingToDatabase()) {
+
+            Patient oldPatient = getCertainPatient(oib);
+
             PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + procedures + "'" + "WHERE OIB='" + oib + "'");
             updateProcedures.executeUpdate();
 
@@ -217,6 +222,13 @@ public interface Data {
 
             PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patientToUpdate.getOib() + "'");
             updateDebt.executeUpdate();
+
+
+            Patient newPatient = getCertainPatient(oib);
+
+            ChangeWriter changeWriter = new ChangeWriter(oldPatient,newPatient);
+            changeWriter.writeChange();
+
 
         } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
@@ -249,7 +261,11 @@ public interface Data {
             PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patient.getOib() + "'");
             updateDebt.executeUpdate();
 
-            conn.close();
+            Patient newPatient = getCertainPatient(oib);
+
+            ChangeWriter changeWriter = new ChangeWriter(patient,newPatient);
+            changeWriter.writeChange();
+
 
         } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
@@ -258,8 +274,8 @@ public interface Data {
     }
 
 
-    static List<Doctor> getAllDoctors() throws SQLException, IOException {
-        List<Doctor> doctorList = new ArrayList<>();
+    static Set<Doctor> getAllDoctors() throws SQLException, IOException {
+        Set<Doctor> doctorList = new HashSet<>();
 
         try(Connection conn = connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
@@ -271,11 +287,7 @@ public interface Data {
                 Doctor newDoctor = getDoctor(proceduresResultSet);
                 doctorList.add(newDoctor);
             }
-
-            conn.close();
-
         }
-
         return doctorList;
     }
     static Doctor getDoctor(ResultSet procedureSet) throws SQLException{
@@ -313,5 +325,18 @@ public interface Data {
         success.setHeaderText("Success!");
         success.setContentText(type + " successfully added to the system!");
         success.show();
+    }
+
+    static void editStats(String sql){
+        try (Connection conn = connectingToDatabase()){
+
+            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE STATS " + sql + "WHERE ID=0");
+            updateProcedures.executeUpdate();
+
+        } catch (SQLException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        } catch (IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
     }
 }

@@ -13,8 +13,10 @@ public class MenuScreenController {
         String role = Application.getLoggedUser().getRole();
         if(role.equals("Doctor")){
             welcomeText.setText("Welcome back doctor " + Application.getLoggedUser().getSurname());
-        }else{
+        }else if(role.equals("Receptionis")){
             welcomeText.setText("Welcome back receptionist " + Application.getLoggedUser().getSurname());
+        }else{
+            welcomeText.setText("Welcome back " + Application.getLoggedUser().getRole());
         }
     }
 }

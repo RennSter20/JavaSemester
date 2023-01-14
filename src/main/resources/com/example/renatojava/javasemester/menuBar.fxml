@@ -17,27 +17,31 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Checkups">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Add checkup" />
-                  <MenuItem mnemonicParsing="false" onAction="#showRemoveCheckupScreen" text="Remove checkup" />
+              <MenuItem fx:id="addCheckup" mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Add checkup" />
+                  <MenuItem fx:id="removeCheckup" mnemonicParsing="false" onAction="#showRemoveCheckupScreen" text="Remove checkup" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Patients">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#showRegisterPatientScreen" text="Register a patient" />
-                  <MenuItem mnemonicParsing="false" onAction="#showAllPatientsScreen" text="All patients" />
+              <MenuItem fx:id="registerPatient" mnemonicParsing="false" onAction="#showRegisterPatientScreen" text="Register a patient" />
+                  <MenuItem fx:id="allPatients" mnemonicParsing="false" onAction="#showAllPatientsScreen" text="All patients" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Doctors">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#showAllDoctorsScreen" text="All doctors" />
+                  <MenuItem fx:id="allDoctors" mnemonicParsing="false" onAction="#showAllDoctorsScreen" text="All doctors" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Billing">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Make a bill" />
-                  <MenuItem mnemonicParsing="false" onAction="#showPricesScreen" text="Procedures" />
+                  <MenuItem fx:id="makeBill" mnemonicParsing="false" text="Make a bill" />
+                  <MenuItem fx:id="procedures" mnemonicParsing="false" onAction="#showPricesScreen" text="Procedures" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Changes">
+               <items>
+                  <MenuItem fx:id="allChanges" mnemonicParsing="false" onAction="#showChangesScreen" text="All changes" />
+               </items></Menu>
         </menus>
       </MenuBar>
    </children>

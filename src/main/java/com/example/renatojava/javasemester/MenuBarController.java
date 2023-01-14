@@ -1,14 +1,33 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.User;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.util.Optional;
 
 public class MenuBarController {
+
+    @FXML
+    MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges;
+
+    public void initialize(){
+        User currentUser = Application.getLoggedUser();
+        if(currentUser.getRole().equals("Doctor")){
+            addCheckup.setDisable(true);
+            removeCheckup.setDisable(true);
+            registerPatient.setDisable(true);
+            makeBill.setDisable(true);
+            allChanges.setDisable(true);
+        }else if(currentUser.getRole().equals("Receptionist")){
+            allChanges.setDisable(true);
+        }
+    }
 
     public void showPricesScreen() {
         BorderPane root;
@@ -99,5 +118,13 @@ public class MenuBarController {
         } catch (IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
+    }
+
+    public void showChangesScreen() throws IOException {
+        BorderPane root;
+
+            root = FXMLLoader.load(getClass().getResource("changesScreen.fxml"));
+            Application.setMainPage(root);
+
     }
 }
