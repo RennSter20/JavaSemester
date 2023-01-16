@@ -361,6 +361,9 @@ public interface Data {
             changesSQL.add("DOCTORS=" + (++currDoctors));
             StatsChanger.changeStats(changesSQL);
 
+            ChangeWriter changeWriter = new ChangeWriter(new Doctor("-", "-", "-", "-", "-"),doctor);
+            changeWriter.addChange();
+
             addedSuccessfully("Doctor");
 
             conn.close();
@@ -386,7 +389,11 @@ public interface Data {
         changesSQL.add("DOCTORS=" + (newCountDoctors));
         StatsChanger.changeStats(changesSQL);
 
-        //WRITE
+        ChangeWriter changeWriter = new ChangeWriter(doctor, new Doctor("-", "-", "-", "-", "-"));
+        changeWriter.addChange();
+
+        removedSuccessfully("Doctor");
+
 
         veza.close();
     }
@@ -412,6 +419,13 @@ public interface Data {
         success.setTitle("INFORMATION");
         success.setHeaderText("Success!");
         success.setContentText(type + " successfully added to the system!");
+        success.show();
+    }
+    static void removedSuccessfully(String type){
+        Alert success = new Alert(Alert.AlertType.INFORMATION);
+        success.setTitle("INFORMATION");
+        success.setHeaderText("Success!");
+        success.setContentText(type + " successfully removed from the system!");
         success.show();
     }
 
@@ -451,4 +465,7 @@ public interface Data {
         return new User(id, password, name, surname, role, oib);
 
     }
+
+
+
 }

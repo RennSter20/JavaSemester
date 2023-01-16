@@ -12,9 +12,8 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class ChangesController {
+public class ChangesPatientsController {
 
     @FXML
     private TableView<Patient> oldTable, newTable;
@@ -23,13 +22,13 @@ public class ChangesController {
     private Text changeTimeText;
 
     ChangeWriter changer = new ChangeWriter();
-    List<String> changesTime = changer.readTime();
+    List<String> changesTime = changer.readTimePatients();
     Integer selectedPatient;
     @FXML
     private TableColumn<Patient, String> nameOld, nameNew, surnameOld, surnameNew, oibOld, oibNew, genderOld, genderNew, debtOld, debtNew, proceduresOld, proceduresNew;
 
     public void initialize(){
-        List<Patient> patientList = changer.read();
+        List<Patient> patientList = changer.readPatients();
 
         List<Patient> oldPatients = new ArrayList<>();
         List<Patient> newPatients = new ArrayList<>();

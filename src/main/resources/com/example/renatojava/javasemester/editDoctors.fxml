@@ -30,11 +30,11 @@
          <children>
             <TableView fx:id="doctorTable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="164.0" text="Name" />
-                <TableColumn fx:id="surnameColumn" prefWidth="194.0" text="Surname" />
-                  <TableColumn fx:id="genderColumn" prefWidth="67.0" text="Gender" />
-                  <TableColumn fx:id="titleColumn" prefWidth="137.0" text="Title" />
-                  <TableColumn fx:id="roomColumn" prefWidth="77.0" text="Room" />
+                <TableColumn fx:id="nameColumn" prefWidth="164.0" style="-fx-alignment: CENTER;" text="Name" />
+                <TableColumn fx:id="surnameColumn" prefWidth="194.0" style="-fx-alignment: CENTER;" text="Surname" />
+                  <TableColumn fx:id="genderColumn" prefWidth="67.0" style="-fx-alignment: CENTER;" text="Gender" />
+                  <TableColumn fx:id="titleColumn" prefWidth="137.0" style="-fx-alignment: CENTER;" text="Title" />
+                  <TableColumn fx:id="roomColumn" prefWidth="77.0" style="-fx-alignment: CENTER;" text="Room" />
               </columns>
             </TableView>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Remove doctor:" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">

@@ -37,7 +37,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
     }
 
     static void checkIfDoctorExists(Doctor doctor) throws ObjectExistsException{
-        List<Patient> patientsList = new ArrayList<>();
+        List<Doctor> patientsList = new ArrayList<>();
         try {
             Connection conn = Data.connectingToDatabase();
 
@@ -47,8 +47,8 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             );
 
             while(proceduresResultSet.next()){
-                Patient newPatient = Data.getPatient(proceduresResultSet);
-                patientsList.add(newPatient);
+                Doctor newDoctor = Data.getDoctor(proceduresResultSet);
+                patientsList.add(newDoctor);
             }
 
             conn.close();

@@ -17,9 +17,9 @@
    <left>
       <TableView fx:id="patientsTable" onMouseClicked="#fillListView" prefHeight="600.0" prefWidth="404.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="127.0" text="Name" />
-          <TableColumn fx:id="surnameColumn" prefWidth="148.0" text="Surname" />
-            <TableColumn fx:id="oibColumn" prefWidth="128.0" text="OIB" />
+          <TableColumn fx:id="nameColumn" prefWidth="127.0" style="-fx-alignment: CENTER;" text="Name" />
+          <TableColumn fx:id="surnameColumn" prefWidth="148.0" style="-fx-alignment: CENTER;" text="Surname" />
+            <TableColumn fx:id="oibColumn" prefWidth="128.0" style="-fx-alignment: CENTER;" text="OIB" />
         </columns>
          <BorderPane.margin>
             <Insets top="200.0" />
@@ -44,8 +44,8 @@
          <children>
             <TableView fx:id="procedureTable" prefHeight="714.0" prefWidth="438.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <columns>
-                <TableColumn fx:id="procedureColumn" prefWidth="179.0" text="Procedure" />
-                <TableColumn fx:id="priceColumn" prefWidth="134.0" text="Price" />
+                <TableColumn fx:id="procedureColumn" prefWidth="179.0" style="-fx-alignment: CENTER;" text="Procedure" />
+                <TableColumn fx:id="priceColumn" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Price" />
               </columns>
                <GridPane.margin>
                   <Insets />

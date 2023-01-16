@@ -29,9 +29,9 @@
          <children>
             <TableView fx:id="patientTable" onMouseClicked="#onSelectedPatient" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="patientName" prefWidth="129.0" text="Name" />
-                <TableColumn fx:id="patientSurname" minWidth="0.0" prefWidth="142.0" text="Surname" />
-                  <TableColumn fx:id="patientOIB" prefWidth="155.0" text="Oib" />
+                <TableColumn fx:id="patientName" prefWidth="129.0" style="-fx-alignment: CENTER;" text="Name" />
+                <TableColumn fx:id="patientSurname" minWidth="0.0" prefWidth="142.0" style="-fx-alignment: CENTER;" text="Surname" />
+                  <TableColumn fx:id="patientOIB" prefWidth="155.0" style="-fx-alignment: CENTER;" text="Oib" />
               </columns>
             </TableView>
             <Button mnemonicParsing="false" onAction="#remove" text="Remove" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
@@ -40,7 +40,7 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <ListView fx:id="procedureListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ListView fx:id="procedureListView" prefHeight="200.0" prefWidth="200.0" style="-fx-alignment: CENTER;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <BorderPane.margin>
             <Insets top="30.0" />

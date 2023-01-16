@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.ChangesDoctorsController">
+    <fx:include source="menuBar.fxml" />
+    <center>
+        <GridPane maxHeight="700.0" prefHeight="400.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="854.0" minWidth="10.0" prefWidth="643.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="637.0" minWidth="10.0" prefWidth="637.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="474.0" minHeight="0.0" prefHeight="321.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="579.0" minHeight="10.0" prefHeight="340.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="579.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+                <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
+            </rowConstraints>
+            <BorderPane.margin>
+            </BorderPane.margin>
+            <children>
+                <TableView fx:id="oldTable" onMouseClicked="#showTimeOld" prefHeight="752.0" prefWidth="1280.0" GridPane.columnSpan="2" GridPane.rowSpan="1">
+                    <columns>
+                        <TableColumn fx:id="nameOld" prefWidth="375.0" style="-fx-alignment: CENTER;" text="Name" />
+                        <TableColumn fx:id="surnameOld" prefWidth="384.0" style="-fx-alignment: CENTER;" text="Surname" />
+                        <TableColumn fx:id="genderOld" prefWidth="94.0" style="-fx-alignment: CENTER;" text="Gender" />
+                  <TableColumn fx:id="titleOld" prefWidth="345.0" style="-fx-alignment: CENTER;" text="Title" />
+                  <TableColumn fx:id="roomOld" prefWidth="81.0" style="-fx-alignment: CENTER;" text="Room" />
+                    </columns>
+                </TableView>
+                <TableView fx:id="newTable" layoutX="10.0" layoutY="270.0" onMouseClicked="#showTimeNew" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                    <columns>
+                        <TableColumn fx:id="nameNew" prefWidth="375.0" style="-fx-alignment: CENTER;" text="Name" />
+                        <TableColumn fx:id="surnameNew" prefWidth="388.0" style="-fx-alignment: CENTER;" text="Surname" />
+                        <TableColumn fx:id="genderNew" prefWidth="94.0" style="-fx-alignment: CENTER;" text="Gender" />
+                  <TableColumn fx:id="titleNew" prefWidth="342.0" style="-fx-alignment: CENTER;" text="Title" />
+                  <TableColumn fx:id="roomNew" prefWidth="80.99993896484375" style="-fx-alignment: CENTER;" text="Room" />
+                    </columns>
+                </TableView>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Changes made:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Text fx:id="changeTimeText" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            </children>
+            <BorderPane.margin>
+                <Insets top="30.0" />
+            </BorderPane.margin>
+        </GridPane>
+    </center>
+</BorderPane>

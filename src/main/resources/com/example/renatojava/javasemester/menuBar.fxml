@@ -16,10 +16,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Checkups">
+          <Menu mnemonicParsing="false" text="Procedures">
             <items>
-              <MenuItem fx:id="addCheckup" mnemonicParsing="false" onAction="#showManageCheckupsScreen" text="Add checkup" />
-                  <MenuItem fx:id="removeCheckup" mnemonicParsing="false" onAction="#showRemoveCheckupScreen" text="Remove checkup" />
+              <MenuItem fx:id="addCheckup" mnemonicParsing="false" onAction="#showAddProcedureScreen" text="Add procedure" />
+                  <MenuItem fx:id="removeCheckup" mnemonicParsing="false" onAction="#showRemoveProcedureScreen" text="Remove procedure" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Patients">
@@ -31,7 +31,7 @@
             <Menu mnemonicParsing="false" text="Doctors">
                <items>
                   <MenuItem fx:id="allDoctors" mnemonicParsing="false" onAction="#showAllDoctorsScreen" text="All doctors" />
-                  <MenuItem fx:id="allDoctors1" mnemonicParsing="false" onAction="#showEditDoctorsScreen" text="Manage doctors" />
+                  <MenuItem fx:id="editDoctors" mnemonicParsing="false" onAction="#showEditDoctorsScreen" text="Manage doctors" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Billing">
@@ -42,7 +42,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Changes">
                <items>
-                  <MenuItem fx:id="allChanges" mnemonicParsing="false" onAction="#showChangesScreen" text="All changes" />
+                  <MenuItem fx:id="allChanges" mnemonicParsing="false" onAction="#showChangesPatientsScreen" text="Patient changes" />
+                  <MenuItem fx:id="allChanges1" mnemonicParsing="false" onAction="#showChangesDoctorsScreen" text="Doctor changes" />
                </items></Menu>
         </menus>
       </MenuBar>

@@ -32,10 +32,10 @@
          <children>
             <TableView fx:id="doctorsTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="1" GridPane.rowSpan="2">
               <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="427.0" text="Name" />
-                <TableColumn fx:id="surnameColumn" prefWidth="427.0" text="Surname" />
-                  <TableColumn fx:id="titleColumn" prefWidth="212.0" text="Title" />
-                  <TableColumn fx:id="roomColumn" prefWidth="213.0" text="Room" />
+                <TableColumn fx:id="nameColumn" prefWidth="427.0" style="-fx-alignment: CENTER;" text="Name" />
+                <TableColumn fx:id="surnameColumn" prefWidth="427.0" style="-fx-alignment: CENTER;" text="Surname" />
+                  <TableColumn fx:id="titleColumn" prefWidth="212.0" style="-fx-alignment: CENTER;" text="Title" />
+                  <TableColumn fx:id="roomColumn" prefWidth="213.0" style="-fx-alignment: CENTER;" text="Room" />
               </columns>
             </TableView>
             <TextField fx:id="searchField" GridPane.columnIndex="1" />

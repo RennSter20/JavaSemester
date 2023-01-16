@@ -48,8 +48,8 @@ public class EditDoctorsController {
         }
 
         List<String> errorMessages = new ArrayList<>();
-        if(name.equals("") || surname.equals("")){
-            errorMessages.add("Name and surname field cannot be empty!");
+        if(name.equals("") || surname.equals("") || title.equals("")){
+            errorMessages.add("Name, surname and title field cannot be empty!");
         }
         if(gender.equals("")){
             errorMessages.add("Gender must be selected!");
@@ -79,18 +79,11 @@ public class EditDoctorsController {
 
         ObservableList<Doctor> observableList = FXCollections.observableArrayList(doctorList);
 
-        nameColumn.setCellValueFactory(doctor -> {
-            return new SimpleStringProperty(doctor.getValue().getName());
-        });
-        surnameColumn.setCellValueFactory(doctor -> {
-            return new SimpleStringProperty(doctor.getValue().getSurname());
-        });
-        titleColumn.setCellValueFactory(doctor -> {
-            return new SimpleStringProperty(doctor.getValue().getTitle());
-        });
-        roomColumn.setCellValueFactory(doctor -> {
-            return new SimpleStringProperty(doctor.getValue().getRoom());
-        });
+        nameColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getName()));
+        surnameColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getSurname()));
+        titleColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getTitle()));
+        roomColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getRoom()));
+        genderColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getGender()));
 
 
         doctorTable.setItems(observableList);
@@ -99,8 +92,16 @@ public class EditDoctorsController {
 
     public void removeDoctor(){
         try{
-            Data.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
-            initialize();
+            if(!Data.confirmEdit()){
+                Alert failure = new Alert(Alert.AlertType.ERROR);
+                failure.setTitle("ERROR");
+                failure.setHeaderText("Failure!");
+                failure.setContentText("Doctor is not removed from the system!");
+                failure.show();
+            }else{
+                Data.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
+                initialize();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

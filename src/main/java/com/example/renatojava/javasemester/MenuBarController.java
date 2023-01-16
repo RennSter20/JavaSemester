@@ -89,18 +89,18 @@ public class MenuBarController {
         }
     }
 
-    public void showManageCheckupsScreen() {
+    public void showAddProcedureScreen() {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("addProcedure.fxml"));
+                    getClass().getResource("addCheckup.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
-    public void showRemoveCheckupScreen() {
+    public void showRemoveProcedureScreen() {
         BorderPane root;
         try {
             root = FXMLLoader.load(
@@ -122,10 +122,10 @@ public class MenuBarController {
         }
     }
 
-    public void showChangesScreen() {
+    public void showChangesPatientsScreen() {
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("changesScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("changesPatientsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
@@ -146,6 +146,16 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(getClass().getResource("editDoctors.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+    public void showChangesDoctorsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("changesDoctorsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
