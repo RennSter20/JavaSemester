@@ -51,5 +51,4 @@ public class Application extends javafx.application.Application {
 //TODO billing
 //TODO rooms, patients in rooms
 //TODO admin to remove and add doctors
-//TODO before removing patient alert window
 //TODO add errors if doesn't add to database

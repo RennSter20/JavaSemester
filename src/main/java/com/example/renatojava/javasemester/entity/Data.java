@@ -12,7 +12,6 @@ import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public interface Data {
 
@@ -342,6 +341,54 @@ public interface Data {
 
         return new Doctor.Builder().withName(name).withSurname(surname).withGender(gender).withRoom(room).withTitle(title).build();
 
+    }
+    static void addDoctor(Doctor doctor){
+        try{
+            Connection conn = Data.connectingToDatabase();
+            CheckObjects.checkIfDoctorExists(doctor);
+
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO DOCTORS(NAME, SURNAME, GENDER, TITLE, ROOM) VALUES(?,?,?,?,?)");
+            stmnt.setString(1, doctor.getName());
+            stmnt.setString(2, doctor.getSurname());
+            stmnt.setString(3, doctor.getGender());
+            stmnt.setString(4, doctor.getTitle());
+            stmnt.setString(5, doctor.getRoom());
+            stmnt.executeUpdate();
+
+            Stats currentStats = getCurrentStats();
+            Integer currDoctors = currentStats.doctors();
+            List<String> changesSQL = new ArrayList<>();
+            changesSQL.add("DOCTORS=" + (++currDoctors));
+            StatsChanger.changeStats(changesSQL);
+
+            addedSuccessfully("Doctor");
+
+            conn.close();
+
+        } catch (ObjectExistsException | IOException | SQLException e) {
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText(e.getMessage());
+            alert.show();
+        }
+    }
+    static void removeDoctor(Doctor doctor) throws SQLException, IOException {
+        Connection veza = connectingToDatabase();
+
+        PreparedStatement stmnt = veza.prepareStatement("DELETE FROM DOCTORS WHERE ROOM='" + doctor.getRoom() + "'");
+        stmnt.executeUpdate();
+
+        Stats currentStats = getCurrentStats();
+        Integer oldCountDoctors = currentStats.doctors();
+        Integer newCountDoctors = oldCountDoctors - 1;
+        List<String> changesSQL = new ArrayList<>();
+        changesSQL.add("DOCTORS=" + (newCountDoctors));
+        StatsChanger.changeStats(changesSQL);
+
+        //WRITE
+
+        veza.close();
     }
 
     static Boolean confirmEdit(){
