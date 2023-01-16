@@ -1,12 +1,14 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.entity.Stats;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 
 public class MenuScreenController {
 
     @FXML
-    private Text welcomeText;
+    private Text welcomeText, patients, debt, doctors, bills;
 
     @FXML
     public void initialize(){
@@ -18,5 +20,11 @@ public class MenuScreenController {
         }else{
             welcomeText.setText("Welcome back " + Application.getLoggedUser().getRole());
         }
+
+        Stats stats = Data.getCurrentStats();
+        patients.setText(String.valueOf(stats.patients()));
+        debt.setText(String.valueOf(stats.debt()));
+        doctors.setText(String.valueOf(stats.doctors()));
+        bills.setText(String.valueOf(stats.bills()));
     }
 }

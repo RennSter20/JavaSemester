@@ -11,6 +11,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showStatsScreen" text="System" />
                   <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
                   <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
             </items>
@@ -30,6 +31,7 @@
             <Menu mnemonicParsing="false" text="Doctors">
                <items>
                   <MenuItem fx:id="allDoctors" mnemonicParsing="false" onAction="#showAllDoctorsScreen" text="All doctors" />
+                  <MenuItem fx:id="allDoctors1" mnemonicParsing="false" onAction="#showEditDoctorsScreen" text="Manage doctors" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Billing">

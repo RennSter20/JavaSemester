@@ -1,7 +1,6 @@
 package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.ChangeWriter;
-import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.Patient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -9,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ public class ChangesController {
     private TableColumn<Patient, String> nameOld, nameNew, surnameOld, surnameNew, oibOld, oibNew, genderOld, genderNew, debtOld, debtNew, proceduresOld, proceduresNew;
 
     public void initialize(){
-        Map<Patient, Patient> patientMap = changer.readChanges();
+        Map<Patient, Patient> patientMap = changer.read();
 
         List<Patient> oldPatients = new ArrayList<>(patientMap.keySet());
         List<Patient> newPatients = new ArrayList<>(patientMap.values());
@@ -97,13 +95,13 @@ public class ChangesController {
 
     public void showTimeOld(){
         selectedPatient = oldTable.getSelectionModel().getSelectedIndex();
-        newTable.setSelectionModel(oldTable.getSelectionModel());
+        newTable.getSelectionModel().select(oldTable.getSelectionModel().getFocusedIndex());
         changeTimeText.setText(changesTime.get(selectedPatient));
     }
 
     public void showTimeNew(){
         selectedPatient = newTable.getSelectionModel().getSelectedIndex();
-        oldTable.setSelectionModel(newTable.getSelectionModel());
+        oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
         changeTimeText.setText(changesTime.get(selectedPatient));
     }
 

@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.exceptions.UserNotFoundException;
 import javafx.fxml.FXML;
@@ -45,7 +46,7 @@ public class LoginController {
         }
 
     }
-    public void login() throws UserNotFoundException {
+    public void login() {
 
         String inputIdText = idTextField.getText();
         String inputPasswordText = passwordTextField.getText();
@@ -60,7 +61,8 @@ public class LoginController {
                             getClass().getResource("menuScreen.fxml"));
                     Application.setMainPage(root);
                 } catch (IOException e) {
-                    Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+                    //Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+                    e.printStackTrace();
                 }
             }else{
                 throw new UserNotFoundException("User not found!");
@@ -86,7 +88,7 @@ public class LoginController {
             );
 
             while(proceduresResultSet.next()){
-                userToSet = getUserFromResult(proceduresResultSet);
+                userToSet = Data.getUserFromResult(proceduresResultSet);
             }
 
             conn.close();
@@ -97,18 +99,6 @@ public class LoginController {
 
         return userToSet;
     }
-    public static User getUserFromResult(ResultSet procedureSet) throws SQLException{
 
-        String id = procedureSet.getString("ID");
-        String password = procedureSet.getString("PASSWORD");
-        String name = procedureSet.getString("NAME");
-        String surname = procedureSet.getString("SURNAME");
-        String role = procedureSet.getString("ROLE");
-        String oib = procedureSet.getString("OIB");
-
-
-        return new User(id, password, name, surname, role, oib);
-
-    }
 
 }

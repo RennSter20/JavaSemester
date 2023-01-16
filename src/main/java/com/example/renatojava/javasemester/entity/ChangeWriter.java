@@ -21,13 +21,21 @@ public class ChangeWriter<T> {
     public ChangeWriter() {
     }
 
-    public void writeChange() {
+    public void addChange(){
+        Map<T, T> items = new HashMap<>(read());
+        items.put(oldObject, newObject);
+        writeAll(items);
+    }
+    public void writeAll(Map<T,T> itemsToWrite) {
+        try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, false))){
 
-        try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, true));
-            out.writeObject(oldObject);
-            out.writeObject(newObject);
+            for(T object : itemsToWrite.keySet()){
+                out.writeObject(object);
+                out.writeObject(itemsToWrite.get(object));
+            }
+
             out.close();
+            out.flush();
         } catch (FileNotFoundException e) {
             Application.logger.info(e.getMessage(), e.getStackTrace());
         } catch (IOException e) {
@@ -50,24 +58,19 @@ public class ChangeWriter<T> {
 
     }
 
-    public Map<Patient, Patient> readChanges(){
-        Map<Patient, Patient> patientsChanged = new HashMap<>();
+    public Map<T, T> read(){
+        Map<T, T> patientsChanged = new HashMap<>();
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PATIENTS));
-
-            Patient oldPatient;
-            Patient newPatient;
-
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PATIENTS));
             while(true){
-                oldPatient = (Patient) in.readObject();
-                newPatient = (Patient) in.readObject();
-                patientsChanged.put(oldPatient, newPatient);
+                patientsChanged.put((T)input.readObject(), (T) input.readObject());
             }
 
+
         } catch (IOException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
         }
 
         return patientsChanged;

@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges;
+    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, editDoctors;
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
@@ -24,8 +24,10 @@ public class MenuBarController {
             registerPatient.setDisable(true);
             makeBill.setDisable(true);
             allChanges.setDisable(true);
+            editDoctors.setDisable(true);
         }else if(currentUser.getRole().equals("Receptionist")){
             allChanges.setDisable(true);
+            editDoctors.setDisable(true);
         }
     }
 
@@ -70,7 +72,7 @@ public class MenuBarController {
                     getClass().getResource("allPatientsScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e);
         }
     }
 
@@ -120,11 +122,33 @@ public class MenuBarController {
         }
     }
 
-    public void showChangesScreen() throws IOException {
+    public void showChangesScreen() {
         BorderPane root;
-
+        try {
             root = FXMLLoader.load(getClass().getResource("changesScreen.fxml"));
             Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
 
+    public void showStatsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("menuScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+    public void showEditDoctorsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("editDoctors.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
     }
 }

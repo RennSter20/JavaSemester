@@ -84,7 +84,7 @@ public class AddProcedureController implements Data {
 
     public void fillListView(){
         String proceduresFromPatient = Data.getAllProceduresFromPatient(patientsTable.getSelectionModel().getSelectedItem());
-        List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split("/"));
+        List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
         ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
         if(observableList.size() > 0){

@@ -44,7 +44,7 @@ public class RemoveProcedureController {
     public void onSelectedPatient(){
         if(patientTable.getSelectionModel().getSelectedItem() != null){
             String proceduresFromPatient = Data.getAllProceduresFromPatient(patientTable.getSelectionModel().getSelectedItem());
-            List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split("/"));
+            List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
             ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
             if(observableList.size() > 0){

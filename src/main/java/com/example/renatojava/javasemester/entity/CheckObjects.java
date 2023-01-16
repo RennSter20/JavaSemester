@@ -20,7 +20,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             );
 
             while(proceduresResultSet.next()){
-                Patient newPatient = getPatient(proceduresResultSet);
+                Patient newPatient = Data.getPatient(proceduresResultSet);
                 patientsList.add(newPatient);
             }
 
@@ -33,19 +33,6 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
         if(patientsList.size() > 0){
             throw new ObjectExistsException("Patient already exists in system!");
         }
-    }
-    static Patient getPatient(ResultSet procedureSet) throws SQLException{
-
-        String name = procedureSet.getString("name");
-        String surname = procedureSet.getString("surname");
-        String gender = procedureSet.getString("gender");
-        String debt = procedureSet.getString("debt");
-        String procedures = procedureSet.getString("procedures");
-        String oib = procedureSet.getString("oib");
-
-
-        return new Patient.Builder().withName(name).withSurname(surname).withGender(gender).withOIB(oib).withDebt(Double.valueOf(debt)).withProcedures(procedures).build();
-
     }
 
 }

@@ -49,6 +49,8 @@ public class Application extends javafx.application.Application {
 }
 
 //TODO billing
+//TODO rooms, patients in rooms
 //TODO main screen statistics
-
+//TODO admin to remove and add doctors
+//TODO procedures fix string everywhere
 

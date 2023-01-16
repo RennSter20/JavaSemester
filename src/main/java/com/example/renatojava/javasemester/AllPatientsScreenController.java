@@ -1,24 +1,27 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.Checker;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class AllPatientsScreenController implements Data {
+public class AllPatientsScreenController implements Data, Checker {
 
     @FXML
     private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn;
@@ -26,6 +29,8 @@ public class AllPatientsScreenController implements Data {
     private TableView<Patient> patientsTable;
     @FXML
     private TextField filterField, nameEditField, surnameEditField, oibEditField;
+    @FXML
+    private Text birthDate;
     @FXML
     private Button editButton, applyButton, removeButton;
 
@@ -79,18 +84,24 @@ public class AllPatientsScreenController implements Data {
     }
 
     public void editButtonAppear(){
-        editButton.setVisible(true);
-        fillEditFields();
+        if(patientsTable.getSelectionModel().getSelectedItem() != null){
+            editButton.setVisible(true);
+            fillEditFields();
+        }
     }
 
     public void fillEditFields(){
+
         Patient selectedPatient = patientsTable.getSelectionModel().getSelectedItem();
-        nameEditField.setText(selectedPatient.getName());
-        surnameEditField.setText(selectedPatient.getSurname());
-        oibEditField.setText(selectedPatient.getOib());
-        nameEditField.setEditable(false);
-        surnameEditField.setEditable(false);
-        oibEditField.setEditable(false);
+        if(selectedPatient != null){
+            nameEditField.setText(selectedPatient.getName());
+            surnameEditField.setText(selectedPatient.getSurname());
+            oibEditField.setText(selectedPatient.getOib());
+            birthDate.setText(String.valueOf(selectedPatient.getDate()));
+            nameEditField.setEditable(false);
+            surnameEditField.setEditable(false);
+            oibEditField.setEditable(false);
+        }
     }
     public void enableEdit(){
         nameEditField.setEditable(true);
@@ -101,21 +112,18 @@ public class AllPatientsScreenController implements Data {
     }
     public void editPatient(){
         Patient selectedPatient = patientsTable.getSelectionModel().getSelectedItem();
-        String newName = nameEditField.getText();
-        String newSurname = surnameEditField.getText();
-        String newOib = oibEditField.getText();
+        if(selectedPatient != null){
+            String newName = nameEditField.getText();
+            String newSurname = surnameEditField.getText();
+            String newOib = oibEditField.getText();
 
-        try{
+            if(!Checker.isNameValid(newName) || !Checker.isNameValid(newSurname) ||!Checker.isOibValid(newOib)) return;
+
             if(Data.confirmEdit()){
-                Data.removePatient(selectedPatient.getOib());
-                Data.addPatient(newName,newSurname,selectedPatient.getGender(), newOib);
+                Data.updatePatient(newName, newSurname, newOib, selectedPatient);
                 clearFields();
                 initialize();
             }
-        } catch (SQLException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
-        } catch (IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
 
@@ -133,5 +141,6 @@ public class AllPatientsScreenController implements Data {
         }
         initialize();
         clearFields();
+        birthDate.setText("");
     }
 }

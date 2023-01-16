@@ -4,13 +4,11 @@ import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,12 +25,15 @@ public final class RegisterPatientScreenController implements CheckObjects {
     private TextField oibField;
     @FXML
     private RadioButton maleRadio, femaleRadio;
+    @FXML
+    private DatePicker datePicker;
 
     @FXML
     public void registerPatient() {
         String name = nameField.getText();
         String surname = surnameField.getText();
         String gender;
+        LocalDate date = null;
 
         if(maleRadio.isSelected()){
             gender = "M";
@@ -57,6 +58,11 @@ public final class RegisterPatientScreenController implements CheckObjects {
         if(oib.length() != 10 || !m.matches()){
             errorMessages.add("OIB must have 10 numeric characters.");
         }
+        if(datePicker.getValue() == null || datePicker.getValue().isAfter(LocalDate.now())){
+            errorMessages.add("Valid date of birth must be selected!");
+        }else{
+            date = datePicker.getValue();
+        }
         if(errorMessages.size() > 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
@@ -74,7 +80,7 @@ public final class RegisterPatientScreenController implements CheckObjects {
                     failure.show();
                 }else{
 
-                    Data.addPatient(name, surname, gender, oib);
+                    Data.addPatient(name, surname, gender, oib, date);
                 }
 
             }catch (SQLException e){
