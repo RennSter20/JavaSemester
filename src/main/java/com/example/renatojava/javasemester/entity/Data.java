@@ -151,8 +151,6 @@ public interface Data {
     }
     static void updatePatient(String newName, String newSurname,String newOib,Patient oldPatient){
         try(Connection conn = connectingToDatabase()) {
-
-            //PreparedStatement stmnt = conn.prepareStatement("UPDATE PATIENTS SET NAME='" + newName + "', SURNAME='" + newSurname + "', OIB='" + newOib + "' WHERE DEBT=" + Integer.valueOf((int) oldPatient.getDebt()));
             PreparedStatement stmnt = conn.prepareStatement("UPDATE PATIENTS SET NAME='" + newName + "', SURNAME='" + newSurname + "' WHERE OIB='" + oldPatient.getOib() + "'");
             stmnt.executeUpdate();
             stmnt = conn.prepareStatement("UPDATE PATIENTS SET OIB='" + newOib + "' WHERE NAME='" + newName + "' AND SURNAME='" + newSurname + "' AND GENDER='" + oldPatient.getGender() + "'");
@@ -237,9 +235,9 @@ public interface Data {
         String procedures = patientToUpdate.getProcedures();
 
         if(procedures.equals("")){
-            procedures = procedure + ",";
+            procedures = procedure;
         }else{
-            procedures = procedures + procedure + ",";
+            procedures = procedures + "," + procedure;
         }
 
         try(Connection conn = connectingToDatabase()) {
@@ -350,7 +348,7 @@ public interface Data {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Are you sure you want to make this edit in database?");
+        alert.setHeaderText("Are you sure you want to make this change in database?");
         alert.getButtonTypes().clear();
         alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
         alert.setContentText("");

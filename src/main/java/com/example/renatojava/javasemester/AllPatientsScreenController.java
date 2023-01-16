@@ -135,7 +135,9 @@ public class AllPatientsScreenController implements Data, Checker {
 
     public void removePatient() {
         try{
-            Data.removePatient(patientsTable.getSelectionModel().getSelectedItem().getOib());
+            if(Data.confirmEdit()){
+                Data.removePatient(patientsTable.getSelectionModel().getSelectedItem().getOib());
+            }
         }catch (SQLException | IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }

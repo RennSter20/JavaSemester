@@ -117,8 +117,6 @@ public class AddProcedureController implements Data {
             return;
         }
 
-        Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
-
         if(!Data.confirmEdit()){
             Alert failure = new Alert(Alert.AlertType.ERROR);
             failure.setTitle("ERROR");
@@ -127,6 +125,7 @@ public class AddProcedureController implements Data {
             failure.show();
             return;
         }else{
+            Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("INFORMATION");
             success.setHeaderText("Success!");

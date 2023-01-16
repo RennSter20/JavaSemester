@@ -29,11 +29,18 @@ public class ChangesController {
     private TableColumn<Patient, String> nameOld, nameNew, surnameOld, surnameNew, oibOld, oibNew, genderOld, genderNew, debtOld, debtNew, proceduresOld, proceduresNew;
 
     public void initialize(){
-        Map<Patient, Patient> patientMap = changer.read();
+        List<Patient> patientList = changer.read();
 
-        List<Patient> oldPatients = new ArrayList<>(patientMap.keySet());
-        List<Patient> newPatients = new ArrayList<>(patientMap.values());
+        List<Patient> oldPatients = new ArrayList<>();
+        List<Patient> newPatients = new ArrayList<>();
 
+        for(int i = 0;i<patientList.size();i+=2){
+            oldPatients.add(patientList.get(i));
+        }
+        for(int i = 1;i<patientList.size();i+=2){
+            newPatients.add(patientList.get(i));
+        }
+        //0 1 2 3 4 5
 
         fillOldTable(oldPatients);
         fillNewTable(newPatients);

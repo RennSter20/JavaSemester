@@ -67,16 +67,14 @@ public class RemoveProcedureController {
                 failure.setContentText("Procedure is not removed from the system!");
                 failure.show();
                 return;
+            }else{
+                Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getOib(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setTitle("INFORMATION");
+                success.setHeaderText("Success!");
+                success.setContentText("Procedure successfully removed from the system!");
+                success.show();
             }
-
-            Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getOib(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
-
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("INFORMATION");
-            success.setHeaderText("Success!");
-            success.setContentText("Procedure successfully removed from the system!");
-            success.show();
-
             procedureListView.setItems(null);
             initialize();
         }

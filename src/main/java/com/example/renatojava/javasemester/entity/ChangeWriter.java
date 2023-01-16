@@ -3,6 +3,8 @@ package com.example.renatojava.javasemester.entity;
 import com.example.renatojava.javasemester.Application;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -22,16 +24,17 @@ public class ChangeWriter<T> {
     }
 
     public void addChange(){
-        Map<T, T> items = new HashMap<>(read());
-        items.put(oldObject, newObject);
+        List<T> items = new ArrayList<>(read());
+
+        items.add(oldObject);
+        items.add(newObject);
         writeAll(items);
     }
-    public void writeAll(Map<T,T> itemsToWrite) {
+    public void writeAll(List<T> itemsToWrite) {
         try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, false))){
 
-            for(T object : itemsToWrite.keySet()){
+            for(T object : itemsToWrite){
                 out.writeObject(object);
-                out.writeObject(itemsToWrite.get(object));
             }
 
             out.close();
@@ -48,6 +51,7 @@ public class ChangeWriter<T> {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
+
             myWriter.write(dtf.format(now) + "\n");
             myWriter.close();
             myWriter.flush();
@@ -58,12 +62,15 @@ public class ChangeWriter<T> {
 
     }
 
-    public Map<T, T> read(){
-        Map<T, T> patientsChanged = new HashMap<>();
+    public List<T> read(){
+        List<T> first = new ArrayList<>();
+        List<T> second = new ArrayList<>();
+        List<T> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PATIENTS));
             while(true){
-                patientsChanged.put((T)input.readObject(), (T) input.readObject());
+                first.add((T)input.readObject());
+                second.add((T)input.readObject());
             }
 
 
@@ -72,8 +79,11 @@ public class ChangeWriter<T> {
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
         }
-
-        return patientsChanged;
+        for(int i = 0;i< first.size();i++){
+            finalList.add(first.get(i));
+            finalList.add(second.get(i));
+        }
+        return finalList;
     }
 
     public List<String> readTime(){
