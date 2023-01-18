@@ -332,6 +332,7 @@ public interface Data {
     }
     static Doctor getDoctor(ResultSet procedureSet) throws SQLException{
 
+        Integer id = procedureSet.getInt("id");
         String gender = procedureSet.getString("gender");
         String name = procedureSet.getString("name");
         String surname = procedureSet.getString("surname");
@@ -339,7 +340,7 @@ public interface Data {
         String title = procedureSet.getString("title");
 
 
-        return new Doctor.Builder().withName(name).withSurname(surname).withGender(gender).withRoom(room).withTitle(title).build();
+        return new Doctor.Builder().withName(name).withSurname(surname).withGender(gender).withRoom(room).withTitle(title).withId(id).build();
 
     }
     static void addDoctor(Doctor doctor){
@@ -361,7 +362,7 @@ public interface Data {
             changesSQL.add("DOCTORS=" + (++currDoctors));
             StatsChanger.changeStats(changesSQL);
 
-            ChangeWriter changeWriter = new ChangeWriter(new Doctor("-", "-", "-", "-", "-"),doctor);
+            ChangeWriter changeWriter = new ChangeWriter(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build(),doctor);
             changeWriter.addChange();
 
             addedSuccessfully("Doctor");
@@ -389,13 +390,44 @@ public interface Data {
         changesSQL.add("DOCTORS=" + (newCountDoctors));
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(doctor, new Doctor("-", "-", "-", "-", "-"));
+        ChangeWriter changeWriter = new ChangeWriter(doctor, new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
         changeWriter.addChange();
 
         removedSuccessfully("Doctor");
 
 
         veza.close();
+    }
+    static void updateDoctor(Integer id, String newName, String newSurname,String newTitle, String newGender, String newRoom, Doctor oldDoctor){
+        try(Connection conn = connectingToDatabase()) {
+            PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET NAME='" + newName + "', SURNAME='" + newSurname + "', TITLE='" + newTitle + "', GENDER='" + newGender + "', ROOM='" + newRoom + "' WHERE ID=" + id);
+            stmnt.executeUpdate();
+
+            ChangeWriter changeWriter = new ChangeWriter(oldDoctor, Data.getCertainDoctor(id));
+            changeWriter.addChange();
+
+        } catch (SQLException | IOException e) {
+            System.out.println(e);
+        }
+    }
+    static Doctor getCertainDoctor(Integer id){
+        Doctor newDoctor = null;
+        try(Connection conn = connectingToDatabase()) {
+
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM DOCTORS WHERE ID='" + id + "'"
+            );
+
+            while(proceduresResultSet.next()){
+                newDoctor = getDoctor(proceduresResultSet);
+            }
+
+        } catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+        return newDoctor;
     }
 
     static Boolean confirmEdit(){
@@ -428,7 +460,6 @@ public interface Data {
         success.setContentText(type + " successfully removed from the system!");
         success.show();
     }
-
 
     static Stats getCurrentStats(){
         try(Connection conn = connectingToDatabase()) {
@@ -467,5 +498,101 @@ public interface Data {
     }
 
 
+    static List<Room> getAllRooms(){
+        List<Room> roomList = new ArrayList<>();
 
+        try(Connection conn = connectingToDatabase()) {
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM HOSPITAL"
+            );
+
+            while(proceduresResultSet.next()){
+                Room newRoom = getRoom(proceduresResultSet);
+                roomList.add(newRoom);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return roomList;
+    }
+    static void addRoom(String roomName, Integer doctorID){
+
+
+        try{
+            CheckObjects.checkIfRoomExists(roomName);
+
+            Connection conn = Data.connectingToDatabase();
+
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO HOSPITAL(ROOM, DOCTORID) VALUES(?,?)");
+            stmnt.setString(1, roomName);
+            stmnt.setInt(2, doctorID);
+            stmnt.executeUpdate();
+
+            ChangeWriter changeWriter = new ChangeWriter(new Room("-", -1, -1), new Room(roomName, doctorID, getCertainRoom(roomName).getRoomID()));
+            changeWriter.addChange();
+
+
+            addedSuccessfully("Room");
+
+            conn.close();
+
+        } catch (IOException | SQLException e) {
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+        }catch (ObjectExistsException e){
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText(e.getMessage());
+            alert.show();
+        }
+    }
+    static void removeRoom(Room oldRoom){
+        try{
+            Connection veza = connectingToDatabase();
+
+            PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ROOM='" + oldRoom.getRoomName() + "'");
+            stmnt.executeUpdate();
+
+            ChangeWriter changeWriter = new ChangeWriter( new Room(oldRoom.getRoomName(), oldRoom.getDoctorID(), oldRoom.getRoomID()), new Room("-", -1, -1));
+            changeWriter.addChange();
+
+            removedSuccessfully("Room");
+
+
+            veza.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    static Room getCertainRoom(String roomName){
+        Room certainRoom = null;
+        try(Connection conn = connectingToDatabase()) {
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM HOSPITAL WHERE ROOM='" + roomName + "'"
+            );
+            while(proceduresResultSet.next()){
+                certainRoom = getRoom(proceduresResultSet);
+            }
+
+        } catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+        return certainRoom;
+    }
+    static Room getRoom(ResultSet procedureSet) throws SQLException{
+
+        Integer id = procedureSet.getInt("id");
+        String roomName = procedureSet.getString("room");
+        Integer doctorID = procedureSet.getInt("doctorid");
+
+        return new Room(roomName, doctorID, id);
+
+    }
 }

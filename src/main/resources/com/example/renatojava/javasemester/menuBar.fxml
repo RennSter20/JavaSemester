@@ -31,13 +31,20 @@
             <Menu mnemonicParsing="false" text="Doctors">
                <items>
                   <MenuItem fx:id="allDoctors" mnemonicParsing="false" onAction="#showAllDoctorsScreen" text="All doctors" />
-                  <MenuItem fx:id="editDoctors" mnemonicParsing="false" onAction="#showEditDoctorsScreen" text="Manage doctors" />
+                  <MenuItem fx:id="addRemoveDoctors" mnemonicParsing="false" onAction="#showAddRemoveDoctorsScreen" text="Add/Remove doctors" />
+                  <MenuItem fx:id="editDoctors" mnemonicParsing="false" onAction="#showEditDoctorsScreen" text="Edit doctors" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Billing">
                <items>
                   <MenuItem fx:id="makeBill" mnemonicParsing="false" text="Make a bill" />
                   <MenuItem fx:id="procedures" mnemonicParsing="false" onAction="#showPricesScreen" text="Procedures" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Rooms">
+               <items>
+                  <MenuItem fx:id="addRemoveRoom" mnemonicParsing="false" onAction="#showAddRemoveRoomScreen" text="Add/Remove room" />
+                  <MenuItem fx:id="editRoom" mnemonicParsing="false" onAction="#showEditRoomScreen" text="Edit room" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Changes">

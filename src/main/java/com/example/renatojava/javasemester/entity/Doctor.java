@@ -2,13 +2,26 @@ package com.example.renatojava.javasemester.entity;
 
 public class Doctor extends Person{
 
+    private Integer id;
     private String room;
     private String title;
 
-    public Doctor(String name, String surname, String gender, String room, String title) {
+    public Doctor(Integer id, String name, String surname, String gender, String room, String title) {
         super(name, surname,gender);
         this.room = room;
         this.title = title;
+        this.id = id;
+    }
+
+    public String getDoctorFullName(){
+        return getName() + " " + getSurname();
+    }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getRoom() {
@@ -29,14 +42,19 @@ public class Doctor extends Person{
 
     public static class Builder {
 
+        private Integer id;
         private String room;
         private String title;
         private String name,surname, gender;
         public Doctor build() {
-            return new Doctor(name, surname,gender,room,title);
+            return new Doctor(id, name, surname,gender,room,title);
         }
         public Builder withName(String name){
             this.name = name;
+            return this;
+        }
+        public Builder withId(Integer id){
+            this.id = id;
             return this;
         }
         public Builder withGender(String gender){

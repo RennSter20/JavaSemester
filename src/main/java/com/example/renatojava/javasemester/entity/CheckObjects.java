@@ -64,4 +64,26 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
         }
     }
 
+    static void checkIfRoomExists(String roomName) throws ObjectExistsException{
+        Room foundRoom = null;
+        try(Connection conn = Data.connectingToDatabase()){
+            Statement sqlStatement = conn.createStatement();
+            ResultSet roomResults = sqlStatement.executeQuery(
+                    "SELECT * FROM HOSPITAL WHERE ROOM='" + roomName + "'"
+            );
+            while(roomResults.next()){
+                foundRoom = Data.getRoom(roomResults);
+            }
+
+            if(foundRoom != null){
+                throw new ObjectExistsException("Another doctor is in this room!");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

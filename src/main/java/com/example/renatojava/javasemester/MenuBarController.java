@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, editDoctors;
+    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, addRemoveDoctors, editDoctors, addRemoveRoom, editRoom;
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
@@ -24,10 +24,16 @@ public class MenuBarController {
             registerPatient.setDisable(true);
             makeBill.setDisable(true);
             allChanges.setDisable(true);
+            addRemoveDoctors.setDisable(true);
             editDoctors.setDisable(true);
+            addRemoveRoom.setDisable(true);
+            editRoom.setDisable(true);
         }else if(currentUser.getRole().equals("Receptionist")){
             allChanges.setDisable(true);
+            addRemoveDoctors.setDisable(true);
             editDoctors.setDisable(true);
+            addRemoveRoom.setDisable(true);
+            editRoom.setDisable(true);
         }
     }
 
@@ -142,6 +148,16 @@ public class MenuBarController {
         }
     }
 
+    public void showAddRemoveDoctorsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("addRemoveDoctors.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
     public void showEditDoctorsScreen(){
         BorderPane root;
         try {
@@ -156,6 +172,26 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(getClass().getResource("changesDoctorsScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+    public void showAddRemoveRoomScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("addRemoveRoom.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+    public void showEditRoomScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("editRoomScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());

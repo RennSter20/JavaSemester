@@ -15,6 +15,10 @@ public class ChangeWriter<T> {
 
     private static final String CHANGE_FILE_DOCTORS = "dat\\changesDoctors.dat";
     private static final String CHANGE_FILE_TIME_DOCTORS = "dat\\changesTimeDoctors.txt";
+
+
+    private static final String CHANGE_FILE_ROOMS = "dat\\changesRooms.dat";
+    private static final String CHANGE_FILE_TIME_ROOMS = "dat\\changesTimeRooms.txt";
     private T oldObject, newObject;
 
     public ChangeWriter(T oldObject, T newObject) {
@@ -31,6 +35,8 @@ public class ChangeWriter<T> {
             items = new ArrayList<>(readPatients());
         }else if(oldObject instanceof Doctor){
             items = new ArrayList<>(readDoctors());
+        }else if(oldObject instanceof Room){
+            items = new ArrayList<>(readRooms());
         }
 
 
@@ -78,6 +84,24 @@ public class ChangeWriter<T> {
                 myWriter.close();
                 myWriter.flush();
 
+            }else if(itemsToWrite.get(0) instanceof Room){
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_ROOMS, false));
+                for(T object : itemsToWrite){
+                    out.writeObject(object);
+                }
+
+                out.close();
+                out.flush();
+
+                FileWriter myWriter = new FileWriter(CHANGE_FILE_TIME_ROOMS, true);
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+
+
+                myWriter.write(dtf.format(now) + "\n");
+                myWriter.close();
+                myWriter.flush();
             }
 
         } catch (FileNotFoundException e) {
@@ -115,7 +139,6 @@ public class ChangeWriter<T> {
         }
         return finalList;
     }
-
     public List<T> readDoctors(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
@@ -153,7 +176,6 @@ public class ChangeWriter<T> {
         }
         return changesTime;
     }
-
     public List<String> readTimeDoctors(){
         List<String> changesTime = new ArrayList<>();
 
@@ -167,4 +189,42 @@ public class ChangeWriter<T> {
         }
         return changesTime;
     }
+
+    public List<T> readRooms(){
+        List<T> first = new ArrayList<>();
+        List<T> second = new ArrayList<>();
+        List<T> finalList = new ArrayList<>();
+        try {
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_ROOMS));
+            while(true){
+                first.add((T)input.readObject());
+                second.add((T)input.readObject());
+            }
+
+
+        } catch (IOException e) {
+            Application.logger.info(e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            Application.logger.info(e.getMessage(), e);
+        }
+        for(int i = 0;i< first.size();i++){
+            finalList.add(first.get(i));
+            finalList.add(second.get(i));
+        }
+        return finalList;
+    }
+    public List<String> readTimeRooms(){
+        List<String> changesTime = new ArrayList<>();
+
+        try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_ROOMS))){
+            while(scanner.hasNextLine()){
+                String time = scanner.nextLine();
+                changesTime.add(time);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return changesTime;
+    }
+
 }

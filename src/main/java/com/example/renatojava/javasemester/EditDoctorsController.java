@@ -1,7 +1,10 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
+import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +13,6 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,13 +20,75 @@ import java.util.stream.Collectors;
 public class EditDoctorsController {
 
     @FXML
-    private TextField nameField, surnameField, titleField, roomField;
-    @FXML
-    private RadioButton maleRadio, femaleRadio;
-    @FXML
     private TableView<Doctor> doctorTable;
+
     @FXML
     private TableColumn<Doctor, String> nameColumn, surnameColumn, genderColumn, titleColumn, roomColumn;
+
+    @FXML
+    private TextField filterField, nameEditField, surnameEditField, titleEditField, roomEditField;
+
+    @FXML
+    private RadioButton maleRadio, femaleRadio;
+
+    public void search(){
+        String filter = filterField.getText();
+
+        Set<Doctor> filteredDoctors;
+
+        try{
+            filteredDoctors = Data.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(filter.toLowerCase()) ||
+                    doctor.getSurname().toLowerCase().contains(filter.toLowerCase()) ||
+                    doctor.getTitle().toLowerCase().contains(filter.toLowerCase()) ||
+                    doctor.getRoom().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toSet());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        fillDoctorTable(filteredDoctors);
+    }
+
+    public void showInfo(){
+        Doctor selectedDoctor;
+        if(doctorTable.getSelectionModel().getSelectedItem() != null){
+            selectedDoctor = doctorTable.getSelectionModel().getSelectedItem();
+            nameEditField.setText(selectedDoctor.getName());
+            surnameEditField.setText(selectedDoctor.getSurname());
+            titleEditField.setText(selectedDoctor.getTitle());
+            roomEditField.setText(selectedDoctor.getRoom());
+            if(selectedDoctor.getGender().equals("M")){
+                maleRadio.setSelected(true);
+            }else{
+                femaleRadio.setSelected(true);
+            }
+        }
+
+    }
+
+    public void apply(){
+
+        try{
+            CheckObjects.checkIfRoomExists(roomEditField.getText());
+        } catch (ObjectExistsException e) {
+            Application.logger.info(e.getMessage(), e);
+            return;
+        }
+
+        if(Data.confirmEdit()){
+            String newGender = "";
+            if(maleRadio.isSelected()){
+                newGender = "M";
+            }else{
+                newGender = "F";
+            }
+            Data.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, roomEditField.getText(), doctorTable.getSelectionModel().getSelectedItem());
+            initialize();
+            Data.addedSuccessfully("Doctor");
+        }
+    }
+
     public void initialize(){
         try{
             fillDoctorTable(Data.getAllDoctors());
@@ -32,46 +96,6 @@ public class EditDoctorsController {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-    public void addDoctor(){
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-        String title = titleField.getText();
-        String room = roomField.getText();
-        String gender = "";
-
-        if(maleRadio.isSelected()){
-            gender = "M";
-        }if(femaleRadio.isSelected()){
-            gender = "F";
-        }
-
-        List<String> errorMessages = new ArrayList<>();
-        if(name.equals("") || surname.equals("") || title.equals("")){
-            errorMessages.add("Name, surname and title field cannot be empty!");
-        }
-        if(gender.equals("")){
-            errorMessages.add("Gender must be selected!");
-        }
-        if(errorMessages.size() > 0){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
-            String error = errorMessages.stream().collect(Collectors.joining("\n"));
-            alert.setHeaderText(error);
-            alert.show();
-            return;
-        }
-
-        if(!Data.confirmEdit()){
-            Alert failure = new Alert(Alert.AlertType.ERROR);
-            failure.setTitle("ERROR");
-            failure.setHeaderText("Failure!");
-            failure.setContentText("Doctor is not added to the system!");
-            failure.show();
-        }else{
-            Data.addDoctor(new Doctor.Builder().withName(name).withSurname(surname).withTitle(title).withRoom(room).withGender(gender).build());
-            initialize();
         }
     }
 
@@ -85,28 +109,7 @@ public class EditDoctorsController {
         roomColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getRoom()));
         genderColumn.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getGender()));
 
-
         doctorTable.setItems(observableList);
-
-    }
-
-    public void removeDoctor(){
-        try{
-            if(!Data.confirmEdit()){
-                Alert failure = new Alert(Alert.AlertType.ERROR);
-                failure.setTitle("ERROR");
-                failure.setHeaderText("Failure!");
-                failure.setContentText("Doctor is not removed from the system!");
-                failure.show();
-            }else{
-                Data.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
-                initialize();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

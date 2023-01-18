@@ -2,27 +2,41 @@ package com.example.renatojava.javasemester.entity;
 
 public class Room {
 
-    private String name;
-    private Doctor doctor;
+    private String roomName;
+    private Integer doctorID;
+    private Integer roomID;
 
-    public Room(String name, Doctor doctor) {
-        this.name = name;
-        this.doctor = doctor;
+    public Room(String roomName, Integer doctorID, Integer roomID) {
+        this.roomName = roomName;
+        this.doctorID = doctorID;
+        this.roomID = roomID;
     }
 
-    public String getName() {
-        return name;
+    public void setDoctorID(Integer doctorID) {
+        this.doctorID = doctorID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Integer getRoomID() {
+        return roomID;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public void setRoomID(Integer roomID) {
+        this.roomID = roomID;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public Integer getDoctorID() {
+        return doctorID;
+    }
+
+    public void setDoctor(Integer doctorID) {
+        this.doctorID = doctorID;
     }
 }
