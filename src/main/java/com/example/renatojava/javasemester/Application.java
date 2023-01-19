@@ -53,5 +53,8 @@ public class Application extends javafx.application.Application {
 //TODO rooms, patients in rooms
 //TODO add errors if doesn't add to database
 //TODO threads
+//TODO room changes
 
+//TODO fix exceptions everywhere
 //TODO main screen stats
+//TODO calendar

@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, addRemoveDoctors, editDoctors, addRemoveRoom, editRoom;
+    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, addRemoveDoctors, editDoctors, addRemoveRoom;
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
@@ -27,13 +27,11 @@ public class MenuBarController {
             addRemoveDoctors.setDisable(true);
             editDoctors.setDisable(true);
             addRemoveRoom.setDisable(true);
-            editRoom.setDisable(true);
         }else if(currentUser.getRole().equals("Receptionist")){
             allChanges.setDisable(true);
             addRemoveDoctors.setDisable(true);
             editDoctors.setDisable(true);
             addRemoveRoom.setDisable(true);
-            editRoom.setDisable(true);
         }
     }
 
@@ -182,16 +180,6 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(getClass().getResource("addRemoveRoom.fxml"));
-            Application.setMainPage(root);
-        }catch (IOException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
-        }
-    }
-
-    public void showEditRoomScreen(){
-        BorderPane root;
-        try {
-            root = FXMLLoader.load(getClass().getResource("editRoomScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());

@@ -1,4 +1,4 @@
-package com.example.renatojava.javasemester;
+package com.example.renatojava.javasemester.doctorControllers;
 
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;

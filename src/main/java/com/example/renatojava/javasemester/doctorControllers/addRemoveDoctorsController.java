@@ -1,4 +1,4 @@
-package com.example.renatojava.javasemester;
+package com.example.renatojava.javasemester.doctorControllers;
 
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class addRemoveDoctorsController {
 
     @FXML
-    private TextField nameField, surnameField, titleField, roomField;
+    private TextField nameField, surnameField, titleField;
     @FXML
     private RadioButton maleRadio, femaleRadio;
     @FXML
@@ -38,7 +38,7 @@ public class addRemoveDoctorsController {
         String name = nameField.getText();
         String surname = surnameField.getText();
         String title = titleField.getText();
-        String room = roomField.getText();
+        String room = "Not yet set";
         String gender = "";
 
         if(maleRadio.isSelected()){
@@ -100,6 +100,7 @@ public class addRemoveDoctorsController {
                 failure.setContentText("Doctor is not removed from the system!");
                 failure.show();
             }else{
+                Data.unlinkDoctorFromRoom(doctorTable.getSelectionModel().getSelectedItem().getRoom());
                 Data.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
                 initialize();
             }
@@ -114,7 +115,6 @@ public class addRemoveDoctorsController {
         nameField.setText("");
         surnameField.setText("");
         titleField.setText("");
-        roomField.setText("");
         maleRadio.setSelected(false);
         femaleRadio.setSelected(false);
     }

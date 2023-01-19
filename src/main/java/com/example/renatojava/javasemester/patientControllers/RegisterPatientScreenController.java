@@ -1,5 +1,6 @@
-package com.example.renatojava.javasemester;
+package com.example.renatojava.javasemester.patientControllers;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;

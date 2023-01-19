@@ -398,9 +398,9 @@ public interface Data {
 
         veza.close();
     }
-    static void updateDoctor(Integer id, String newName, String newSurname,String newTitle, String newGender, String newRoom, Doctor oldDoctor){
+    static void updateDoctor(Integer id, String newName, String newSurname,String newTitle, String newGender, Doctor oldDoctor){
         try(Connection conn = connectingToDatabase()) {
-            PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET NAME='" + newName + "', SURNAME='" + newSurname + "', TITLE='" + newTitle + "', GENDER='" + newGender + "', ROOM='" + newRoom + "' WHERE ID=" + id);
+            PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET NAME='" + newName + "', SURNAME='" + newSurname + "', TITLE='" + newTitle + "', GENDER='" + newGender + "' WHERE ID=" + id);
             stmnt.executeUpdate();
 
             ChangeWriter changeWriter = new ChangeWriter(oldDoctor, Data.getCertainDoctor(id));
@@ -417,7 +417,7 @@ public interface Data {
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM DOCTORS WHERE ID='" + id + "'"
+                    "SELECT * FROM DOCTORS WHERE ID=" + id
             );
 
             while(proceduresResultSet.next()){
@@ -520,7 +520,6 @@ public interface Data {
     }
     static void addRoom(String roomName, Integer doctorID){
 
-
         try{
             CheckObjects.checkIfRoomExists(roomName);
 
@@ -534,6 +533,7 @@ public interface Data {
             ChangeWriter changeWriter = new ChangeWriter(new Room("-", -1, -1), new Room(roomName, doctorID, getCertainRoom(roomName).getRoomID()));
             changeWriter.addChange();
 
+            linkDoctorWithRoom(getCertainDoctor(doctorID), doctorID, roomName);
 
             addedSuccessfully("Room");
 
@@ -594,5 +594,65 @@ public interface Data {
 
         return new Room(roomName, doctorID, id);
 
+    }
+    static void linkDoctorWithRoom(Doctor oldDoctor, Integer doctorID, String roomName){
+        try(Connection conn = connectingToDatabase()) {
+            PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + roomName + "' WHERE ID=" + doctorID );
+            stmnt.executeUpdate();
+
+            ChangeWriter changeWriter = new ChangeWriter(oldDoctor, Data.getCertainDoctor(doctorID));
+            changeWriter.addChange();
+
+        } catch (SQLException | IOException e) {
+            System.out.println(e);
+        }
+    }
+    static void unlinkRoomFromDoctor(Room roomToRemove){
+        try(Connection conn = connectingToDatabase()){
+            Optional<Doctor> oldDoctor = getAllDoctors().stream().filter(doctor -> doctor.getRoom().equals(roomToRemove.getRoomName())).findFirst();
+            if(oldDoctor.isPresent()){
+
+                PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + roomToRemove.getDoctorID());
+                stmnt.executeUpdate();
+
+                ChangeWriter changeWriter = new ChangeWriter(oldDoctor.get(), Data.getCertainDoctor(roomToRemove.getDoctorID()));
+                changeWriter.addChange();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    static void unlinkDoctorFromRoom(String roomName){
+        try(Connection conn = connectingToDatabase()){
+            Optional<Room> oldRoom = getAllRooms().stream().filter(room -> room.getRoomName().equals(roomName)).findFirst();
+            if(oldRoom.isPresent()){
+
+                PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID= -1 WHERE ROOM='" + roomName + "'");
+                stmnt.executeUpdate();
+
+                ChangeWriter changeWriter = new ChangeWriter(oldRoom.get(), getCertainRoom(roomName));
+                changeWriter.addChange();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    static Boolean hasDoctorRoom(Integer id){
+        Doctor doctorToCheck = null;
+        try(Connection conn = connectingToDatabase()){
+            doctorToCheck = getCertainDoctor(id);
+
+        }catch (SQLException | IOException e){
+            System.out.println(e);
+        }
+        if(doctorToCheck.getRoom().equals("Not yet set")){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

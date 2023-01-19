@@ -1,4 +1,4 @@
-package com.example.renatojava.javasemester;
+package com.example.renatojava.javasemester.doctorControllers;
 
 import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
@@ -26,7 +26,7 @@ public class EditDoctorsController {
     private TableColumn<Doctor, String> nameColumn, surnameColumn, genderColumn, titleColumn, roomColumn;
 
     @FXML
-    private TextField filterField, nameEditField, surnameEditField, titleEditField, roomEditField;
+    private TextField filterField, nameEditField, surnameEditField, titleEditField;
 
     @FXML
     private RadioButton maleRadio, femaleRadio;
@@ -57,7 +57,6 @@ public class EditDoctorsController {
             nameEditField.setText(selectedDoctor.getName());
             surnameEditField.setText(selectedDoctor.getSurname());
             titleEditField.setText(selectedDoctor.getTitle());
-            roomEditField.setText(selectedDoctor.getRoom());
             if(selectedDoctor.getGender().equals("M")){
                 maleRadio.setSelected(true);
             }else{
@@ -69,13 +68,6 @@ public class EditDoctorsController {
 
     public void apply(){
 
-        try{
-            CheckObjects.checkIfRoomExists(roomEditField.getText());
-        } catch (ObjectExistsException e) {
-            Application.logger.info(e.getMessage(), e);
-            return;
-        }
-
         if(Data.confirmEdit()){
             String newGender = "";
             if(maleRadio.isSelected()){
@@ -83,7 +75,7 @@ public class EditDoctorsController {
             }else{
                 newGender = "F";
             }
-            Data.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, roomEditField.getText(), doctorTable.getSelectionModel().getSelectedItem());
+            Data.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, doctorTable.getSelectionModel().getSelectedItem());
             initialize();
             Data.addedSuccessfully("Doctor");
         }

@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.entity;
 
-import com.example.renatojava.javasemester.RegisterPatientScreenController;
+import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 
 import java.io.IOException;
@@ -37,18 +37,18 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
     }
 
     static void checkIfDoctorExists(Doctor doctor) throws ObjectExistsException{
-        List<Doctor> patientsList = new ArrayList<>();
+        List<Doctor> doctorsList = new ArrayList<>();
         try {
             Connection conn = Data.connectingToDatabase();
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM DOCTORS WHERE ROOM='" + doctor.getRoom() + "'"
+                    "SELECT * FROM DOCTORS WHERE NAME='" + doctor.getName() + "' AND SURNAME='" + doctor.getSurname() + "'"
             );
 
             while(proceduresResultSet.next()){
                 Doctor newDoctor = Data.getDoctor(proceduresResultSet);
-                patientsList.add(newDoctor);
+                doctorsList.add(newDoctor);
             }
 
             conn.close();
@@ -59,7 +59,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             throw new RuntimeException(e);
         }
 
-        if(patientsList.size() > 0){
+        if(doctorsList.size() > 0){
             throw new ObjectExistsException("Doctor already exists in system!");
         }
     }
@@ -75,7 +75,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
                 foundRoom = Data.getRoom(roomResults);
             }
 
-            if(foundRoom != null){
+            if(foundRoom != null && foundRoom.getDoctorID() != -1){
                 throw new ObjectExistsException("Another doctor is in this room!");
             }
 
