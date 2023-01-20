@@ -57,7 +57,7 @@
                </GridPane.margin>
             </Button>
             <ListView fx:id="listView" prefHeight="267.0" prefWidth="367.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add a checkup" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add a procedure" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="70.0" />
                </GridPane.margin>
@@ -66,6 +66,9 @@
                </font>
             </Text>
          </children>
+         <BorderPane.margin>
+            <Insets top="30.0" />
+         </BorderPane.margin>
       </GridPane>
    </center>
 </BorderPane>

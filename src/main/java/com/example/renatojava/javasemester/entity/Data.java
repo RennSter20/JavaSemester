@@ -741,7 +741,25 @@ public interface Data {
         Integer patientID = set.getInt("PATIENT_ID");
         LocalDateTime date = set.getTimestamp("DATE").toLocalDateTime();
         String roomType = set.getString("ROOM_TYPE");
+        Integer id = set.getInt("ID");
 
-        return new ActiveCheckup(date, patientID, procedureID, new PatientRoom(roomType));
+        return new ActiveCheckup(id,date, patientID, procedureID, new PatientRoom(roomType));
+    }
+
+    static void removeCheckup(Integer id){
+        try{
+            Connection veza = connectingToDatabase();
+
+            PreparedStatement stmnt = veza.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE ID=" + id);
+            stmnt.executeUpdate();
+
+            //POSTOJI SUCCESSFULLY
+
+            veza.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

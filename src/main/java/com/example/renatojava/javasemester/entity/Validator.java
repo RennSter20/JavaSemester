@@ -5,7 +5,7 @@ import javafx.scene.control.Alert;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface Checker {
+public interface Validator {
 
     static Boolean isOibValid(String oib){
         String regex = "^[0-9]+$";

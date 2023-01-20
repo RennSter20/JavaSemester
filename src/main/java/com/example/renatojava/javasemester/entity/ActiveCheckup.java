@@ -4,16 +4,27 @@ import java.time.LocalDateTime;
 
 public class ActiveCheckup<T extends PatientRoom> {
 
+    private Integer id;
     private LocalDateTime dateOfCheckup;
     private Integer patientID;
     private Integer procedureID;
     private T room;
 
-    public ActiveCheckup(LocalDateTime dateOfCheckup, Integer patientID, Integer procedureID, T room) {
+    public ActiveCheckup(Integer id, LocalDateTime dateOfCheckup, Integer patientID, Integer procedureID, T room) {
         this.dateOfCheckup = dateOfCheckup;
         this.patientID = patientID;
         this.procedureID = procedureID;
         this.room = room;
+        this.id = id;
+    }
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateOfCheckup() {

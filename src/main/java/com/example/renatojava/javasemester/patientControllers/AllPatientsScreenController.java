@@ -1,9 +1,10 @@
 package com.example.renatojava.javasemester.patientControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.Checker;
+import com.example.renatojava.javasemester.entity.Validator;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,13 +17,10 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class AllPatientsScreenController implements Data, Checker {
+public class AllPatientsScreenController implements Data, Validator {
 
     @FXML
     private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn;
@@ -98,7 +96,7 @@ public class AllPatientsScreenController implements Data, Checker {
             nameEditField.setText(selectedPatient.getName());
             surnameEditField.setText(selectedPatient.getSurname());
             oibEditField.setText(selectedPatient.getOib());
-            birthDate.setText(String.valueOf(selectedPatient.getDate()));
+            birthDate.setText(new DateFormatter(String.valueOf(selectedPatient.getDate())).getDateFormatted());
             nameEditField.setEditable(false);
             surnameEditField.setEditable(false);
             oibEditField.setEditable(false);
@@ -118,7 +116,7 @@ public class AllPatientsScreenController implements Data, Checker {
             String newSurname = surnameEditField.getText();
             String newOib = oibEditField.getText();
 
-            if(!Checker.isNameValid(newName) || !Checker.isNameValid(newSurname) ||!Checker.isOibValid(newOib)) return;
+            if(!Validator.isNameValid(newName) || !Validator.isNameValid(newSurname) ||!Validator.isOibValid(newOib)) return;
 
             if(Data.confirmEdit()){
                 Data.updatePatient(newName, newSurname, newOib, selectedPatient);

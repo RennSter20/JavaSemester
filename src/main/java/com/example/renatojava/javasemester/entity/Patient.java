@@ -105,4 +105,8 @@ public class Patient extends Person {
     public void setOib(String oib) {
         this.oib = oib;
     }
+
+    public String getFullName(){
+        return getName() + " " + getSurname();
+    }
 }
