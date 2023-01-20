@@ -1,19 +1,16 @@
 package com.example.renatojava.javasemester.entity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Patient extends Person {
 
-    private String id;
+    private Integer id;
     private double debt;
     private String procedures;
     private String oib;
     private LocalDate date;
 
-    public Patient(String id, String name, String surname, String gender,double debt, String procedures, String oib, LocalDate date) {
+    public Patient(Integer id, String name, String surname, String gender,double debt, String procedures, String oib, LocalDate date) {
         super(name, surname, gender);
         this.id = id;
         this.debt = debt;
@@ -23,7 +20,7 @@ public class Patient extends Person {
     }
 
     public static class Builder{
-        private String id;
+        private Integer id;
         private String name;
         private String surname;
         private String gender;
@@ -35,7 +32,7 @@ public class Patient extends Person {
         public Patient build(){
             return new Patient(id, name, surname, gender,debt, procedures, oib, date);
         }
-        public Builder withId(String id){
+        public Builder withId(Integer id){
             this.id = id;
             return this;
         }
@@ -93,11 +90,11 @@ public class Patient extends Person {
         this.procedures = procedures;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

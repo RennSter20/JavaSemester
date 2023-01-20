@@ -100,15 +100,19 @@ public class ChangesPatientsController {
     }
 
     public void showTimeOld(){
-        selectedPatient = oldTable.getSelectionModel().getSelectedIndex();
-        newTable.getSelectionModel().select(oldTable.getSelectionModel().getFocusedIndex());
-        changeTimeText.setText(changesTime.get(selectedPatient));
+        if(oldTable.getSelectionModel().getSelectedItem() != null){
+            selectedPatient = oldTable.getSelectionModel().getSelectedIndex();
+            newTable.getSelectionModel().select(oldTable.getSelectionModel().getFocusedIndex());
+            changeTimeText.setText(changesTime.get(selectedPatient));
+        }
     }
 
     public void showTimeNew(){
-        selectedPatient = newTable.getSelectionModel().getSelectedIndex();
-        oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
-        changeTimeText.setText(changesTime.get(selectedPatient));
+        if(newTable.getSelectionModel().getSelectedItem() != null){
+            selectedPatient = newTable.getSelectionModel().getSelectedIndex();
+            oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
+            changeTimeText.setText(changesTime.get(selectedPatient));
+        }
     }
 
 }

@@ -3,14 +3,17 @@ package com.example.renatojava.javasemester.entity;
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.RoomChecker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
 import java.sql.Date;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public interface Data {
@@ -55,6 +58,7 @@ public interface Data {
     }
     static Patient getPatient(ResultSet procedureSet) throws SQLException{
 
+        Integer id = procedureSet.getInt("id");
         String name = procedureSet.getString("name");
         String surname = procedureSet.getString("surname");
         String gender = procedureSet.getString("gender");
@@ -64,7 +68,7 @@ public interface Data {
         LocalDate date = procedureSet.getTimestamp("date").toLocalDateTime().toLocalDate();
 
 
-        Patient patientToAdd = new Patient.Builder().withName(name).withSurname(surname).withGender(gender).withOIB(oib).withDebt(debt).withProcedures(procedures).withDate(date).build();
+        Patient patientToAdd = new Patient.Builder().withId(id).withName(name).withSurname(surname).withGender(gender).withOIB(oib).withDebt(debt).withProcedures(procedures).withDate(date).build();
 
         return patientToAdd;
 
@@ -101,13 +105,13 @@ public interface Data {
         changesSQL.add("PATIENTS=" + (++currPatients));
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(new Patient("-", "-", "-", "-", 0, "-", "-", null), new Patient(null, name, surname, gender, 0.0, "", oib, date));
+        ChangeWriter changeWriter = new ChangeWriter(new Patient(-1, "-", "-", "-", 0, "-", "-", null), new Patient(Data.getPatientWithOib(oib).getId(), name, surname, gender, 0.0, "", oib, date));
         changeWriter.addChange();
         addedSuccessfully("Patient");
 
         veza.close();
     }
-    static Patient getCertainPatient(String oib){
+    static Patient getPatientWithOib(String oib){
         Patient newPatient = null;
         try(Connection conn = connectingToDatabase()) {
 
@@ -126,10 +130,30 @@ public interface Data {
         }
         return newPatient;
     }
+
+    static Patient getPatientWithID(Integer id){
+        Patient newPatient = null;
+        try(Connection conn = connectingToDatabase()) {
+
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM PATIENTS WHERE ID='" + id + "'"
+            );
+
+            while(proceduresResultSet.next()){
+                newPatient = getPatient(proceduresResultSet);
+            }
+
+        } catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+        return newPatient;
+    }
     static void removePatient(String oib) throws SQLException, IOException {
 
         Connection veza = connectingToDatabase();
-        Patient patientToRemove = getCertainPatient(oib);
+        Patient patientToRemove = getPatientWithOib(oib);
 
         PreparedStatement stmnt = veza.prepareStatement("DELETE FROM PATIENTS WHERE OIB='" + oib + "'");
         stmnt.executeUpdate();
@@ -142,7 +166,7 @@ public interface Data {
         changesSQL.add("DEBT=" + (currentDebt - patientToRemove.getDebt()) + "");
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), oib, patientToRemove.getDate()), new Patient("-", "-", "-", "-", 0, "-", "-", null));
+        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), oib, patientToRemove.getDate()), new Patient(-1, "-", "-", "-", 0, "-", "-", null));
         changeWriter.addChange();
 
         veza.close();
@@ -155,7 +179,7 @@ public interface Data {
             stmnt = conn.prepareStatement("UPDATE PATIENTS SET OIB='" + newOib + "' WHERE NAME='" + newName + "' AND SURNAME='" + newSurname + "' AND GENDER='" + oldPatient.getGender() + "'");
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(oldPatient, Data.getCertainPatient(newOib));
+            ChangeWriter changeWriter = new ChangeWriter(oldPatient, Data.getPatientWithOib(newOib));
             changeWriter.addChange();
 
         } catch (SQLException | IOException e) {
@@ -187,11 +211,12 @@ public interface Data {
     }
     static Procedure getProcedure(ResultSet procedureSet) throws SQLException{
 
+        Integer id = procedureSet.getInt("id");
         String description = procedureSet.getString("description");
         Double price = procedureSet.getDouble("price");
 
 
-        return new Procedure(description, price);
+        return new Procedure(id, description, price);
 
     }
     static Procedure getProcedureFromDescription(String description){
@@ -199,6 +224,18 @@ public interface Data {
         try{
             List<Procedure> allProcedures = getAllProcedures();
             procedure = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(description)).findAny().orElse(null);
+        }catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }catch (NoProceduresException e){
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+        }
+        return procedure;
+    }
+    static Procedure getProcedureFromId(Integer id){
+        Procedure procedure = null;
+        try{
+            List<Procedure> allProcedures = getAllProcedures();
+            procedure = allProcedures.stream().filter(procedure1 -> procedure1.id().equals(id)).findAny().orElse(null);
         }catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }catch (NoProceduresException e){
@@ -230,7 +267,7 @@ public interface Data {
     }
     static void addProcedureToPatient(String oib, String procedure){
 
-        Patient patientToUpdate = getCertainPatient(oib);
+        Patient patientToUpdate = getPatientWithOib(oib);
         String procedures = patientToUpdate.getProcedures();
 
         if(procedures.equals("")){
@@ -241,7 +278,7 @@ public interface Data {
 
         try(Connection conn = connectingToDatabase()) {
 
-            Patient oldPatient = getCertainPatient(oib);
+            Patient oldPatient = getPatientWithOib(oib);
 
             PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + procedures + "'" + "WHERE OIB='" + oib + "'");
             updateProcedures.executeUpdate();
@@ -261,7 +298,7 @@ public interface Data {
             changesSQL.add("DEBT=" + (currentStats.debt() + debtToAdd) + "");
             StatsChanger.changeStats(changesSQL);
 
-            Patient newPatient = getCertainPatient(oib);
+            Patient newPatient = getPatientWithOib(oib);
             ChangeWriter changeWriter = new ChangeWriter(oldPatient,newPatient);
             changeWriter.addChange();
 
@@ -273,7 +310,7 @@ public interface Data {
         }
     }
     static void removeProcedure(String procedureDescription, String oib, String currentProcedures){
-        Patient patient = getCertainPatient(oib);
+        Patient patient = getPatientWithOib(oib);
         Procedure procedure = getProcedureFromDescription(procedureDescription);
 
         List<String> currentProceduresSplitted = List.of(currentProcedures.split(","));;
@@ -302,7 +339,7 @@ public interface Data {
             changesSQL.add("DEBT=" + (currentStats.debt() - procedure.price()) + "");
             StatsChanger.changeStats(changesSQL);
 
-            Patient newPatient = getCertainPatient(oib);
+            Patient newPatient = getPatientWithOib(oib);
             ChangeWriter changeWriter = new ChangeWriter(patient,newPatient);
             changeWriter.addChange();
 
@@ -411,7 +448,7 @@ public interface Data {
         }
     }
     static Doctor getCertainDoctor(Integer id){
-        Doctor newDoctor = null;
+        Doctor newDoctor = new Doctor.Builder().withName("-1").withSurname("").build();
         try(Connection conn = connectingToDatabase()) {
 
 
@@ -654,5 +691,57 @@ public interface Data {
         }else{
             return true;
         }
+    }
+
+
+
+    static void addNewActiveCheckup(Integer procedureID, Integer patientID, LocalDateTime time, PatientRoom room){
+        try{
+            Connection conn = Data.connectingToDatabase();
+
+            String roomType = new RoomChecker(room).roomType();
+
+            String dateTimeString = time.toString();
+            String fullDateTime = dateTimeString.substring(8,10) + "-" + dateTimeString.substring(5,7) + "-" + dateTimeString.substring(0,4) + " " + dateTimeString.substring(11,13) + ":" + dateTimeString.substring(14,16);
+
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO ACTIVE_CHECKUPS(PROCEDURE_ID, PATIENT_ID, DATE, ROOM_TYPE) VALUES (" + procedureID + ", " + patientID + ",parsedatetime('" + fullDateTime + "', 'dd-MM-yyyy HH:mm'), '" + roomType + "');");
+            stmnt.executeUpdate();
+
+            addedSuccessfully("Checkup");
+
+            conn.close();
+
+        } catch (IOException | SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    static List<ActiveCheckup> getAllActiveCheckups(){
+        List<ActiveCheckup> activeCheckupList = new ArrayList<>();
+
+        try(Connection conn = connectingToDatabase()) {
+            Statement sqlStatement = conn.createStatement();
+            ResultSet activeCheckupsResults = sqlStatement.executeQuery(
+                    "SELECT * FROM ACTIVE_CHECKUPS"
+            );
+
+            while(activeCheckupsResults.next()){
+                ActiveCheckup checkup = getCheckup(activeCheckupsResults);
+                activeCheckupList.add(checkup);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return activeCheckupList;
+    }
+    static ActiveCheckup getCheckup(ResultSet set) throws SQLException {
+        Integer procedureID = set.getInt("PROCEDURE_ID");
+        Integer patientID = set.getInt("PATIENT_ID");
+        LocalDateTime date = set.getTimestamp("DATE").toLocalDateTime();
+        String roomType = set.getString("ROOM_TYPE");
+
+        return new ActiveCheckup(date, patientID, procedureID, new PatientRoom(roomType));
     }
 }

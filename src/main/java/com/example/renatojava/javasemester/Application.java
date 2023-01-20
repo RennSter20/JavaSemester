@@ -5,10 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class Application extends javafx.application.Application {
 
@@ -53,7 +53,7 @@ public class Application extends javafx.application.Application {
 //TODO rooms, patients in rooms
 //TODO add errors if doesn't add to database
 //TODO threads
-//TODO room changes
+//TODO admin procedures add
 
 //TODO fix exceptions everywhere
 //TODO main screen stats

@@ -31,7 +31,7 @@
             <TableView fx:id="roomTable" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                <columns>
                   <TableColumn fx:id="roomNameColumn" prefWidth="317.0" style="-fx-alignment: CENTER;" text="Room name" />
-                  <TableColumn fx:id="doctorIDColumn" prefWidth="322.0" style="-fx-alignment: CENTER;" text="Doctor ID" />
+                  <TableColumn fx:id="doctorColumn" prefWidth="322.0" style="-fx-alignment: CENTER;" text="Doctor" />
                </columns>
             </TableView>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Remove room:" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
@@ -91,7 +91,7 @@
                   <Insets bottom="5.0" />
                </GridPane.margin>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="When Doctor ID is set to -1, it means that the new doctor needs to be assigned to the room." GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="When Doctor value is set to -1, it means that the new doctor needs to be assigned to the room." GridPane.halignment="CENTER" GridPane.rowIndex="2" />
          </children>
          <BorderPane.margin>
             <Insets top="50.0" />

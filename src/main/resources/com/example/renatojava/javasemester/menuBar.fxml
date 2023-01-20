@@ -22,6 +22,12 @@
                   <MenuItem fx:id="removeCheckup" mnemonicParsing="false" onAction="#showRemoveProcedureScreen" text="Remove procedure" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Checkups">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showAddCheckupScreen" text="Add checkup" />
+                  <MenuItem mnemonicParsing="false" onAction="#showAllCheckupsScreen" text="All checkups" />
+               </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Patients">
             <items>
               <MenuItem fx:id="registerPatient" mnemonicParsing="false" onAction="#showRegisterPatientScreen" text="Register a patient" />
@@ -38,7 +44,7 @@
             <Menu mnemonicParsing="false" text="Billing">
                <items>
                   <MenuItem fx:id="makeBill" mnemonicParsing="false" text="Make a bill" />
-                  <MenuItem fx:id="procedures" mnemonicParsing="false" onAction="#showPricesScreen" text="Procedures" />
+                  <MenuItem fx:id="procedures" mnemonicParsing="false" onAction="#showPricesScreen" text="Procedure price" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Rooms">

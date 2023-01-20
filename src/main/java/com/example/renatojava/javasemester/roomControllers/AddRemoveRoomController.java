@@ -22,7 +22,7 @@ public class AddRemoveRoomController {
     private TableView<Room> roomTable;
 
     @FXML
-    private TableColumn<Room, String> roomNameColumn, doctorIDColumn;
+    private TableColumn<Room, String> roomNameColumn, doctorColumn;
 
     @FXML
     private TextField nameField;
@@ -52,12 +52,9 @@ public class AddRemoveRoomController {
 
         ObservableList<Room> observableList = FXCollections.observableArrayList(allRooms);
 
-        roomNameColumn.setCellValueFactory(room -> {
-            return new SimpleStringProperty(room.getValue().getRoomName());
-        });
-        doctorIDColumn.setCellValueFactory(room -> {
-            return new SimpleStringProperty(String.valueOf(room.getValue().getDoctorID()));
-        });
+        roomNameColumn.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
+
+        doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(Data.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
 
         roomTable.setItems(observableList);
     }
@@ -86,10 +83,10 @@ public class AddRemoveRoomController {
         }else
         if(doctorChoice.getSelectionModel().getSelectedItem() == null){
             errorMessages.add("Please select a doctor from dropdown list!");
-        }
-        if(Data.hasDoctorRoom(allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().equals(doctorChoice.getSelectionModel().getSelectedItem())).toList().get(0).getId())){
+        }else if(Data.hasDoctorRoom(allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().equals(doctorChoice.getSelectionModel().getSelectedItem())).toList().get(0).getId())){
             errorMessages.add("Doctor already has a room!");
         }
+
         if(errorMessages.size() > 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");

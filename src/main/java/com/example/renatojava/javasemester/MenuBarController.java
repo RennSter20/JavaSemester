@@ -14,7 +14,7 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, addRemoveDoctors, editDoctors, addRemoveRoom;
+    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, makeBill, procedures, allChanges, addRemoveDoctors, editDoctors, addRemoveRoom, activeProcedures;
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
@@ -97,7 +97,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("addCheckup.fxml"));
+                    getClass().getResource("addProcedures.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
@@ -185,4 +185,26 @@ public class MenuBarController {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
     }
+
+    public void showAddCheckupScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("addCheckup.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+    public void showAllCheckupsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("listOfActiveCheckups.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
+
 }

@@ -1,10 +1,7 @@
 package com.example.renatojava.javasemester.doctorControllers;
 
-import com.example.renatojava.javasemester.entity.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
-import com.example.renatojava.javasemester.entity.Patient;
-import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +10,6 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

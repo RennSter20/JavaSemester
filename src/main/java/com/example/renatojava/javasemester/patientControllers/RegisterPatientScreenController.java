@@ -1,9 +1,8 @@
 package com.example.renatojava.javasemester.patientControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.CheckObjects;
+import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
-import com.example.renatojava.javasemester.entity.Patient;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 

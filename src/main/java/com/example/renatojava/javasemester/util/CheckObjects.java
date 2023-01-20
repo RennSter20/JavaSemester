@@ -1,10 +1,17 @@
-package com.example.renatojava.javasemester.entity;
+package com.example.renatojava.javasemester.util;
 
-import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
+import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.entity.Doctor;
+import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.entity.Room;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,12 +84,23 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
 
             if(foundRoom != null && foundRoom.getDoctorID() != -1){
                 throw new ObjectExistsException("Another doctor is in this room!");
+            }else if(foundRoom != null && foundRoom.getDoctorID() == -1){
+                Data.removeRoom(foundRoom);
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    static boolean isValidTime(String input, DateTimeFormatter format) {
+        try {
+            LocalDate time = LocalDate.parse(input, format);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
         }
     }
 

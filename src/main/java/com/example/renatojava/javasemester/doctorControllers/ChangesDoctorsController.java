@@ -45,15 +45,19 @@ public class ChangesDoctorsController {
         fillNewTable(newDoctors);
     }
     public void showTimeOld(){
-        selectedDoctor = oldTable.getSelectionModel().getSelectedIndex();
-        newTable.getSelectionModel().select(oldTable.getSelectionModel().getFocusedIndex());
-        changeTimeText.setText(changesTime.get(selectedDoctor));
+        if(oldTable.getSelectionModel().getSelectedItem() != null){
+            selectedDoctor = oldTable.getSelectionModel().getSelectedIndex();
+            newTable.getSelectionModel().select(oldTable.getSelectionModel().getFocusedIndex());
+            changeTimeText.setText(changesTime.get(selectedDoctor));
+        }
     }
 
     public void showTimeNew(){
-        selectedDoctor = newTable.getSelectionModel().getSelectedIndex();
-        oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
-        changeTimeText.setText(changesTime.get(selectedDoctor));
+        if(newTable.getSelectionModel().getSelectedItem() != null){
+            selectedDoctor = newTable.getSelectionModel().getSelectedIndex();
+            oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
+            changeTimeText.setText(changesTime.get(selectedDoctor));
+        }
     }
 
     public void fillOldTable(List<Doctor> oldDoctors){

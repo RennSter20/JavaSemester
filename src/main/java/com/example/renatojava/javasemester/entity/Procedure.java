@@ -1,9 +1,10 @@
 package com.example.renatojava.javasemester.entity;
 
-public record Procedure(String description, Double price) {
-    public Procedure(String description, Double price) {
+public record Procedure(Integer id, String description, Double price) {
+    public Procedure(Integer id, String description, Double price) {
         this.description = description;
         this.price = price;
+        this.id = id;
     }
 
     @Override
@@ -14,5 +15,10 @@ public record Procedure(String description, Double price) {
     @Override
     public Double price() {
         return price;
+    }
+
+    @Override
+    public Integer id() {
+        return id;
     }
 }
