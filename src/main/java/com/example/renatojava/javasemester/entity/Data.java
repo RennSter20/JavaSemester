@@ -4,6 +4,7 @@ import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.RoomChecker;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -150,12 +151,12 @@ public interface Data {
         }
         return newPatient;
     }
-    static void removePatient(String oib) throws SQLException, IOException {
+    static void removePatient(Integer id) throws SQLException, IOException {
 
         Connection veza = connectingToDatabase();
-        Patient patientToRemove = getPatientWithOib(oib);
+        Patient patientToRemove = getPatientWithID(id);
 
-        PreparedStatement stmnt = veza.prepareStatement("DELETE FROM PATIENTS WHERE OIB='" + oib + "'");
+        PreparedStatement stmnt = veza.prepareStatement("DELETE FROM PATIENTS WHERE ID=" + id);
         stmnt.executeUpdate();
 
         Stats currentStats = getCurrentStats();
@@ -166,7 +167,9 @@ public interface Data {
         changesSQL.add("DEBT=" + (currentDebt - patientToRemove.getDebt()) + "");
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), oib, patientToRemove.getDate()), new Patient(-1, "-", "-", "-", 0, "-", "-", null));
+        removeAllActiveCheckupsFromPatient(id);
+
+        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), patientToRemove.getOib(), patientToRemove.getDate()), new Patient(-1, "-", "-", "-", 0, "-", "-", null));
         changeWriter.addChange();
 
         veza.close();
@@ -265,9 +268,9 @@ public interface Data {
 
         return procedureList;
     }
-    static void addProcedureToPatient(String oib, String procedure){
+    static void addProcedureToPatient(Integer id, String procedure){
 
-        Patient patientToUpdate = getPatientWithOib(oib);
+        Patient patientToUpdate = getPatientWithID(id);
         String procedures = patientToUpdate.getProcedures();
 
         if(procedures.equals("")){
@@ -278,27 +281,23 @@ public interface Data {
 
         try(Connection conn = connectingToDatabase()) {
 
-            Patient oldPatient = getPatientWithOib(oib);
+            Patient oldPatient = getPatientWithID(id);
 
-            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + procedures + "'" + "WHERE OIB='" + oib + "'");
+            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + procedures + "'" + "WHERE ID=" + id);
             updateProcedures.executeUpdate();
 
-            List<Procedure> allProcedures = getAllProcedures();
-            Procedure procedureToFind = allProcedures.stream().filter(procedure1 -> procedure1.description().equals(procedure)).findAny().orElse(null);
+            Procedure procedureToAdd = getAllProcedures().stream().filter(procedure1 -> procedure1.description().equals(procedure)).findAny().orElse(null);
 
-            Double debtToAdd = procedureToFind.price();
-            Double oldDebt = patientToUpdate.getDebt();
-            Double newDebt = oldDebt + debtToAdd;
-
-            PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patientToUpdate.getOib() + "'");
+            Double newDebt = patientToUpdate.getDebt() + procedureToAdd.price();
+            PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE ID=" + patientToUpdate.getId());
             updateDebt.executeUpdate();
 
             Stats currentStats = getCurrentStats();
             List<String> changesSQL = new ArrayList<>();
-            changesSQL.add("DEBT=" + (currentStats.debt() + debtToAdd) + "");
+            changesSQL.add("DEBT=" + (currentStats.debt() + procedureToAdd.price()) + "");
             StatsChanger.changeStats(changesSQL);
 
-            Patient newPatient = getPatientWithOib(oib);
+            Patient newPatient = getPatientWithID(id);
             ChangeWriter changeWriter = new ChangeWriter(oldPatient,newPatient);
             changeWriter.addChange();
 
@@ -309,8 +308,8 @@ public interface Data {
             Application.logger.info(e.getMessage(), e.getStackTrace());
         }
     }
-    static void removeProcedure(String procedureDescription, String oib, String currentProcedures){
-        Patient patient = getPatientWithOib(oib);
+    static void removeProcedure(String procedureDescription, Integer id, String currentProcedures){
+        Patient patient = getPatientWithID(id);
         Procedure procedure = getProcedureFromDescription(procedureDescription);
 
         List<String> currentProceduresSplitted = List.of(currentProcedures.split(","));;
@@ -327,19 +326,18 @@ public interface Data {
                 }
             }
 
-            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + newProcedureString + "'" + "WHERE OIB='" + oib + "'");
+            PreparedStatement updateProcedures = conn.prepareStatement("UPDATE PATIENTS SET PROCEDURES='" + newProcedureString + "'" + "WHERE ID=" + id);
             updateProcedures.executeUpdate();
 
-            Double newDebt = patient.getDebt() - procedure.price();
-            PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + newDebt + "WHERE OIB='" + patient.getOib() + "'");
+            PreparedStatement updateDebt = conn.prepareStatement("UPDATE PATIENTS SET DEBT=" + (patient.getDebt() - procedure.price()) + "WHERE ID=" + id);
             updateDebt.executeUpdate();
 
             Stats currentStats = getCurrentStats();
             List<String> changesSQL = new ArrayList<>();
-            changesSQL.add("DEBT=" + (currentStats.debt() - procedure.price()) + "");
+            changesSQL.add("DEBT=" + (currentStats.debt() - procedure.price()));
             StatsChanger.changeStats(changesSQL);
 
-            Patient newPatient = getPatientWithOib(oib);
+            Patient newPatient = getPatientWithID(id);
             ChangeWriter changeWriter = new ChangeWriter(patient,newPatient);
             changeWriter.addChange();
 
@@ -471,7 +469,7 @@ public interface Data {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Are you sure you want to make this change in database?");
+        alert.setHeaderText("Are you sure you want to make this change in system?");
         alert.getButtonTypes().clear();
         alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
         alert.setContentText("");
@@ -535,8 +533,8 @@ public interface Data {
     }
 
 
-    static List<Room> getAllRooms(){
-        List<Room> roomList = new ArrayList<>();
+    static List<DoctorRoom> getAllRooms(){
+        List<DoctorRoom> doctorRoomList = new ArrayList<>();
 
         try(Connection conn = connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
@@ -545,15 +543,15 @@ public interface Data {
             );
 
             while(proceduresResultSet.next()){
-                Room newRoom = getRoom(proceduresResultSet);
-                roomList.add(newRoom);
+                DoctorRoom newDoctorRoom = getRoom(proceduresResultSet);
+                doctorRoomList.add(newDoctorRoom);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return roomList;
+        return doctorRoomList;
     }
     static void addRoom(String roomName, Integer doctorID){
 
@@ -567,7 +565,7 @@ public interface Data {
             stmnt.setInt(2, doctorID);
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(new Room("-", -1, -1), new Room(roomName, doctorID, getCertainRoom(roomName).getRoomID()));
+            ChangeWriter changeWriter = new ChangeWriter(new DoctorRoom("-", -1, -1), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID()));
             changeWriter.addChange();
 
             linkDoctorWithRoom(getCertainDoctor(doctorID), doctorID, roomName);
@@ -586,14 +584,16 @@ public interface Data {
             alert.show();
         }
     }
-    static void removeRoom(Room oldRoom){
+    static void removeRoom(Integer id){
         try{
             Connection veza = connectingToDatabase();
 
-            PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ROOM='" + oldRoom.getRoomName() + "'");
+            DoctorRoom oldDoctorRoom = getRoomWithId(id);
+
+            PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter( new Room(oldRoom.getRoomName(), oldRoom.getDoctorID(), oldRoom.getRoomID()), new Room("-", -1, -1));
+            ChangeWriter changeWriter = new ChangeWriter( new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID()), new DoctorRoom("-", -1, -1));
             changeWriter.addChange();
 
             removedSuccessfully("Room");
@@ -606,30 +606,47 @@ public interface Data {
             throw new RuntimeException(e);
         }
     }
-    static Room getCertainRoom(String roomName){
-        Room certainRoom = null;
+    static DoctorRoom getRoomWithId(Integer id){
+        DoctorRoom certainDoctorRoom = null;
         try(Connection conn = connectingToDatabase()) {
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM HOSPITAL WHERE ROOM='" + roomName + "'"
+                    "SELECT * FROM HOSPITAL WHERE ID=" + id
             );
             while(proceduresResultSet.next()){
-                certainRoom = getRoom(proceduresResultSet);
+                certainDoctorRoom = getRoom(proceduresResultSet);
             }
 
         } catch (SQLException | IOException e) {
             Application.logger.info(String.valueOf(e.getStackTrace()));
         }
-        return certainRoom;
+        return certainDoctorRoom;
     }
-    static Room getRoom(ResultSet procedureSet) throws SQLException{
+    static DoctorRoom getRoomWithName(String name){
+        DoctorRoom certainDoctorRoom = null;
+        try(Connection conn = connectingToDatabase()) {
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM HOSPITAL WHERE ROOM='" + name + "'"
+            );
+            while(proceduresResultSet.next()){
+                certainDoctorRoom = getRoom(proceduresResultSet);
+            }
+
+        } catch (SQLException | IOException e) {
+            Application.logger.info(String.valueOf(e.getStackTrace()));
+        }
+        return certainDoctorRoom;
+    }
+    static DoctorRoom getRoom(ResultSet procedureSet) throws SQLException{
 
         Integer id = procedureSet.getInt("id");
         String roomName = procedureSet.getString("room");
         Integer doctorID = procedureSet.getInt("doctorid");
 
-        return new Room(roomName, doctorID, id);
+        return new DoctorRoom(roomName, doctorID, id);
 
     }
     static void linkDoctorWithRoom(Doctor oldDoctor, Integer doctorID, String roomName){
@@ -644,15 +661,15 @@ public interface Data {
             System.out.println(e);
         }
     }
-    static void unlinkRoomFromDoctor(Room roomToRemove){
+    static void unlinkRoomFromDoctor(DoctorRoom doctorRoomToRemove){
         try(Connection conn = connectingToDatabase()){
-            Optional<Doctor> oldDoctor = getAllDoctors().stream().filter(doctor -> doctor.getRoom().equals(roomToRemove.getRoomName())).findFirst();
+            Optional<Doctor> oldDoctor = getAllDoctors().stream().filter(doctor -> doctor.getRoom().equals(doctorRoomToRemove.getRoomName())).findFirst();
             if(oldDoctor.isPresent()){
 
-                PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + roomToRemove.getDoctorID());
+                PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + doctorRoomToRemove.getDoctorID());
                 stmnt.executeUpdate();
 
-                ChangeWriter changeWriter = new ChangeWriter(oldDoctor.get(), Data.getCertainDoctor(roomToRemove.getDoctorID()));
+                ChangeWriter changeWriter = new ChangeWriter(oldDoctor.get(), Data.getCertainDoctor(doctorRoomToRemove.getDoctorID()));
                 changeWriter.addChange();
             }
         } catch (SQLException e) {
@@ -663,13 +680,13 @@ public interface Data {
     }
     static void unlinkDoctorFromRoom(String roomName){
         try(Connection conn = connectingToDatabase()){
-            Optional<Room> oldRoom = getAllRooms().stream().filter(room -> room.getRoomName().equals(roomName)).findFirst();
+            Optional<DoctorRoom> oldRoom = getAllRooms().stream().filter(doctorRoom -> doctorRoom.getRoomName().equals(roomName)).findFirst();
             if(oldRoom.isPresent()){
 
                 PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID= -1 WHERE ROOM='" + roomName + "'");
                 stmnt.executeUpdate();
 
-                ChangeWriter changeWriter = new ChangeWriter(oldRoom.get(), getCertainRoom(roomName));
+                ChangeWriter changeWriter = new ChangeWriter(oldRoom.get(), getRoomWithName(roomName));
                 changeWriter.addChange();
             }
         } catch (SQLException e) {
@@ -680,12 +697,7 @@ public interface Data {
     }
     static Boolean hasDoctorRoom(Integer id){
         Doctor doctorToCheck = null;
-        try(Connection conn = connectingToDatabase()){
-            doctorToCheck = getCertainDoctor(id);
-
-        }catch (SQLException | IOException e){
-            System.out.println(e);
-        }
+        doctorToCheck = getCertainDoctor(id);
         if(doctorToCheck.getRoom().equals("Not yet set")){
             return false;
         }else{
@@ -715,7 +727,6 @@ public interface Data {
             System.out.println(e);
         }
     }
-
     static List<ActiveCheckup> getAllActiveCheckups(){
         List<ActiveCheckup> activeCheckupList = new ArrayList<>();
 
@@ -745,15 +756,12 @@ public interface Data {
 
         return new ActiveCheckup(id,date, patientID, procedureID, new PatientRoom(roomType));
     }
-
-    static void removeCheckup(Integer id){
+    static void removeActiveCheckup(Integer id){
         try{
             Connection veza = connectingToDatabase();
 
             PreparedStatement stmnt = veza.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE ID=" + id);
             stmnt.executeUpdate();
-
-            //POSTOJI SUCCESSFULLY
 
             veza.close();
         } catch (SQLException e) {
@@ -761,5 +769,75 @@ public interface Data {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    static void removeAllActiveCheckupsFromPatient(Integer patientID){
+        try{
+            Connection veza = connectingToDatabase();
+
+            PreparedStatement stmnt = veza.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE PATIENT_ID=" + patientID);
+            stmnt.executeUpdate();
+
+            veza.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static void createBill(Patient patient, LocalDateTime time){
+        try{
+            Connection conn = Data.connectingToDatabase();
+
+            DateFormatter fullDateTime = new DateFormatter(time.toString());
+            String billCreated = fullDateTime.getDateTimeFormatted();
+            fullDateTime.setStart(patient.getDate().toString());
+            String birthDay = fullDateTime.getDateFormatted();
+
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO BILLS(NAME, SURNAME, OIB, GENDER, DEBT, PROCEDURES, DATE, BIRTH_DATE) VALUES ('" + patient.getName() + "', '" + patient.getSurname() + "', '" + patient.getOib() + "', '" + patient.getGender() +"', " + patient.getDebt() + ", '" + patient.getProcedures() + "', parsedatetime('" + billCreated + "', 'dd-MM-yyyy HH:mm'), parsedatetime('" + birthDay + "', 'dd-MM-yyyy'))");
+            stmnt.executeUpdate();
+
+            removePatient(patient.getId());
+
+            addedSuccessfully("Bill");
+
+            conn.close();
+
+        } catch (IOException | SQLException e) {
+            Application.logger.info(e.getMessage(), e.getStackTrace());
+        }
+    }
+    static List<Bill> getAllBills(){
+        List<Bill> billList = new ArrayList<>();
+
+        try(Connection conn = connectingToDatabase()) {
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM BILLS"
+            );
+
+            while(proceduresResultSet.next()){
+                Bill newBill = getBill(proceduresResultSet);
+                billList.add(newBill);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return billList;
+    }
+
+    static Bill getBill(ResultSet set) throws SQLException {
+        String name = set.getString("NAME");
+        String surname = set.getString("SURNAME");
+        String oib = set.getString("OIB");
+        String gender = set.getString("GENDER");
+        Double debt = set.getDouble("DEBT");
+        String procedures = set.getString("PROCEDURES");
+        LocalDateTime date = set.getTimestamp("DATE").toLocalDateTime();
+        LocalDate birth_date = set.getTimestamp("BIRTH_DATE").toLocalDateTime().toLocalDate();
+
+        return new Bill(new Patient(null, name, surname, gender, debt, procedures, oib, birth_date), date);
     }
 }

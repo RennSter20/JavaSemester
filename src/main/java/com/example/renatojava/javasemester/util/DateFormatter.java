@@ -16,4 +16,12 @@ public class DateFormatter {
     public String getDateFormatted(){
         return start.substring(8,10) + "-" + start.substring(5,7) + "-" + start.substring(0,4);
     }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
 }

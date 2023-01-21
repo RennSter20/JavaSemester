@@ -35,7 +35,7 @@ public class ChangeWriter<T> {
             items = new ArrayList<>(readPatients());
         }else if(oldObject instanceof Doctor){
             items = new ArrayList<>(readDoctors());
-        }else if(oldObject instanceof Room){
+        }else if(oldObject instanceof DoctorRoom){
             items = new ArrayList<>(readRooms());
         }
 
@@ -84,7 +84,7 @@ public class ChangeWriter<T> {
                 myWriter.close();
                 myWriter.flush();
 
-            }else if(itemsToWrite.get(0) instanceof Room){
+            }else if(itemsToWrite.get(0) instanceof DoctorRoom){
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_ROOMS, false));
                 for(T object : itemsToWrite){
                     out.writeObject(object);

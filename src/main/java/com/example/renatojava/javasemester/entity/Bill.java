@@ -1,12 +1,14 @@
 package com.example.renatojava.javasemester.entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-public class Bill<T> {
+public class Bill {
 
-    private List<Procedure> procedureList;
+    private Patient patient;
+    private LocalDateTime time;
 
-    public Bill(T patient) {
-
+    public Bill(Patient patient, LocalDateTime time) {
+        this.patient = patient;
+        this.time = time;
     }
 }

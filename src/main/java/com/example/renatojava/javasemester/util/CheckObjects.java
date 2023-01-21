@@ -2,14 +2,16 @@ package com.example.renatojava.javasemester.util;
 
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
+import com.example.renatojava.javasemester.entity.DoctorRoom;
 import com.example.renatojava.javasemester.entity.Patient;
-import com.example.renatojava.javasemester.entity.Room;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -72,20 +74,20 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
     }
 
     static void checkIfRoomExists(String roomName) throws ObjectExistsException{
-        Room foundRoom = null;
+        DoctorRoom foundDoctorRoom = null;
         try(Connection conn = Data.connectingToDatabase()){
             Statement sqlStatement = conn.createStatement();
             ResultSet roomResults = sqlStatement.executeQuery(
                     "SELECT * FROM HOSPITAL WHERE ROOM='" + roomName + "'"
             );
             while(roomResults.next()){
-                foundRoom = Data.getRoom(roomResults);
+                foundDoctorRoom = Data.getRoom(roomResults);
             }
 
-            if(foundRoom != null && foundRoom.getDoctorID() != -1){
+            if(foundDoctorRoom != null && foundDoctorRoom.getDoctorID() != -1){
                 throw new ObjectExistsException("Another doctor is in this room!");
-            }else if(foundRoom != null && foundRoom.getDoctorID() == -1){
-                Data.removeRoom(foundRoom);
+            }else if(foundDoctorRoom != null && foundDoctorRoom.getDoctorID() == -1){
+                Data.removeRoom(foundDoctorRoom.getRoomID());
             }
 
         } catch (SQLException e) {
@@ -102,6 +104,20 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    static Boolean isBeforeToday(LocalDateTime dateTimeValue){
+        if(dateTimeValue.isBefore(LocalDateTime.now())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("Date is not valid!");
+            alert.setContentText("Checkup date needs to be after today's date!");
+            alert.show();
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
 }

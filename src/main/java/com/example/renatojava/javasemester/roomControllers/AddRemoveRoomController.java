@@ -2,7 +2,7 @@ package com.example.renatojava.javasemester.roomControllers;
 
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
-import com.example.renatojava.javasemester.entity.Room;
+import com.example.renatojava.javasemester.entity.DoctorRoom;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class AddRemoveRoomController {
 
     @FXML
-    private TableView<Room> roomTable;
+    private TableView<DoctorRoom> roomTable;
 
     @FXML
-    private TableColumn<Room, String> roomNameColumn, doctorColumn;
+    private TableColumn<DoctorRoom, String> roomNameColumn, doctorColumn;
 
     @FXML
     private TextField nameField;
@@ -48,9 +48,9 @@ public class AddRemoveRoomController {
     }
 
     public void fillRoomTable(){
-        List<Room> allRooms = Data.getAllRooms();
+        List<DoctorRoom> allDoctorRooms = Data.getAllRooms();
 
-        ObservableList<Room> observableList = FXCollections.observableArrayList(allRooms);
+        ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(allDoctorRooms);
 
         roomNameColumn.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
 
@@ -60,9 +60,9 @@ public class AddRemoveRoomController {
     }
     public void removeRoom(){
         if(Data.confirmEdit()){
-            Room oldRoom = roomTable.getSelectionModel().getSelectedItem();
-            Data.unlinkRoomFromDoctor(oldRoom);
-            Data.removeRoom(oldRoom);
+            DoctorRoom oldDoctorRoom = roomTable.getSelectionModel().getSelectedItem();
+            Data.unlinkRoomFromDoctor(oldDoctorRoom);
+            Data.removeRoom(oldDoctorRoom.getRoomID());
             initialize();
         }else{
             Alert failure = new Alert(Alert.AlertType.ERROR);

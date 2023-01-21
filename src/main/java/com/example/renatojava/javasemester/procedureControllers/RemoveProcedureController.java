@@ -68,7 +68,7 @@ public class RemoveProcedureController {
                 failure.show();
                 return;
             }else{
-                Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getOib(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
+                Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getId(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("INFORMATION");
                 success.setHeaderText("Success!");

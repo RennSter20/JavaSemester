@@ -1,12 +1,12 @@
 package com.example.renatojava.javasemester.entity;
 
-public class Room {
+public class DoctorRoom {
 
     private String roomName;
     private Integer doctorID;
     private Integer roomID;
 
-    public Room(String roomName, Integer doctorID, Integer roomID) {
+    public DoctorRoom(String roomName, Integer doctorID, Integer roomID) {
         this.roomName = roomName;
         this.doctorID = doctorID;
         this.roomID = roomID;

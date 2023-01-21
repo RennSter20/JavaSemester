@@ -104,8 +104,16 @@ public class AddCheckupController {
     }
 
     public void addNewCheckup(){
-        if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL)) {
-            Data.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
+        if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Data.confirmEdit()) {
+
+            if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
+                Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
+
+                Data.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
+
+                ChangeWriter writer = new ChangeWriter(oldPatient, Data.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
+                writer.addChange();
+            }
         }
 
     }

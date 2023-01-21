@@ -22,7 +22,9 @@ public class ListOfActiveCheckupsController {
     private TableColumn<ActiveCheckup, String> dateColumn, patientColumn, procedureColumn, roomColumn, oibColumn;
 
     public void initialize(){
-        fillCheckupTable(Data.getAllActiveCheckups());
+        if(Data.getAllActiveCheckups().size() > 0){
+            fillCheckupTable(Data.getAllActiveCheckups());
+        }
     }
 
     public void fillCheckupTable(List<ActiveCheckup> list){
@@ -38,9 +40,9 @@ public class ListOfActiveCheckupsController {
     }
 
     public void accept(){
-        if(table.getSelectionModel().getSelectedItem() != null){
-            Data.addProcedureToPatient(Data.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getOib(), Data.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
-            Data.removeCheckup(table.getSelectionModel().getSelectedItem().getId());
+        if(table.getSelectionModel().getSelectedItem() != null && Data.confirmEdit()){
+            Data.addProcedureToPatient(Data.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(), Data.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
+            Data.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
             initialize();
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -52,9 +54,11 @@ public class ListOfActiveCheckupsController {
     }
 
     public void reject(){
-        Data.removeCheckup(table.getSelectionModel().getSelectedItem().getId());
-        Data.removedSuccessfully("Checkup");
-        initialize();
+        if(Data.confirmEdit()){
+            Data.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
+            Data.removedSuccessfully("Checkup");
+            initialize();
+        }
     }
 
 }

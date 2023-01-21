@@ -126,7 +126,7 @@ public class AddProcedureController implements Data {
             failure.show();
             return;
         }else{
-            Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getOib(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
+            Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getId(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("INFORMATION");
             success.setHeaderText("Success!");

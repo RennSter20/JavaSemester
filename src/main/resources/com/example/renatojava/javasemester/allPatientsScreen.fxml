@@ -91,17 +91,18 @@
                   <TextField fx:id="nameEditField" GridPane.columnIndex="1" />
                   <TextField fx:id="surnameEditField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="oibEditField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button fx:id="applyButton" mnemonicParsing="false" onAction="#editPatient" text="Apply" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+                  <Button fx:id="applyButton" mnemonicParsing="false" onAction="#editPatient" text="Apply" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                      <GridPane.margin>
-                        <Insets right="50.0" />
+                        <Insets left="20.0" />
                      </GridPane.margin></Button>
-                  <Button fx:id="removeButton" mnemonicParsing="false" onAction="#removePatient" text="Remove" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                  <Button fx:id="removeButton" mnemonicParsing="false" onAction="#removePatient" text="Remove" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                      <GridPane.margin>
-                        <Insets right="50.0" />
+                        <Insets />
                      </GridPane.margin>
                   </Button>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date of birth:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                   <Text fx:id="birthDate" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button fx:id="createBillButton" mnemonicParsing="false" onAction="#createBill" text="Create bill" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </children>

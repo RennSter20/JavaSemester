@@ -49,7 +49,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Rooms">
                <items>
-                  <MenuItem fx:id="addRemoveRoom" mnemonicParsing="false" onAction="#showAddRemoveRoomScreen" text="Add/Remove room" />
+                  <MenuItem fx:id="addRemoveRoom" mnemonicParsing="false" onAction="#showAddRemoveRoomScreen" text="Add/Remove doctorRoom" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Changes">

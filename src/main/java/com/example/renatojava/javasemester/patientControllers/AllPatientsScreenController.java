@@ -1,22 +1,20 @@
 package com.example.renatojava.javasemester.patientControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.Validator;
 import com.example.renatojava.javasemester.entity.Data;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.entity.Validator;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +29,7 @@ public class AllPatientsScreenController implements Data, Validator {
     @FXML
     private Text birthDate;
     @FXML
-    private Button editButton, applyButton, removeButton;
+    private Button editButton, applyButton, removeButton, createBillButton;
 
     private List<Patient> patients;
 
@@ -44,6 +42,7 @@ public class AllPatientsScreenController implements Data, Validator {
         editButton.setVisible(false);
         applyButton.setDisable(true);
         removeButton.setDisable(true);
+        createBillButton.setDisable(true);
     }
 
     public void fillTable(List<Patient> list){
@@ -108,6 +107,7 @@ public class AllPatientsScreenController implements Data, Validator {
         oibEditField.setEditable(true);
         applyButton.setDisable(false);
         removeButton.setDisable(false);
+        createBillButton.setDisable(false);
     }
     public void editPatient(){
         Patient selectedPatient = patientsTable.getSelectionModel().getSelectedItem();
@@ -135,7 +135,7 @@ public class AllPatientsScreenController implements Data, Validator {
     public void removePatient() {
         try{
             if(Data.confirmEdit()){
-                Data.removePatient(patientsTable.getSelectionModel().getSelectedItem().getOib());
+                Data.removePatient(patientsTable.getSelectionModel().getSelectedItem().getId());
             }
         }catch (SQLException | IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
@@ -143,5 +143,24 @@ public class AllPatientsScreenController implements Data, Validator {
         initialize();
         clearFields();
         birthDate.setText("");
+    }
+
+    public void createBill(){
+        Patient selectedPatient = patientsTable.getSelectionModel().getSelectedItem();
+        if(selectedPatient.getDebt() > 0){
+            if(Data.confirmEdit()){
+                Data.createBill(selectedPatient, LocalDateTime.now());
+                Data.addedSuccessfully("Bill");
+                initialize();
+                clearFields();
+                birthDate.setText("");
+            }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("Error when creating a bill.");
+            alert.setContentText("Patient has no debt.");
+            alert.show();
+        }
     }
 }
