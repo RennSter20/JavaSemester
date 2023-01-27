@@ -22,15 +22,13 @@ public class ListOfActiveCheckupsController {
     private TableColumn<ActiveCheckup, String> dateColumn, patientColumn, procedureColumn, roomColumn, oibColumn;
 
     public void initialize(){
-        if(Data.getAllActiveCheckups().size() > 0){
-            fillCheckupTable(Data.getAllActiveCheckups());
-        }
+        fillCheckupTable(Data.getAllActiveCheckups());
     }
 
     public void fillCheckupTable(List<ActiveCheckup> list){
         ObservableList<ActiveCheckup> observableList = FXCollections.observableArrayList(list);
 
-        dateColumn.setCellValueFactory(checkup -> new SimpleStringProperty(new DateFormatter(checkup.getValue().getDateOfCheckup().toString()).getDateTimeFormatted()));
+        dateColumn.setCellValueFactory(checkup -> new SimpleStringProperty(DateFormatter.getDateTimeFormatted(checkup.getValue().getDateOfCheckup().toString())));
         patientColumn.setCellValueFactory(checkup -> new SimpleStringProperty(Data.getPatientWithID(checkup.getValue().getPatientID()).getFullName()));
         oibColumn.setCellValueFactory(checkup -> new SimpleStringProperty(Data.getPatientWithID(checkup.getValue().getPatientID()).getOib()));
         procedureColumn.setCellValueFactory(checkup -> new SimpleStringProperty(Data.getProcedureFromId(checkup.getValue().getProcedureID()).description()));
@@ -54,10 +52,16 @@ public class ListOfActiveCheckupsController {
     }
 
     public void reject(){
-        if(Data.confirmEdit()){
+        if(table.getSelectionModel().getSelectedItem() != null && Data.confirmEdit()){
             Data.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
             Data.removedSuccessfully("Checkup");
             initialize();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("Error with checkup!");
+            alert.setContentText("No checkup selected");
+            alert.show();
         }
     }
 

@@ -1,13 +1,16 @@
 package com.example.renatojava.javasemester.patientControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.util.CheckObjects;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +84,7 @@ public final class RegisterPatientScreenController implements CheckObjects {
                 }else{
 
                     Data.addPatient(name, surname, gender, oib, date);
+                    clearFields();
                 }
 
             }catch (SQLException e){
@@ -89,4 +93,14 @@ public final class RegisterPatientScreenController implements CheckObjects {
                 Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
             }
     }
+
+    public void clearFields(){
+        nameField.setText("");
+        surnameField.setText("");
+        oibField.setText("");
+        maleRadio.setSelected(false);
+        femaleRadio.setSelected(false);
+        datePicker.setValue(null);
     }
+
+}

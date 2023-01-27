@@ -41,6 +41,13 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>no.tornado</groupId>
             <artifactId>tornadofx-controls</artifactId>
             <version>1.0.3</version>

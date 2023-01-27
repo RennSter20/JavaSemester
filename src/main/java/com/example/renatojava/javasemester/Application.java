@@ -48,11 +48,14 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO billing
 //TODO threads
 //TODO admin procedures add
 //TODO changes
-
+//TODO editCheckups not showing
+//TODO password hashing
 //TODO fix exceptions everywhere
+
+
 //TODO main screen stats
 //TODO calendar
+//TODO main menu todays checkups!!!

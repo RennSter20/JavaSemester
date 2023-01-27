@@ -9,12 +9,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class LoginController {
 
@@ -51,8 +54,11 @@ public class LoginController {
         String inputIdText = idTextField.getText();
         String inputPasswordText = passwordTextField.getText();
 
+
+        String hashedPassword = DigestUtils.sha1Hex(inputPasswordText);
+        System.out.println(hashedPassword);
         try{
-            if(users.containsKey(inputIdText) && users.get(inputIdText).equals(inputPasswordText)){
+            if(users.containsKey(inputIdText) && users.get(inputIdText).equals(hashedPassword)){
                 errorText.setText("");
                 Application.setLoggedUser(getUser(inputIdText));
                 BorderPane root;
@@ -61,7 +67,6 @@ public class LoginController {
                             getClass().getResource("menuScreen.fxml"));
                     Application.setMainPage(root);
                 } catch (IOException e) {
-                    //Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
                     e.printStackTrace();
                 }
             }else{

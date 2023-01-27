@@ -789,10 +789,8 @@ public interface Data {
         try{
             Connection conn = Data.connectingToDatabase();
 
-            DateFormatter fullDateTime = new DateFormatter(time.toString());
-            String billCreated = fullDateTime.getDateTimeFormatted();
-            fullDateTime.setStart(patient.getDate().toString());
-            String birthDay = fullDateTime.getDateFormatted();
+            String billCreated = DateFormatter.getDateTimeFormatted(time.toString());
+            String birthDay = DateFormatter.getDateFormatted(patient.getDate().toString());
 
             PreparedStatement stmnt = conn.prepareStatement("INSERT INTO BILLS(NAME, SURNAME, OIB, GENDER, DEBT, PROCEDURES, DATE, BIRTH_DATE) VALUES ('" + patient.getName() + "', '" + patient.getSurname() + "', '" + patient.getOib() + "', '" + patient.getGender() +"', " + patient.getDebt() + ", '" + patient.getProcedures() + "', parsedatetime('" + billCreated + "', 'dd-MM-yyyy HH:mm'), parsedatetime('" + birthDay + "', 'dd-MM-yyyy'))");
             stmnt.executeUpdate();

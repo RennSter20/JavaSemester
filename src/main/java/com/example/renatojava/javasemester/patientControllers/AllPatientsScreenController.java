@@ -95,7 +95,7 @@ public class AllPatientsScreenController implements Data, Validator {
             nameEditField.setText(selectedPatient.getName());
             surnameEditField.setText(selectedPatient.getSurname());
             oibEditField.setText(selectedPatient.getOib());
-            birthDate.setText(new DateFormatter(String.valueOf(selectedPatient.getDate())).getDateFormatted());
+            birthDate.setText(DateFormatter.getDateFormatted(String.valueOf(selectedPatient.getDate())));
             nameEditField.setEditable(false);
             surnameEditField.setEditable(false);
             oibEditField.setEditable(false);
@@ -150,7 +150,6 @@ public class AllPatientsScreenController implements Data, Validator {
         if(selectedPatient.getDebt() > 0){
             if(Data.confirmEdit()){
                 Data.createBill(selectedPatient, LocalDateTime.now());
-                Data.addedSuccessfully("Bill");
                 initialize();
                 clearFields();
                 birthDate.setText("");

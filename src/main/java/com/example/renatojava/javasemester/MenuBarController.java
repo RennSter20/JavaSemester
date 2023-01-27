@@ -204,6 +204,18 @@ public class MenuBarController {
         }catch (IOException e){
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }
+
+    }
+
+    public void showAllBillsScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("allBills.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
 

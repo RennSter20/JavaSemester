@@ -43,13 +43,14 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Billing">
                <items>
+                  <MenuItem fx:id="makeBill1" mnemonicParsing="false" onAction="#showAllBillsScreen" text="All bills" />
                   <MenuItem fx:id="makeBill" mnemonicParsing="false" text="Make a bill" />
                   <MenuItem fx:id="procedures" mnemonicParsing="false" onAction="#showPricesScreen" text="Procedure price" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Rooms">
                <items>
-                  <MenuItem fx:id="addRemoveRoom" mnemonicParsing="false" onAction="#showAddRemoveRoomScreen" text="Add/Remove doctorRoom" />
+                  <MenuItem fx:id="addRemoveRoom" mnemonicParsing="false" onAction="#showAddRemoveRoomScreen" text="Add/Remove room" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Changes">

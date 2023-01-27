@@ -4,6 +4,7 @@ module com.example.renatojava.javasemester {
     requires java.sql;
     requires org.slf4j;
     requires tornadofx.controls;
+    requires org.apache.commons.codec;
 
 
     opens com.example.renatojava.javasemester to javafx.fxml;
@@ -18,4 +19,6 @@ module com.example.renatojava.javasemester {
     exports com.example.renatojava.javasemester.roomControllers;
     exports com.example.renatojava.javasemester.checkups;
     opens com.example.renatojava.javasemester.checkups to javafx.fxml;
+    exports com.example.renatojava.javasemester.bills;
+    opens com.example.renatojava.javasemester.bills to javafx.fxml;
 }
