@@ -1,10 +1,17 @@
 package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.User;
+import com.example.renatojava.javasemester.threads.LastChangeMadeThread;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +23,10 @@ public class Application extends javafx.application.Application {
     public static Stage mainStage;
     public static User loggedUser;
 
+    public static Stage getStage() {
+        return mainStage;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         mainStage = stage;
@@ -25,6 +36,15 @@ public class Application extends javafx.application.Application {
         stage.setFullScreen(false);
         stage.setResizable(false);
         stage.show();
+
+        Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(3), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.runLater(new LastChangeMadeThread());
+            }
+        }));
+        latestChange.setCycleCount(Timeline.INDEFINITE);
+        latestChange.play();
 
 
     }
