@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.procedureControllers;
 
-import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -43,7 +43,7 @@ public class RemoveProcedureController {
 
     public void onSelectedPatient(){
         if(patientTable.getSelectionModel().getSelectedItem() != null){
-            String proceduresFromPatient = Data.getAllProceduresFromPatient(patientTable.getSelectionModel().getSelectedItem());
+            String proceduresFromPatient = Data.getAllProceduresFromPatientString(patientTable.getSelectionModel().getSelectedItem());
             List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
             ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 

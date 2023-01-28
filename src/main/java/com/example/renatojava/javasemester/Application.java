@@ -19,7 +19,7 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
         mainStage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("loginScreen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/loginScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
         stage.setScene(scene);
         stage.setFullScreen(false);
@@ -48,13 +48,15 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO threads
-//TODO admin procedures add
-//TODO changes
-//TODO editCheckups not showing
-//TODO password hashing
-//TODO fix exceptions everywhere
+//TODO add room changes
+//TODO add titles to changes
+//TODO add confirmation before changes
 
+
+//TODO threads
+//TODO editCheckups not showing
+//TODO fix exceptions everywhere
+//TODO unchecked exception
 
 //TODO main screen stats
 //TODO calendar

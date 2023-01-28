@@ -2,12 +2,15 @@ package com.example.renatojava.javasemester.procedureControllers;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.util.CheckObjects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -16,9 +19,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class PricesScreenController implements Data {
+public class DeleteProcedureController {
 
     @FXML
     private TableView<Procedure> priceTable;
@@ -43,7 +47,6 @@ public class PricesScreenController implements Data {
         fillTable(proceduresToShow);
     }
 
-
     public void searchProcedure(){
         String inputString = searchField.getText();
 
@@ -62,4 +65,35 @@ public class PricesScreenController implements Data {
 
         priceTable.setItems(observableList);
     }
+
+    public void deleteProcedure(){
+        Optional<Procedure> selectedProcedure = Optional.of(priceTable.getSelectionModel().getSelectedItem());
+        if(selectedProcedure.isPresent()){
+
+            Procedure procedure = priceTable.getSelectionModel().getSelectedItem();
+
+            if(CheckObjects.checkIfPatientsHaveProcedure(procedure.description())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Error while deleting procedure!");
+                alert.setContentText("Some patients have this checkup.");
+                alert.show();
+                return;
+            }
+
+            Data.deleteProcedure(procedure.description());
+
+            ChangeWriter writer = new ChangeWriter(procedure, new Procedure(0, "-", Double.valueOf(0)));
+            writer.addChange(Application.getLoggedUser().getRole());
+
+            initialize();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("No procedure selected!");
+            alert.setContentText("Please select procedure first.");
+            alert.show();
+        }
+    }
+
 }

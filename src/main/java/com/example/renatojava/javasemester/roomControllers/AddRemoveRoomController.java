@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.roomControllers;
 
-import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
 import javafx.beans.property.SimpleStringProperty;

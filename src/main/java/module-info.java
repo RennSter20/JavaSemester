@@ -8,9 +8,8 @@ module com.example.renatojava.javasemester {
 
 
     opens com.example.renatojava.javasemester to javafx.fxml;
-    exports com.example.renatojava.javasemester;
-    exports com.example.renatojava.javasemester.doctorControllers;
-    opens com.example.renatojava.javasemester.doctorControllers to javafx.fxml;
+    exports com.example.renatojava.javasemester.doctors;
+    opens com.example.renatojava.javasemester.doctors to javafx.fxml;
     exports com.example.renatojava.javasemester.patientControllers;
     opens com.example.renatojava.javasemester.patientControllers to javafx.fxml;
     opens com.example.renatojava.javasemester.procedureControllers to javafx.fxml;
@@ -21,4 +20,7 @@ module com.example.renatojava.javasemester {
     opens com.example.renatojava.javasemester.checkups to javafx.fxml;
     exports com.example.renatojava.javasemester.bills;
     opens com.example.renatojava.javasemester.bills to javafx.fxml;
+    opens com.example.renatojava.javasemester.menus to javafx.fxml;
+    exports com.example.renatojava.javasemester.menus;
+    exports com.example.renatojava.javasemester;
 }

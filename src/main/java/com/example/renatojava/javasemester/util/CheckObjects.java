@@ -1,9 +1,7 @@
 package com.example.renatojava.javasemester.util;
 
-import com.example.renatojava.javasemester.entity.Data;
-import com.example.renatojava.javasemester.entity.Doctor;
-import com.example.renatojava.javasemester.entity.DoctorRoom;
-import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
 import javafx.scene.control.Alert;
@@ -97,6 +95,27 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
         }
     }
 
+    static void checkIfProcedureExists(String description) throws ObjectExistsException{
+        Procedure foundProcedure = null;
+        try(Connection conn = Data.connectingToDatabase()){
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResult = sqlStatement.executeQuery(
+                    "SELECT * FROM PROCEDURES WHERE DESCRIPTION='" + description + "'"
+            );
+            while(proceduresResult.next()){
+                foundProcedure = Data.getProcedure(proceduresResult);
+            }
+            if(foundProcedure != null){
+                throw new ObjectExistsException("Procedure already exists!");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     static boolean isValidTime(String input, DateTimeFormatter format) {
         try {
             LocalDate time = LocalDate.parse(input, format);
@@ -118,6 +137,24 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             return false;
         }
 
+    }
+
+    static Boolean checkIfPatientsHaveProcedure(String procedure){
+        List<Patient> allPatients = Data.getAllPatients();
+        List<ActiveCheckup> allCheckups = Data.getAllActiveCheckups();
+
+        for(Patient p : allPatients){
+            if(p.getProcedures().contains(procedure)){
+                return true;
+            }
+        }
+
+        for(ActiveCheckup a : allCheckups){
+            if(a.getProcedureID().equals(Data.getProcedureFromDescription(procedure).id())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

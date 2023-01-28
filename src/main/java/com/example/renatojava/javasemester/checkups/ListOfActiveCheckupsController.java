@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester.checkups;
 
 import com.example.renatojava.javasemester.entity.ActiveCheckup;
-import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

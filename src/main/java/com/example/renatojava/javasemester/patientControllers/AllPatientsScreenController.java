@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester.patientControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.Patient;
-import com.example.renatojava.javasemester.entity.Validator;
+import com.example.renatojava.javasemester.util.Validator;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,6 +1,8 @@
 package com.example.renatojava.javasemester.entity;
 
-public record Procedure(Integer id, String description, Double price) {
+import java.io.Serializable;
+
+public record Procedure(Integer id, String description, Double price) implements Serializable {
     public Procedure(Integer id, String description, Double price) {
         this.description = description;
         this.price = price;

@@ -1,8 +1,10 @@
 package com.example.renatojava.javasemester.checkups;
 
 import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -65,9 +67,9 @@ public class AddCheckupController {
         try{
             procedureList = Data.getAllProcedures();
         } catch (SQLException | IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error("There has been an error while getting all procedures!", e);
         }catch (NoProceduresException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
         fillProceduresTable(procedureList);
     }
@@ -75,16 +77,9 @@ public class AddCheckupController {
     public void fillPatientsTable(List<Patient> list){
         ObservableList<Patient> observableList = FXCollections.observableArrayList(list);
 
-        nameColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getName());
-        });
-        surnameColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getSurname());
-        });
-        oibColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getOib());
-        });
-
+        nameColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getName()));
+        surnameColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getSurname()));
+        oibColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getOib()));
 
         patientsTable.setItems(observableList);
     }
@@ -92,13 +87,8 @@ public class AddCheckupController {
     public void fillProceduresTable(List<Procedure> list){
         ObservableList<Procedure> observableList = FXCollections.observableArrayList(list);
 
-        procedureColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(procedure.getValue().description());
-        });
-        priceColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(String.valueOf(procedure.getValue().price()));
-        });
-
+        procedureColumn.setCellValueFactory(procedure -> new SimpleStringProperty(procedure.getValue().description()));
+        priceColumn.setCellValueFactory(procedure -> new SimpleStringProperty(String.valueOf(procedure.getValue().price())));
 
         procedureTable.setItems(observableList);
     }
@@ -107,12 +97,14 @@ public class AddCheckupController {
         if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Data.confirmEdit()) {
 
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
+
                 Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
                 Data.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
 
                 ChangeWriter writer = new ChangeWriter(oldPatient, Data.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
-                writer.addChange();
+
+                writer.addChange(Application.getLoggedUser().getRole());
             }
         }
 

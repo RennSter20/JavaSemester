@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester.procedureControllers;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.Data;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
@@ -84,7 +84,7 @@ public class AddProcedureController implements Data {
     }
 
     public void fillListView(){
-        String proceduresFromPatient = Data.getAllProceduresFromPatient(patientsTable.getSelectionModel().getSelectedItem());
+        String proceduresFromPatient = Data.getAllProceduresFromPatientString(patientsTable.getSelectionModel().getSelectedItem());
         List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
         ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
