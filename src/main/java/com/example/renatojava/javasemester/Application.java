@@ -48,10 +48,7 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO add room changes
-//TODO add titles to changes
 //TODO add confirmation before changes
-
 
 //TODO threads
 //TODO editCheckups not showing

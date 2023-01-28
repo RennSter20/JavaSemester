@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -48,6 +49,11 @@
                         <TableColumn fx:id="proceduresNew" maxWidth="550.0" minWidth="-1.0" prefWidth="550.0" sortable="false" style="-fx-alignment: CENTER;" text="Procedures" />
                     </columns>
                 </TableView>
+            <Label text="Patient changes" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
             </children>
             <BorderPane.margin>
                 <Insets top="30.0" />
@@ -81,6 +87,9 @@
                <font>
                   <Font size="18.0" />
                </font>
+               <GridPane.margin>
+                  <Insets right="90.0" />
+               </GridPane.margin>
             </Text>
          </children>
       </GridPane>

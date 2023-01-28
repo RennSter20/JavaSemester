@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.procedureControllers.ChangesProceduresController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.roomControllers.ChangesRoomController">
     <fx:include source="menuBar.fxml" />
     <center>
         <GridPane maxHeight="700.0" prefHeight="400.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
@@ -31,14 +31,14 @@
             <children>
                 <TableView fx:id="oldTable" onMouseClicked="#showTimeOld" prefHeight="752.0" prefWidth="1280.0" GridPane.columnSpan="2" GridPane.rowSpan="1">
                     <columns>
-                        <TableColumn fx:id="descriptionOld" prefWidth="635.0" sortable="false" style="-fx-alignment: CENTER;" text="Description" />
-                        <TableColumn fx:id="priceOld" prefWidth="644.0" sortable="false" style="-fx-alignment: CENTER;" text="Price" />
+                        <TableColumn fx:id="roomOld" prefWidth="635.0" sortable="false" style="-fx-alignment: CENTER;" text="Room name" />
+                        <TableColumn fx:id="doctorOld" prefWidth="644.0" sortable="false" style="-fx-alignment: CENTER;" text="Doctor" />
                     </columns>
                 </TableView>
                 <TableView fx:id="newTable" layoutX="10.0" layoutY="270.0" onMouseClicked="#showTimeNew" GridPane.columnSpan="2" GridPane.rowIndex="1">
                     <columns>
-                        <TableColumn fx:id="descriptionNew" prefWidth="633.0" sortable="false" style="-fx-alignment: CENTER;" text="Description" />
-                        <TableColumn fx:id="priceNew" prefWidth="646.0" sortable="false" style="-fx-alignment: CENTER;" text="Price" />
+                        <TableColumn fx:id="roomNew" prefWidth="633.0" sortable="false" style="-fx-alignment: CENTER;" text="Room name" />
+                        <TableColumn fx:id="doctorNew" prefWidth="646.0" sortable="false" style="-fx-alignment: CENTER;" text="Doctor" />
                     </columns>
                 </TableView>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Changes made:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
@@ -68,7 +68,7 @@
         </GridPane>
     </center>
    <top>
-      <Label text="Procedure changes" BorderPane.alignment="CENTER">
+      <Label text="Room changes" BorderPane.alignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>

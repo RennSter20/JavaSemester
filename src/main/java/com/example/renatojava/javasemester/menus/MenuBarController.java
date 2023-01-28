@@ -15,7 +15,7 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, procedures, addRemoveDoctors, editDoctors, addRemoveRoom, activeProcedures, doctorChanges, patientChanges, procedureChanges, createProcedure, deleteProcedure, editProcedure;
+    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, procedures, addRemoveDoctors, editDoctors, addRemoveRoom, activeProcedures, doctorChanges, patientChanges, procedureChanges, createProcedure, deleteProcedure, editProcedure, roomChanges;
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
@@ -28,6 +28,7 @@ public class MenuBarController {
             addRemoveRoom.setDisable(true);
             doctorChanges.setDisable(true);
             patientChanges.setDisable(true);
+            roomChanges.setDisable(true);
             procedureChanges.setDisable(true);
             createProcedure.setDisable(true);
             deleteProcedure.setDisable(true);
@@ -39,6 +40,7 @@ public class MenuBarController {
             doctorChanges.setDisable(true);
             patientChanges.setDisable(true);
             procedureChanges.setDisable(true);
+            roomChanges.setDisable(true);
             createProcedure.setDisable(true);
             deleteProcedure.setDisable(true);
             editProcedure.setDisable(true);
@@ -262,6 +264,16 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/editProcedureScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void showRoomChangesScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/changesRoomScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             e.printStackTrace();
