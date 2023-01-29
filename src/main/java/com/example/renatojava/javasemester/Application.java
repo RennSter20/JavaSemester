@@ -68,8 +68,6 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO add confirmation before changes
-
 //TODO threads add second thread
 //TODO editCheckups not showing
 //TODO fix exceptions everywhere

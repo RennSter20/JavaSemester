@@ -1,4 +1,4 @@
-package com.example.renatojava.javasemester.procedureControllers;
+package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;

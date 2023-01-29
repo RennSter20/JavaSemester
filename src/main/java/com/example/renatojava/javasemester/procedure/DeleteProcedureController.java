@@ -1,4 +1,4 @@
-package com.example.renatojava.javasemester.procedureControllers;
+package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
@@ -70,23 +70,25 @@ public class DeleteProcedureController {
         Optional<Procedure> selectedProcedure = Optional.of(priceTable.getSelectionModel().getSelectedItem());
         if(selectedProcedure.isPresent()){
 
-            Procedure procedure = priceTable.getSelectionModel().getSelectedItem();
+            if(Data.confirmEdit()){
+                Procedure procedure = priceTable.getSelectionModel().getSelectedItem();
 
-            if(CheckObjects.checkIfPatientsHaveProcedure(procedure.description())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Error while deleting procedure!");
-                alert.setContentText("Some patients have this checkup.");
-                alert.show();
-                return;
+                if(CheckObjects.checkIfPatientsHaveProcedure(procedure.description())){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Error while deleting procedure!");
+                    alert.setContentText("Some patients have this checkup.");
+                    alert.show();
+                    return;
+                }
+
+                Data.deleteProcedure(procedure.description());
+
+                ChangeWriter writer = new ChangeWriter(procedure, new Procedure(0, "-", Double.valueOf(0)));
+                writer.addChange(Application.getLoggedUser().getRole());
+
+                initialize();
             }
-
-            Data.deleteProcedure(procedure.description());
-
-            ChangeWriter writer = new ChangeWriter(procedure, new Procedure(0, "-", Double.valueOf(0)));
-            writer.addChange(Application.getLoggedUser().getRole());
-
-            initialize();
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("INFORMATION");

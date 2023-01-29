@@ -74,14 +74,22 @@ public class EditDoctorsController {
             }
 
             Data.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, doctorTable.getSelectionModel().getSelectedItem());
-            Data.addedSuccessfully("Doctor");
             initialize();
         }
+    }
+
+    public void clearFields(){
+        nameEditField.setText("");
+        surnameEditField.setText("");
+        titleEditField.setText("");
+        maleRadio.setSelected(false);
+        femaleRadio.setSelected(false);
     }
 
     public void initialize(){
         try{
             fillDoctorTable(Data.getAllDoctors());
+            clearFields();
         } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
