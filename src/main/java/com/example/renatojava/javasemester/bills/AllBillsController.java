@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.bills;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.BillData;
 import com.example.renatojava.javasemester.entity.Bill;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,7 +28,7 @@ public class AllBillsController {
     private TextField searchField;
 
     public void initialize(){
-        fillBillsTable(Data.getAllBills());
+        fillBillsTable(BillData.getAllBills());
     }
 
     public void fillBillsTable(List<Bill> list){
@@ -48,7 +48,7 @@ public class AllBillsController {
 
         List<Bill> filteredBills;
 
-        filteredBills = Data.getAllBills().stream().filter(bill -> bill.getPatient().getFullName().contains(searchText) ||
+        filteredBills = BillData.getAllBills().stream().filter(bill -> bill.getPatient().getFullName().contains(searchText) ||
                                                             String.valueOf(bill.getPatient().getDebt()).contains(searchText) ||
                                                             DateFormatter.getDateTimeFormatted(bill.getTime().toString()).contains(searchText) ||
                                                             bill.getPatient().getOib().contains(searchText)).collect(Collectors.toList());

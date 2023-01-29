@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester.menus;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.database.UserData;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.exceptions.UserNotFoundException;
-import com.example.renatojava.javasemester.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.PasswordField;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class LoginController {
+public class LoginController implements UserData {
 
     private static final String USERS_SERIALIZATION_FILE_NAME = "dat\\users.txt";
 
@@ -57,7 +57,8 @@ public class LoginController {
 
 
         String hashedPassword = DigestUtils.sha1Hex(inputPasswordText);
-        System.out.println(hashedPassword);
+        //System.out.println(hashedPassword);
+
         try{
             if(users.containsKey(inputIdText) && users.get(inputIdText).equals(hashedPassword)){
                 errorText.setText("");
@@ -94,7 +95,7 @@ public class LoginController {
             );
 
             while(proceduresResultSet.next()){
-                userToSet = Data.getUserFromResult(proceduresResultSet);
+                userToSet = UserData.getUserFromResult(proceduresResultSet);
             }
 
             conn.close();

@@ -1,7 +1,9 @@
 package com.example.renatojava.javasemester.procedure;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +15,7 @@ import javafx.scene.control.TableView;
 
 import java.util.List;
 
-public class RemoveProcedureController {
+public class RemoveProcedureController implements PatientData, ProcedureData, Notification {
 
     @FXML
     private TableView<Patient> patientTable;
@@ -24,26 +26,20 @@ public class RemoveProcedureController {
     private TableColumn<Patient, String> patientName, patientSurname, patientOIB, procedureDescription;
 
     public void initialize(){
-        List<Patient> allPatients = Data.getAllPatients();
+        List<Patient> allPatients = PatientData.getAllPatients();
 
         ObservableList<Patient> observableList = FXCollections.observableArrayList(allPatients);
 
-        patientName.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getName());
-        });
-        patientSurname.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getSurname());
-        });
-        patientOIB.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getOib());
-        });
+        patientName.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getName()));
+        patientSurname.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getSurname()));
+        patientOIB.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getOib()));
 
         patientTable.setItems(observableList);
     }
 
     public void onSelectedPatient(){
         if(patientTable.getSelectionModel().getSelectedItem() != null){
-            String proceduresFromPatient = Data.getAllProceduresFromPatientString(patientTable.getSelectionModel().getSelectedItem());
+            String proceduresFromPatient = ProcedureData.getAllProceduresFromPatientString(patientTable.getSelectionModel().getSelectedItem());
             List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
             ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
@@ -60,7 +56,7 @@ public class RemoveProcedureController {
         if(procedureListView.getSelectionModel().getSelectedItem() != null){
             String selectedProcedure = procedureListView.getSelectionModel().getSelectedItem();
 
-            if(!Data.confirmEdit()){
+            if(!Notification.confirmEdit()){
                 Alert failure = new Alert(Alert.AlertType.ERROR);
                 failure.setTitle("ERROR");
                 failure.setHeaderText("Failure!");
@@ -68,7 +64,7 @@ public class RemoveProcedureController {
                 failure.show();
                 return;
             }else{
-                Data.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getId(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
+                ProcedureData.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getId(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("INFORMATION");
                 success.setHeaderText("Success!");

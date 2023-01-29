@@ -1,20 +1,24 @@
 package com.example.renatojava.javasemester.doctors;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.entity.Doctor;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class EditDoctorsController {
+public class EditDoctorsController implements DoctorData, Notification {
 
     @FXML
     private TableView<Doctor> doctorTable;
@@ -34,7 +38,7 @@ public class EditDoctorsController {
         Set<Doctor> filteredDoctors = null;
 
         try{
-            filteredDoctors = Data.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(filter.toLowerCase()) ||
+            filteredDoctors = DoctorData.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(filter.toLowerCase()) ||
                     doctor.getSurname().toLowerCase().contains(filter.toLowerCase()) ||
                     doctor.getTitle().toLowerCase().contains(filter.toLowerCase()) ||
                     doctor.getRoom().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toSet());
@@ -65,7 +69,7 @@ public class EditDoctorsController {
 
     public void apply(){
 
-        if(Data.confirmEdit()){
+        if(Notification.confirmEdit()){
             String newGender = "";
             if(maleRadio.isSelected()){
                 newGender = "M";
@@ -73,7 +77,7 @@ public class EditDoctorsController {
                 newGender = "F";
             }
 
-            Data.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, doctorTable.getSelectionModel().getSelectedItem());
+            DoctorData.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, doctorTable.getSelectionModel().getSelectedItem());
             initialize();
         }
     }
@@ -88,7 +92,7 @@ public class EditDoctorsController {
 
     public void initialize(){
         try{
-            fillDoctorTable(Data.getAllDoctors());
+            fillDoctorTable(DoctorData.getAllDoctors());
             clearFields();
         } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);

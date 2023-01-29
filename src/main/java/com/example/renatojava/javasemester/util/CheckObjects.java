@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester.util;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.*;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
-import com.example.renatojava.javasemester.patientControllers.RegisterPatientScreenController;
+import com.example.renatojava.javasemester.patient.RegisterPatientScreenController;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public sealed interface CheckObjects permits RegisterPatientScreenController {
+public sealed interface CheckObjects permits RegisterPatientScreenController  {
 
     static void checkIfPatientExists(String oib) throws ObjectExistsException{
         List<Patient> patientsList = new ArrayList<>();
@@ -28,7 +28,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             );
 
             while(proceduresResultSet.next()){
-                Patient newPatient = Data.getPatient(proceduresResultSet);
+                Patient newPatient = PatientData.getPatient(proceduresResultSet);
                 patientsList.add(newPatient);
             }
 
@@ -54,7 +54,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
             );
 
             while(proceduresResultSet.next()){
-                Doctor newDoctor = Data.getDoctor(proceduresResultSet);
+                Doctor newDoctor = DoctorData.getDoctor(proceduresResultSet);
                 doctorsList.add(newDoctor);
             }
 
@@ -79,13 +79,13 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
                     "SELECT * FROM HOSPITAL WHERE ROOM='" + roomName + "'"
             );
             while(roomResults.next()){
-                foundDoctorRoom = Data.getRoom(roomResults);
+                foundDoctorRoom = DoctorRoomData.getRoom(roomResults);
             }
 
             if(foundDoctorRoom != null && foundDoctorRoom.getDoctorID() != -1){
                 throw new ObjectExistsException("Another doctor is in this room!");
             }else if(foundDoctorRoom != null && foundDoctorRoom.getDoctorID() == -1){
-                Data.removeRoom(foundDoctorRoom.getRoomID());
+                DoctorRoomData.removeRoom(foundDoctorRoom.getRoomID());
             }
 
         } catch (SQLException e) {
@@ -103,7 +103,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
                     "SELECT * FROM PROCEDURES WHERE DESCRIPTION='" + description + "'"
             );
             while(proceduresResult.next()){
-                foundProcedure = Data.getProcedure(proceduresResult);
+                foundProcedure = ProcedureData.getProcedure(proceduresResult);
             }
             if(foundProcedure != null){
                 throw new ObjectExistsException("Procedure already exists!");
@@ -140,8 +140,8 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
     }
 
     static Boolean checkIfPatientsHaveProcedure(String procedure){
-        List<Patient> allPatients = Data.getAllPatients();
-        List<ActiveCheckup> allCheckups = Data.getAllActiveCheckups();
+        List<Patient> allPatients = PatientData.getAllPatients();
+        List<ActiveCheckup> allCheckups = CheckupData.getAllActiveCheckups();
 
         for(Patient p : allPatients){
             if(p.getProcedures().contains(procedure)){
@@ -150,7 +150,7 @@ public sealed interface CheckObjects permits RegisterPatientScreenController {
         }
 
         for(ActiveCheckup a : allCheckups){
-            if(a.getProcedureID().equals(Data.getProcedureFromDescription(procedure).id())){
+            if(a.getProcedureID().equals(ProcedureData.getProcedureFromDescription(procedure).id())){
                 return true;
             }
         }

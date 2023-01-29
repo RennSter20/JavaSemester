@@ -2,6 +2,7 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PricesScreenController implements Data {
+public class PricesScreenController implements Data, ProcedureData {
 
     @FXML
     private TableView<Procedure> priceTable;
@@ -34,7 +35,7 @@ public class PricesScreenController implements Data {
     @FXML
     public void initialize(){
         try{
-            proceduresToShow = Data.getAllProcedures();
+            proceduresToShow = ProcedureData.getAllProcedures();
         }catch (SQLException | IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }catch (NoProceduresException e){

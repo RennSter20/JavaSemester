@@ -1,8 +1,10 @@
 package com.example.renatojava.javasemester.roomControllers;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.DoctorData;
+import com.example.renatojava.javasemester.database.DoctorRoomData;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AddRemoveRoomController {
+public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Notification {
 
     @FXML
     private TableView<DoctorRoom> roomTable;
@@ -34,7 +36,7 @@ public class AddRemoveRoomController {
 
     public void initialize(){
         try{
-            allDoctors = Data.getAllDoctors();
+            allDoctors = DoctorData.getAllDoctors();
 
             ObservableList<String> doctorsList = FXCollections.observableArrayList(allDoctors.stream().map(Doctor::getDoctorFullName).collect(Collectors.toList()));
             doctorChoice.setItems(doctorsList);
@@ -48,21 +50,21 @@ public class AddRemoveRoomController {
     }
 
     public void fillRoomTable(){
-        List<DoctorRoom> allDoctorRooms = Data.getAllRooms();
+        List<DoctorRoom> allDoctorRooms = DoctorRoomData.getAllRooms();
 
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(allDoctorRooms);
 
         roomNameColumn.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
 
-        doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(Data.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
 
         roomTable.setItems(observableList);
     }
     public void removeRoom(){
-        if(Data.confirmEdit()){
+        if(Notification.confirmEdit()){
             DoctorRoom oldDoctorRoom = roomTable.getSelectionModel().getSelectedItem();
-            Data.unlinkRoomFromDoctor(oldDoctorRoom);
-            Data.removeRoom(oldDoctorRoom.getRoomID());
+            DoctorRoomData.unlinkRoomFromDoctor(oldDoctorRoom);
+            DoctorRoomData.removeRoom(oldDoctorRoom.getRoomID());
             initialize();
         }else{
             Alert failure = new Alert(Alert.AlertType.ERROR);
@@ -83,7 +85,7 @@ public class AddRemoveRoomController {
         }else
         if(doctorChoice.getSelectionModel().getSelectedItem() == null){
             errorMessages.add("Please select a doctor from dropdown list!");
-        }else if(Data.hasDoctorRoom(allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().equals(doctorChoice.getSelectionModel().getSelectedItem())).toList().get(0).getId())){
+        }else if(DoctorRoomData.hasDoctorRoom(allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().equals(doctorChoice.getSelectionModel().getSelectedItem())).toList().get(0).getId())){
             errorMessages.add("Doctor already has a room!");
         }
 
@@ -96,7 +98,7 @@ public class AddRemoveRoomController {
             return;
         }
 
-        if(!Data.confirmEdit()){
+        if(!Notification.confirmEdit()){
             Alert failure = new Alert(Alert.AlertType.ERROR);
             failure.setTitle("ERROR");
             failure.setHeaderText("Failure!");
@@ -104,7 +106,7 @@ public class AddRemoveRoomController {
             failure.show();
         }else{
             Doctor selectedDoctor = allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().equals(doctorChoice.getSelectionModel().getSelectedItem())).toList().get(0);
-            Data.addRoom(nameField.getText(), selectedDoctor.getId());
+            DoctorRoomData.addRoom(nameField.getText(), selectedDoctor.getId());
             initialize();
             clearFields();
         }

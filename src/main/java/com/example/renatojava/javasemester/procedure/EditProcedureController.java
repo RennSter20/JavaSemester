@@ -1,12 +1,13 @@
 package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class EditProcedureController {
+public class EditProcedureController implements ProcedureData, Notification {
 
     @FXML
     private TextField filterField, descriptionField, priceField;
@@ -35,7 +36,7 @@ public class EditProcedureController {
 
     public void initialize(){
         try{
-            fillTable(Data.getAllProcedures());
+            fillTable(ProcedureData.getAllProcedures());
             clearFields();
         }catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -47,7 +48,7 @@ public class EditProcedureController {
     public void editProcedure(){
         try{
             if(!descriptionField.getText().equals("") && !priceField.getText().equals("")){
-                if(Data.confirmEdit()){
+                if(Notification.confirmEdit()){
 
                     Procedure oldProcedure = proceduresTable.getSelectionModel().getSelectedItem();
 
@@ -61,10 +62,10 @@ public class EditProcedureController {
                     }
 
                     CheckObjects.checkIfProcedureExists(descriptionField.getText());
-                    Data.updateProcedure(new Procedure(oldProcedure.id(), descriptionField.getText(), Double.valueOf(priceField.getText())));
+                    ProcedureData.updateProcedure(new Procedure(oldProcedure.id(), descriptionField.getText(), Double.valueOf(priceField.getText())));
 
 
-                    ChangeWriter changeWriter = new ChangeWriter(oldProcedure, Data.getProcedureFromDescription(descriptionField.getText()));
+                    ChangeWriter changeWriter = new ChangeWriter(oldProcedure, ProcedureData.getProcedureFromDescription(descriptionField.getText()));
                     changeWriter.addChange(Application.getLoggedUser().getRole());
                     initialize();
                 }
@@ -103,7 +104,7 @@ public class EditProcedureController {
         List<Procedure> filteredProcedures = null;
 
         try{
-            filteredProcedures = Data.getAllProcedures().stream().filter(procedure -> procedure.description().toLowerCase().contains(inputString.toLowerCase())).collect(Collectors.toList());
+            filteredProcedures = ProcedureData.getAllProcedures().stream().filter(procedure -> procedure.description().toLowerCase().contains(inputString.toLowerCase())).collect(Collectors.toList());
         }catch (IOException | SQLException | NoProceduresException e){
             Application.logger.error(e.getMessage(), e);
         }

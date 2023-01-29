@@ -1,8 +1,10 @@
 package com.example.renatojava.javasemester.doctors;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.DoctorData;
+import com.example.renatojava.javasemester.database.DoctorRoomData;
 import com.example.renatojava.javasemester.entity.Doctor;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class addRemoveDoctorsController {
+public class addRemoveDoctorsController implements DoctorData, Notification, DoctorRoomData {
 
     @FXML
     private TextField nameField, surnameField, titleField;
@@ -28,7 +30,7 @@ public class addRemoveDoctorsController {
     private TableColumn<Doctor, String> nameColumn, surnameColumn, genderColumn, titleColumn, roomColumn;
     public void initialize(){
         try{
-            fillDoctorTable(Data.getAllDoctors());
+            fillDoctorTable(DoctorData.getAllDoctors());
         } catch (SQLException e) {
             Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
@@ -64,14 +66,14 @@ public class addRemoveDoctorsController {
             return;
         }
 
-        if(!Data.confirmEdit()){
+        if(!Notification.confirmEdit()){
             Alert failure = new Alert(Alert.AlertType.ERROR);
             failure.setTitle("ERROR");
             failure.setHeaderText("Failure!");
             failure.setContentText("Doctor is not added to the system!");
             failure.show();
         }else{
-            Data.addDoctor(new Doctor.Builder().withName(name).withSurname(surname).withTitle(title).withRoom(room).withGender(gender).build());
+            DoctorData.addDoctor(new Doctor.Builder().withName(name).withSurname(surname).withTitle(title).withRoom(room).withGender(gender).build());
             initialize();
             clearFields();
         }
@@ -94,15 +96,15 @@ public class addRemoveDoctorsController {
 
     public void removeDoctor(){
         try{
-            if(!Data.confirmEdit()){
+            if(!Notification.confirmEdit()){
                 Alert failure = new Alert(Alert.AlertType.ERROR);
                 failure.setTitle("ERROR");
                 failure.setHeaderText("Failure!");
                 failure.setContentText("Doctor is not removed from the system!");
                 failure.show();
             }else{
-                Data.unlinkDoctorFromRoom(doctorTable.getSelectionModel().getSelectedItem().getRoom());
-                Data.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
+                DoctorRoomData.unlinkDoctorFromRoom(doctorTable.getSelectionModel().getSelectedItem().getRoom());
+                DoctorData.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
                 initialize();
             }
         } catch (SQLException e) {

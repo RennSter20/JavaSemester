@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -10,7 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-public class CreateProcedureController {
+public class CreateProcedureController implements ProcedureData {
 
     @FXML
     private TextField descriptionField, priceField;
@@ -29,11 +29,11 @@ public class CreateProcedureController {
         }else{
             try{
                 CheckObjects.checkIfProcedureExists(descText);
-                Data.createProcedure(descText, priceText);
+                ProcedureData.createProcedure(descText, priceText);
                 descriptionField.setText("");
                 priceField.setText("");
 
-                ChangeWriter changeWriter = new ChangeWriter(new Procedure(0, "-", Double.valueOf(0)), Data.getProcedureFromDescription(descText));
+                ChangeWriter changeWriter = new ChangeWriter(new Procedure(0, "-", Double.valueOf(0)), ProcedureData.getProcedureFromDescription(descText));
                 changeWriter.addChange(Application.getLoggedUser().getRole());
 
             }catch (ObjectExistsException e){

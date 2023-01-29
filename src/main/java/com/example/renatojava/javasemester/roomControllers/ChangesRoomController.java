@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.roomControllers;
 
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,7 +14,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangesRoomController {
+public class ChangesRoomController implements DoctorData {
 
     @FXML
     private TableView<DoctorRoom> oldTable, newTable;
@@ -56,7 +56,7 @@ public class ChangesRoomController {
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(oldRooms);
 
         roomOld.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
-        doctorOld.setCellValueFactory(room -> new SimpleStringProperty(Data.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorOld.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
 
         oldTable.setItems(observableList);
     }
@@ -66,7 +66,7 @@ public class ChangesRoomController {
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(newRooms);
 
         roomNew.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
-        doctorNew.setCellValueFactory(room -> new SimpleStringProperty(Data.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorNew.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
 
         newTable.setItems(observableList);
     }

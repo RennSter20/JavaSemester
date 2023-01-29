@@ -67,11 +67,11 @@ public class Application extends javafx.application.Application {
         launch();
     }
 }
+//TODO data class, implementirati trazenje objekata kao i iz pripreme(Optional)
 
 //TODO threads add second thread
 //TODO editCheckups not showing
 //TODO fix exceptions everywhere
-//TODO unchecked exception
 
 //TODO main screen stats
 //TODO calendar

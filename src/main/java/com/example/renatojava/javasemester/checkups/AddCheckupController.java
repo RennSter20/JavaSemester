@@ -1,11 +1,13 @@
 package com.example.renatojava.javasemester.checkups;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.CheckupData;
+import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddCheckupController {
+public class AddCheckupController implements PatientData,ProcedureData, Notification, CheckupData {
 
     public static final DateTimeFormatter DATE_TIME_FORMAT_FULL = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
     @FXML
@@ -44,7 +46,7 @@ public class AddCheckupController {
 
     @FXML
     public void initialize(){
-        patientList = Data.getAllPatients();
+        patientList = PatientData.getAllPatients();
         fillPatientsTable(patientList);
 
         List<PatientRoom> rooms = List.of(new RoomA("A"), new RoomB("B"), new RoomC("C"));
@@ -65,7 +67,7 @@ public class AddCheckupController {
 
 
         try{
-            procedureList = Data.getAllProcedures();
+            procedureList = ProcedureData.getAllProcedures();
         } catch (SQLException | IOException e) {
             Application.logger.error("There has been an error while getting all procedures!", e);
         }catch (NoProceduresException e){
@@ -94,15 +96,15 @@ public class AddCheckupController {
     }
 
     public void addNewCheckup(){
-        if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Data.confirmEdit()) {
+        if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
 
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
 
                 Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
-                Data.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
+                CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
 
-                ChangeWriter writer = new ChangeWriter(oldPatient, Data.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
+                ChangeWriter writer = new ChangeWriter(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
 
                 writer.addChange(Application.getLoggedUser().getRole());
             }

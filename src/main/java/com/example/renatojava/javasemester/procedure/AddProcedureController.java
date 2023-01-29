@@ -2,9 +2,12 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddProcedureController implements Data {
+public class AddProcedureController implements Data, PatientData, ProcedureData, Notification {
 
     @FXML
     private TableView<Patient> patientsTable;
@@ -39,11 +42,11 @@ public class AddProcedureController implements Data {
 
     @FXML
     public void initialize(){
-        patientList = Data.getAllPatients();
+        patientList = PatientData.getAllPatients();
         fillPatientsTable(patientList);
 
         try{
-            procedureList = Data.getAllProcedures();
+            procedureList = ProcedureData.getAllProcedures();
         } catch (SQLException | IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }catch (NoProceduresException e){
@@ -55,16 +58,9 @@ public class AddProcedureController implements Data {
     public void fillPatientsTable(List<Patient> list){
         ObservableList<Patient> observableList = FXCollections.observableArrayList(list);
 
-        nameColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getName());
-        });
-        surnameColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getSurname());
-        });
-        oibColumn.setCellValueFactory(patient -> {
-            return new SimpleStringProperty(patient.getValue().getOib());
-        });
-
+        nameColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getName()));
+        surnameColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getSurname()));
+        oibColumn.setCellValueFactory(patient -> new SimpleStringProperty(patient.getValue().getOib()));
 
         patientsTable.setItems(observableList);
     }
@@ -72,19 +68,14 @@ public class AddProcedureController implements Data {
     public void fillProceduresTable(List<Procedure> list){
         ObservableList<Procedure> observableList = FXCollections.observableArrayList(list);
 
-        procedureColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(procedure.getValue().description());
-        });
-        priceColumn.setCellValueFactory(procedure -> {
-            return new SimpleStringProperty(String.valueOf(procedure.getValue().price()));
-        });
-
+        procedureColumn.setCellValueFactory(procedure -> new SimpleStringProperty(procedure.getValue().description()));
+        priceColumn.setCellValueFactory(procedure -> new SimpleStringProperty(String.valueOf(procedure.getValue().price())));
 
         procedureTable.setItems(observableList);
     }
 
     public void fillListView(){
-        String proceduresFromPatient = Data.getAllProceduresFromPatientString(patientsTable.getSelectionModel().getSelectedItem());
+        String proceduresFromPatient = ProcedureData.getAllProceduresFromPatientString(patientsTable.getSelectionModel().getSelectedItem());
         List<String> splittedProceduresFromPatient = List.of(proceduresFromPatient.split(","));
         ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
@@ -118,7 +109,7 @@ public class AddProcedureController implements Data {
             return;
         }
 
-        if(!Data.confirmEdit()){
+        if(!Notification.confirmEdit()){
             Alert failure = new Alert(Alert.AlertType.ERROR);
             failure.setTitle("ERROR");
             failure.setHeaderText("Failure!");
@@ -126,7 +117,7 @@ public class AddProcedureController implements Data {
             failure.show();
             return;
         }else{
-            Data.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getId(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
+            ProcedureData.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getId(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
             Alert success = new Alert(Alert.AlertType.INFORMATION);
             success.setTitle("INFORMATION");
             success.setHeaderText("Success!");

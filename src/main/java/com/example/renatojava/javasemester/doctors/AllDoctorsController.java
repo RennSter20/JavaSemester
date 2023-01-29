@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester.doctors;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.entity.Doctor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AllDoctorsController {
+public class AllDoctorsController implements DoctorData {
 
     @FXML
     private TableView<Doctor> doctorsTable;
@@ -29,7 +29,7 @@ public class AllDoctorsController {
 
     public void initialize(){
         try{
-            fillDoctorTable(Data.getAllDoctors());
+            fillDoctorTable(DoctorData.getAllDoctors());
         }catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
@@ -54,7 +54,7 @@ public class AllDoctorsController {
         Set<Doctor> filteredDoctors = null;
 
         try{
-            filteredDoctors = Data.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+            filteredDoctors = DoctorData.getAllDoctors().stream().filter(doctor -> doctor.getName().toLowerCase().contains(searchText.toLowerCase()) ||
                     doctor.getSurname().toLowerCase().contains(searchText.toLowerCase()) ||
                     doctor.getTitle().contains(searchText.toLowerCase()) ||
                     doctor.getRoom().contains(searchText.toLowerCase()))

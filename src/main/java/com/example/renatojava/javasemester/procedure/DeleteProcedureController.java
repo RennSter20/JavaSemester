@@ -1,11 +1,12 @@
 package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class DeleteProcedureController {
+public class DeleteProcedureController implements ProcedureData, Notification {
 
     @FXML
     private TableView<Procedure> priceTable;
@@ -38,7 +39,7 @@ public class DeleteProcedureController {
     @FXML
     public void initialize(){
         try{
-            proceduresToShow = Data.getAllProcedures();
+            proceduresToShow = ProcedureData.getAllProcedures();
         }catch (SQLException | IOException e) {
             Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
         }catch (NoProceduresException e){
@@ -70,7 +71,7 @@ public class DeleteProcedureController {
         Optional<Procedure> selectedProcedure = Optional.of(priceTable.getSelectionModel().getSelectedItem());
         if(selectedProcedure.isPresent()){
 
-            if(Data.confirmEdit()){
+            if(Notification.confirmEdit()){
                 Procedure procedure = priceTable.getSelectionModel().getSelectedItem();
 
                 if(CheckObjects.checkIfPatientsHaveProcedure(procedure.description())){
@@ -82,7 +83,7 @@ public class DeleteProcedureController {
                     return;
                 }
 
-                Data.deleteProcedure(procedure.description());
+                ProcedureData.deleteProcedure(procedure.description());
 
                 ChangeWriter writer = new ChangeWriter(procedure, new Procedure(0, "-", Double.valueOf(0)));
                 writer.addChange(Application.getLoggedUser().getRole());
