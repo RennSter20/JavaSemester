@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ChangeWriter<T> {
+public class ChangeWriter<T>{
 
     private static final String CHANGE_FILE_PATIENTS = "dat\\changes\\patients\\changesPatients.dat";
     private static final String CHANGE_FILE_TIME_PATIENTS = "dat\\changes\\patients\\changesTimePatients.txt";
@@ -39,7 +39,7 @@ public class ChangeWriter<T> {
     public ChangeWriter() {
     }
 
-    public void addChange(String role){
+    public synchronized void addChange(String role){
 
         List<T> items = null;
 
@@ -58,7 +58,7 @@ public class ChangeWriter<T> {
 
         writeAll(items, role);
     }
-    public void writeAll(List<T> itemsToWrite, String role) {
+    public synchronized void writeAll(List<T> itemsToWrite, String role) {
         try{
             if(itemsToWrite.get(0) instanceof Patient){
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, false));
@@ -161,7 +161,7 @@ public class ChangeWriter<T> {
 
     }
 
-    public List<T> readPatients(){
+    public synchronized List<T> readPatients(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -184,7 +184,7 @@ public class ChangeWriter<T> {
         }
         return finalList;
     }
-    public List<T> readDoctors(){
+    public synchronized List<T> readDoctors(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -207,7 +207,7 @@ public class ChangeWriter<T> {
         }
         return finalList;
     }
-    public List<T> readRooms(){
+    public synchronized List<T> readRooms(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -230,7 +230,7 @@ public class ChangeWriter<T> {
         }
         return finalList;
     }
-    public List<T> readProcedures(){
+    public synchronized List<T> readProcedures(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -254,7 +254,7 @@ public class ChangeWriter<T> {
         return finalList;
     }
 
-    public List<String> readTimePatients(){
+    public synchronized List<String> readTimePatients(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_PATIENTS))){
@@ -267,7 +267,7 @@ public class ChangeWriter<T> {
         }
         return changesTime;
     }
-    public List<String> readTimeDoctors(){
+    public synchronized List<String> readTimeDoctors(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_DOCTORS))){
@@ -280,7 +280,7 @@ public class ChangeWriter<T> {
         }
         return changesTime;
     }
-    public List<String> readTimeRooms(){
+    public synchronized List<String> readTimeRooms(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_ROOMS))){
@@ -293,7 +293,7 @@ public class ChangeWriter<T> {
         }
         return changesTime;
     }
-    public List<String> readTimeProcedures() {
+    public synchronized List<String> readTimeProcedures() {
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_PROCEDURES))){
@@ -308,7 +308,7 @@ public class ChangeWriter<T> {
     }
 
 
-    public List<String> readRoleChangeDoctors(){
+    public synchronized List<String> readRoleChangeDoctors(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_DOCTORS_ROLE))){
@@ -321,7 +321,7 @@ public class ChangeWriter<T> {
         }
         return changesRole;
     }
-    public List<String> readRoleChangePatients(){
+    public synchronized List<String> readRoleChangePatients(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_PATIENTS_ROLE))){
@@ -334,7 +334,7 @@ public class ChangeWriter<T> {
         }
         return changesRole;
     }
-    public List<String> readRoleChangeRooms(){
+    public synchronized List<String> readRoleChangeRooms(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_ROOMS_ROLE))){
@@ -347,7 +347,7 @@ public class ChangeWriter<T> {
         }
         return changesRole;
     }
-    public List<String> readRoleChangeProcedures(){
+    public synchronized List<String> readRoleChangeProcedures(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_PROCEDURES_ROLE))){

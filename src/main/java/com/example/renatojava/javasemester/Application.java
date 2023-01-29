@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.User;
-import com.example.renatojava.javasemester.threads.LastChangeMadeThread;
+import com.example.renatojava.javasemester.threads.LastChangeThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -37,10 +37,10 @@ public class Application extends javafx.application.Application {
         stage.setResizable(false);
         stage.show();
 
-        Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(3), new EventHandler<ActionEvent>() {
+        Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Platform.runLater(new LastChangeMadeThread());
+                Platform.runLater(new LastChangeThread());
             }
         }));
         latestChange.setCycleCount(Timeline.INDEFINITE);
@@ -70,7 +70,7 @@ public class Application extends javafx.application.Application {
 
 //TODO add confirmation before changes
 
-//TODO threads
+//TODO threads add second thread
 //TODO editCheckups not showing
 //TODO fix exceptions everywhere
 //TODO unchecked exception
