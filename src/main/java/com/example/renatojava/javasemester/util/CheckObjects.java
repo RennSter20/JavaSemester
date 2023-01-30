@@ -4,7 +4,6 @@ import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.*;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
-import com.example.renatojava.javasemester.patient.RegisterPatientScreenController;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public sealed interface CheckObjects permits RegisterPatientScreenController  {
+public interface CheckObjects  {
 
     static void checkIfPatientExists(String oib) throws ObjectExistsException{
         List<Patient> patientsList = new ArrayList<>();

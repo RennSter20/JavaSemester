@@ -1,11 +1,12 @@
 package com.example.renatojava.javasemester.util;
 
+import com.example.renatojava.javasemester.patient.AllPatientsScreenController;
 import javafx.scene.control.Alert;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface Validator {
+public sealed interface Validator permits AllPatientsScreenController {
 
     static Boolean isOibValid(String oib){
         String regex = "^[0-9]+$";

@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllPatientsScreenController implements Data, Validator, PatientData, Notification, BillData {
+public final class AllPatientsScreenController implements Data, Validator, PatientData, Notification, BillData {
 
     @FXML
     private TableColumn<Patient, String> nameColumn, surnameColumn, OIBColumn, genderColumn, debtColumn;
