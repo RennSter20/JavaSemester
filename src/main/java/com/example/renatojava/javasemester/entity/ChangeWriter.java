@@ -77,7 +77,6 @@ public class ChangeWriter<T>{
 
                 timePatientsWriter.write(dtf.format(now) + "\n");
                 timePatientsWriter.close();
-                timePatientsWriter.flush();
 
 
                 FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_PATIENTS_ROLE, true);

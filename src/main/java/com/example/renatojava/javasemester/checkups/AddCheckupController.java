@@ -96,17 +96,21 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
     }
 
     public void addNewCheckup(){
-        if (!CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
+        if (CheckObjects.checkIfHospitalHasDoctors() && !CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
 
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
 
-                Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
+                if(CheckObjects.checkCheckupTime(datePicker.getDateTimeValue())){
+                    Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
-                CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
+                    CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
 
-                ChangeWriter writer = new ChangeWriter(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
+                    ChangeWriter writer = new ChangeWriter(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
 
-                writer.addChange(Application.getLoggedUser().getRole());
+                    writer.addChange(Application.getLoggedUser().getRole());
+                }
+
+
             }
         }
 

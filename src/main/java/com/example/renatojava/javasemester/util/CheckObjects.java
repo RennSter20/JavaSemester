@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester.util;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.*;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -8,6 +9,7 @@ import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -95,12 +97,12 @@ public sealed interface CheckObjects permits RegisterPatientScreenController  {
         }
     }
 
-    static void checkIfProcedureExists(String description) throws ObjectExistsException{
+    static void checkIfProcedureExists(String description, Double price) throws ObjectExistsException{
         Procedure foundProcedure = null;
         try(Connection conn = Data.connectingToDatabase()){
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResult = sqlStatement.executeQuery(
-                    "SELECT * FROM PROCEDURES WHERE DESCRIPTION='" + description + "'"
+                    "SELECT * FROM PROCEDURES WHERE DESCRIPTION='" + description + "' AND PRICE=" + price
             );
             while(proceduresResult.next()){
                 foundProcedure = ProcedureData.getProcedure(proceduresResult);
@@ -155,6 +157,38 @@ public sealed interface CheckObjects permits RegisterPatientScreenController  {
             }
         }
         return false;
+    }
+
+    static Boolean checkCheckupTime(LocalDateTime localDateTime){
+        List<ActiveCheckup> allCheckups = CheckupData.getAllActiveCheckups();
+        for(ActiveCheckup checkup : allCheckups){
+            long duration = Duration.between(checkup.getDateOfCheckup(), localDateTime).toMinutes();
+            if(duration < 15 && duration > -15){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Error while adding checkup");
+                alert.setContentText("Doctors are not available at this time, please select 15 minutes after or before other checkups!");
+                alert.show();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static Boolean checkIfHospitalHasDoctors(){
+        try{
+            if(DoctorData.getAllDoctors().size() == 0){
+                Alert noDoctors = new Alert(Alert.AlertType.ERROR);
+                noDoctors.setTitle("ERROR");
+                noDoctors.setHeaderText("Error while managing checkups!");
+                noDoctors.setContentText("To schedule a checkup, please add doctors to system.");
+                noDoctors.show();
+                return false;
+            }
+        }catch (SQLException | IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }
+        return true;
     }
 
 }

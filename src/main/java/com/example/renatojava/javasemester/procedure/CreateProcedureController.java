@@ -28,7 +28,7 @@ public class CreateProcedureController implements ProcedureData {
             emptyAlert.show();
         }else{
             try{
-                CheckObjects.checkIfProcedureExists(descText);
+                CheckObjects.checkIfProcedureExists(descText, Double.valueOf(priceText));
                 ProcedureData.createProcedure(descText, priceText);
                 descriptionField.setText("");
                 priceField.setText("");

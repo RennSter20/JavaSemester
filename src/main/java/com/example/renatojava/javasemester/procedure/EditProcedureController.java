@@ -61,7 +61,7 @@ public class EditProcedureController implements ProcedureData, Notification {
                         return;
                     }
 
-                    CheckObjects.checkIfProcedureExists(descriptionField.getText());
+                    CheckObjects.checkIfProcedureExists(descriptionField.getText(), Double.valueOf(priceField.getText()));
                     ProcedureData.updateProcedure(new Procedure(oldProcedure.id(), descriptionField.getText(), Double.valueOf(priceField.getText())));
 
 

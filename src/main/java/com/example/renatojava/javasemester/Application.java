@@ -71,8 +71,10 @@ public class Application extends javafx.application.Application {
 
 //TODO threads add second thread
 //TODO editCheckups not showing
+//TODO checkup changes
 //TODO fix exceptions everywhere
 
 //TODO main screen stats
 //TODO calendar
 //TODO main menu todays checkups!!!
+//TODO instructions to use program
