@@ -1,9 +1,11 @@
 package com.example.renatojava.javasemester.checkups;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.ActiveCheckup;
+import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,6 +44,10 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
 
     public void accept(){
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
+
+            ChangeWriter writer = new ChangeWriter();
+            writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup accepted");
+
             ProcedureData.addProcedureToPatient(PatientData.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(), ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
             initialize();
@@ -56,8 +62,11 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
 
     public void reject(){
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
+
+            ChangeWriter writer = new ChangeWriter();
+            writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup rejected");
+
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
-            Notification.removedSuccessfully("Checkup");
             initialize();
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

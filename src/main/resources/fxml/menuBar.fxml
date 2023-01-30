@@ -26,6 +26,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#showAddCheckupScreen" text="Add checkup" />
                   <MenuItem mnemonicParsing="false" onAction="#showAllCheckupsScreen" text="All checkups" />
+                  <MenuItem fx:id="editCheckup" mnemonicParsing="false" onAction="#showEditCheckupScreen" text="Edit checkup" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Patients">
@@ -55,6 +56,7 @@
                         <MenuItem fx:id="doctorChanges" mnemonicParsing="false" onAction="#showChangesDoctorsScreen" text="Doctor changes" />
                         <MenuItem fx:id="procedureChanges" mnemonicParsing="false" onAction="#showChangesProceduresScreen" text="Procedure changes" />
                         <MenuItem fx:id="roomChanges" mnemonicParsing="false" onAction="#showRoomChangesScreen" text="Room changes" />
+                        <MenuItem fx:id="checkupChanges" mnemonicParsing="false" onAction="#showCheckupChangesScreen" text="Checkup changes" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Rooms">

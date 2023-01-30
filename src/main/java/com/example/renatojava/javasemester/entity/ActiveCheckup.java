@@ -1,8 +1,9 @@
 package com.example.renatojava.javasemester.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ActiveCheckup<T extends PatientRoom> {
+public class ActiveCheckup<T extends PatientRoom> implements Serializable {
 
     private Integer id;
     private LocalDateTime dateOfCheckup;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.checkups.ChangesCheckupsController">
+    <fx:include source="menuBar.fxml" />
+   <center>
+      <TableView fx:id="checkupTable" maxHeight="-Infinity" onMouseClicked="#showInfo" prefHeight="500.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="dateColumn" prefWidth="364.0" text="Date and time" />
+          <TableColumn fx:id="patientColumn" prefWidth="568.0" text="Patient" />
+            <TableColumn fx:id="procedureColumn" prefWidth="347.0" text="Procedure" />
+        </columns>
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+   <top>
+      <Label text="Checkup changes" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="70.0" />
+         </BorderPane.margin>
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </top>
+   <bottom>
+      <Label fx:id="changeText" text="Change made:" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="80.0" />
+         </BorderPane.margin>
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </bottom>
+</BorderPane>

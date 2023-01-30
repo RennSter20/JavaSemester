@@ -5,9 +5,7 @@ import com.example.renatojava.javasemester.Application;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ChangeWriter<T>{
 
@@ -28,6 +26,11 @@ public class ChangeWriter<T>{
     private static final String CHANGE_FILE_PROCEDURES = "dat\\changes\\procedures\\changesProcedures.dat";
     private static final String CHANGE_FILE_PROCEDURES_ROLE = "dat\\changes\\procedures\\changesProceduresRole.txt";
     private static final String CHANGE_FILE_TIME_PROCEDURES = "dat\\changes\\procedures\\changesTimeProcedures.txt";
+
+
+    private static final String CHANGE_FILE_CHECKUPS = "dat\\changes\\checkups\\changesCheckups.dat";
+    private static final String CHANGE_FILE_CHECKUPS_ROLE = "dat\\changes\\checkups\\changesCheckupsRole.txt";
+    private static final String CHANGE_FILE_TIME_CHECKUPS = "dat\\changes\\checkups\\changesTimeCheckups.txt";
     private T oldObject, newObject;
 
 
@@ -35,11 +38,10 @@ public class ChangeWriter<T>{
         this.oldObject = oldObject;
         this.newObject = newObject;
     }
+    public ChangeWriter(){}
 
-    public ChangeWriter() {
-    }
 
-    public synchronized void addChange(String role){
+    public void addChange(String role){
 
         List<T> items = null;
 
@@ -58,7 +60,7 @@ public class ChangeWriter<T>{
 
         writeAll(items, role);
     }
-    public synchronized void writeAll(List<T> itemsToWrite, String role) {
+    public void writeAll(List<T> itemsToWrite, String role) {
         try{
             if(itemsToWrite.get(0) instanceof Patient){
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, false));
@@ -156,11 +158,42 @@ public class ChangeWriter<T>{
         } catch (IOException e) {
             Application.logger.info(e.getMessage(), e.getStackTrace());
         }
-
-
     }
 
-    public synchronized List<T> readPatients(){
+
+    public void addCheckupsChange(ActiveCheckup checkup, String role, String change){
+        List<T> items = new ArrayList<>(readCheckups());
+        items.add((T)checkup);
+        writeAllCheckups(items, role, change);
+    }
+
+    public void writeAllCheckups(List<T> list, String role, String change){
+        try{
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_CHECKUPS, false));
+            for(T object : list){
+                out.writeObject(object);
+            }
+            out.close();
+            out.flush();
+
+
+            FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_CHECKUPS, true);
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            timePatientsWriter.write(dtf.format(now) + "\n");
+            timePatientsWriter.close();
+
+
+            FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_CHECKUPS_ROLE, true);
+            roleDoctorsWriter.write(role + "\n" + change + "\n");
+            roleDoctorsWriter.close();
+        }catch (IOException e){
+
+        }
+    }
+
+    public List<T> readPatients(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -183,7 +216,7 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public synchronized List<T> readDoctors(){
+    public List<T> readDoctors(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -206,7 +239,7 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public synchronized List<T> readRooms(){
+    public List<T> readRooms(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -229,7 +262,7 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public synchronized List<T> readProcedures(){
+    public List<T> readProcedures(){
         List<T> first = new ArrayList<>();
         List<T> second = new ArrayList<>();
         List<T> finalList = new ArrayList<>();
@@ -252,8 +285,23 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
+    public List<T> readCheckups(){
+        List<T> finalList = new ArrayList<>();
+        try {
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_CHECKUPS));
+            while(true){
+                finalList.add((T)input.readObject());
+            }
 
-    public synchronized List<String> readTimePatients(){
+        } catch (IOException e) {
+            Application.logger.info(e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            Application.logger.info(e.getMessage(), e);
+        }
+        return finalList;
+    }
+
+    public List<String> readTimePatients(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_PATIENTS))){
@@ -266,7 +314,7 @@ public class ChangeWriter<T>{
         }
         return changesTime;
     }
-    public synchronized List<String> readTimeDoctors(){
+    public List<String> readTimeDoctors(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_DOCTORS))){
@@ -279,7 +327,7 @@ public class ChangeWriter<T>{
         }
         return changesTime;
     }
-    public synchronized List<String> readTimeRooms(){
+    public List<String> readTimeRooms(){
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_ROOMS))){
@@ -292,7 +340,7 @@ public class ChangeWriter<T>{
         }
         return changesTime;
     }
-    public synchronized List<String> readTimeProcedures() {
+    public List<String> readTimeProcedures() {
         List<String> changesTime = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_PROCEDURES))){
@@ -305,9 +353,22 @@ public class ChangeWriter<T>{
         }
         return changesTime;
     }
+    public List<String> readTimeCheckups(){
+        List<String> changesTime = new ArrayList<>();
+
+        try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_CHECKUPS))){
+            while(scanner.hasNextLine()){
+                String time = scanner.nextLine();
+                changesTime.add(time);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return changesTime;
+    }
 
 
-    public synchronized List<String> readRoleChangeDoctors(){
+    public List<String> readRoleChangeDoctors(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_DOCTORS_ROLE))){
@@ -320,7 +381,7 @@ public class ChangeWriter<T>{
         }
         return changesRole;
     }
-    public synchronized List<String> readRoleChangePatients(){
+    public List<String> readRoleChangePatients(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_PATIENTS_ROLE))){
@@ -333,7 +394,7 @@ public class ChangeWriter<T>{
         }
         return changesRole;
     }
-    public synchronized List<String> readRoleChangeRooms(){
+    public List<String> readRoleChangeRooms(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_ROOMS_ROLE))){
@@ -346,13 +407,27 @@ public class ChangeWriter<T>{
         }
         return changesRole;
     }
-    public synchronized List<String> readRoleChangeProcedures(){
+    public List<String> readRoleChangeProcedures(){
         List<String> changesRole = new ArrayList<>();
 
         try(Scanner scanner = new Scanner(new File(CHANGE_FILE_PROCEDURES_ROLE))){
             while(scanner.hasNextLine()){
                 String role = scanner.nextLine();
                 changesRole.add(role);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return changesRole;
+    }
+
+    public List<String> readRoleChangeCheckups(){
+        List<String> changesRole = new ArrayList<>();
+
+        try(Scanner scanner = new Scanner(new File(CHANGE_FILE_CHECKUPS_ROLE))){
+            while(scanner.hasNextLine()){
+                String scan = scanner.nextLine();
+                changesRole.add(scan);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

@@ -47,6 +47,19 @@ public class MenuBarController {
         }
     }
 
+
+
+    public void showEditCheckupScreen() {
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(
+                    getClass().getResource("/fxml/editCheckups.fxml"));
+            Application.setMainPage(root);
+        } catch (IOException e) {
+            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+        }
+    }
+
     public void showPricesScreen() {
         BorderPane root;
         try {
@@ -274,6 +287,16 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(getClass().getResource("/fxml/changesRoomScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void showCheckupChangesScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/changesCheckupsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             e.printStackTrace();

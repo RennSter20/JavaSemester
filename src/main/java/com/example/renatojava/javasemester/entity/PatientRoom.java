@@ -1,6 +1,8 @@
 package com.example.renatojava.javasemester.entity;
 
-public class PatientRoom {
+import java.io.Serializable;
+
+public class PatientRoom implements Serializable {
 
     private String roomType;
 

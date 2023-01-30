@@ -1,7 +1,9 @@
 package com.example.renatojava.javasemester.database;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.ActiveCheckup;
 import com.example.renatojava.javasemester.entity.PatientRoom;
+import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
 import com.example.renatojava.javasemester.util.RoomChecker;
 
@@ -20,7 +22,7 @@ public interface CheckupData {
             String roomType = new RoomChecker(room).roomType();
 
             String dateTimeString = time.toString();
-            String fullDateTime = dateTimeString.substring(8,10) + "-" + dateTimeString.substring(5,7) + "-" + dateTimeString.substring(0,4) + " " + dateTimeString.substring(11,13) + ":" + dateTimeString.substring(14,16);
+            String fullDateTime = DateFormatter.getDateTimeFormatted(dateTimeString);
 
             PreparedStatement stmnt = conn.prepareStatement("INSERT INTO ACTIVE_CHECKUPS(PROCEDURE_ID, PATIENT_ID, DATE, ROOM_TYPE) VALUES (" + procedureID + ", " + patientID + ",parsedatetime('" + fullDateTime + "', 'dd-MM-yyyy HH:mm'), '" + roomType + "');");
             stmnt.executeUpdate();
@@ -69,6 +71,8 @@ public interface CheckupData {
             PreparedStatement stmnt = veza.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE ID=" + id);
             stmnt.executeUpdate();
 
+            Notification.removedSuccessfully("Checkup");
+
             veza.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -90,5 +94,43 @@ public interface CheckupData {
             throw new RuntimeException(e);
         }
     }
+    static void updateActiveCheckup(Integer id, LocalDateTime dateTimeValue, PatientRoom selectedItem) {
 
+        try(Connection conn = Data.connectingToDatabase()){
+
+            ActiveCheckup checkup = getCheckupFromId(id);
+
+            PreparedStatement stmnt = conn.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE ID=" + id);
+            stmnt.executeUpdate();
+
+            stmnt = conn.prepareStatement("INSERT INTO ACTIVE_CHECKUPS(PROCEDURE_ID, PATIENT_ID, DATE, ROOM_TYPE) VALUES (" + checkup.getProcedureID() + ", " + checkup.getPatientID() + ",parsedatetime('" + DateFormatter.getDateTimeFormatted(dateTimeValue.toString()) + "', 'dd-MM-yyyy HH:mm'), '" + selectedItem.getRoomType() + "');");
+            stmnt.executeUpdate();
+
+            Notification.updatedSuccessfully("Checkup");
+        }catch (SQLException | IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }
+
+    }
+
+    static ActiveCheckup getCheckupFromId(Integer id){
+        ActiveCheckup checkup = null;
+
+        try(Connection conn = Data.connectingToDatabase()) {
+
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet checkupResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM ACTIVE_CHECKUPS WHERE ID=" + id
+            );
+
+            while(checkupResultSet.next()){
+                checkup = getCheckup(checkupResultSet);
+            }
+
+        } catch (SQLException | IOException e) {
+            Application.logger.error(e.getMessage(), e);
+        }
+        return checkup;
+    }
 }
