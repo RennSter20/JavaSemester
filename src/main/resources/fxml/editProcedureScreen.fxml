@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.procedure.EditProcedureController">
     <fx:include source="menuBar.fxml" />
@@ -37,21 +36,11 @@
                     </columns>
                 </TableView>
                 <TextField fx:id="filterField" prefHeight="25.0" prefWidth="455.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                    <GridPane.margin>
-                        <Insets right="5.0" />
-                    </GridPane.margin>
-                </Text>
                 <Button mnemonicParsing="false" onAction="#searchProcedure" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </Button>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit procedures" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Text>
                 <Button fx:id="editButton" mnemonicParsing="false" text="Edit" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="80.0" />
@@ -89,6 +78,16 @@
                   </Label>
                     </children>
                 </GridPane>
+            <Label text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Edit procedures" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
             </children>
             <BorderPane.margin>
                 <Insets top="30.0" />

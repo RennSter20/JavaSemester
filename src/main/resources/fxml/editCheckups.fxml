@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import tornadofx.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.checkups.EditCheckupsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.checkups.EditCheckupsController">
     <fx:include source="menuBar.fxml" />
     <center>
         <GridPane prefHeight="751.0" prefWidth="1286.0" BorderPane.alignment="CENTER">
@@ -31,21 +38,11 @@
                     </columns>
                 </TableView>
                 <TextField fx:id="filterField" prefHeight="25.0" prefWidth="455.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                    <GridPane.margin>
-                        <Insets right="5.0" />
-                    </GridPane.margin>
-                </Text>
                 <Button mnemonicParsing="false" onAction="#search" text="Search" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="10.0" />
                     </GridPane.margin>
                 </Button>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit checkups" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Text>
                 <Button fx:id="editButton" mnemonicParsing="false" text="Edit" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets left="80.0" />
@@ -65,7 +62,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Button mnemonicParsing="false" onAction="#apply" text="Apply" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+                        <Button mnemonicParsing="false" onAction="#apply" text="Apply" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                             <GridPane.margin>
                                 <Insets />
                             </GridPane.margin></Button>
@@ -75,6 +72,16 @@
                   <ChoiceBox fx:id="roomChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
+            <Label text="Edit checkups" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Search" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </Label>
             </children>
             <BorderPane.margin>
                 <Insets top="30.0" />

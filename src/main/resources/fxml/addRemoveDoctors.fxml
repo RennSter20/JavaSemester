@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -12,7 +13,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.doctors.addRemoveDoctorsController">
     <fx:include source="menuBar.fxml" />
@@ -37,14 +37,6 @@
                   <TableColumn fx:id="roomColumn" prefWidth="77.0" style="-fx-alignment: CENTER;" text="Room" />
               </columns>
             </TableView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Remove doctor:" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
-               <font>
-                  <Font size="18.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets bottom="10.0" />
-               </GridPane.margin>
-            </Text>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="230.0" />
@@ -58,26 +50,6 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" GridPane.halignment="RIGHT">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Surname:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                     <GridPane.margin>
-                        <Insets right="10.0" />
-                     </GridPane.margin>
-                  </Text>
                   <TextField fx:id="nameField" maxWidth="200.0" GridPane.columnIndex="1" />
                   <TextField fx:id="surnameField" maxWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="titleField" maxWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -92,6 +64,26 @@
                      </GridPane.margin>
                   </RadioButton>
                   <Button mnemonicParsing="false" onMouseClicked="#addDoctor" text="Add" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+                  <Label text="Name:" GridPane.halignment="RIGHT">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Surname:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Title:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Gender:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
             </GridPane>
             <Button mnemonicParsing="false" onMouseClicked="#removeDoctor" text="Remove" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
@@ -99,14 +91,19 @@
                   <Insets top="15.0" />
                </GridPane.margin>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add doctor:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+            <Label text="Remove doctor:" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="18.0" />
                </font>
                <GridPane.margin>
-                  <Insets bottom="5.0" />
+                  <Insets bottom="20.0" />
                </GridPane.margin>
-            </Text>
+            </Label>
+            <Label text="Add doctor:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
          <BorderPane.margin>
             <Insets top="50.0" />

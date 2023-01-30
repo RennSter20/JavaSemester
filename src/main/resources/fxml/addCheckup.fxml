@@ -47,7 +47,7 @@
                 </TableView>
                 <Button mnemonicParsing="false" onAction="#addNewCheckup" text="Add" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                     <GridPane.margin>
-                        <Insets top="120.0" />
+                        <Insets top="180.0" />
                     </GridPane.margin>
                 </Button>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add a checkup" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
@@ -62,7 +62,7 @@
                 </DateTimePicker>
             <ChoiceBox fx:id="roomChoiceBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets top="50.0" />
+                  <Insets top="100.0" />
                </GridPane.margin>
             </ChoiceBox>
             </children>
