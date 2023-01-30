@@ -1,5 +1,7 @@
 package com.example.renatojava.javasemester.entity;
 
+import com.example.renatojava.javasemester.database.DoctorData;
+
 import java.io.Serializable;
 
 public class DoctorRoom implements Serializable {
@@ -40,5 +42,12 @@ public class DoctorRoom implements Serializable {
 
     public void setDoctor(Integer doctorID) {
         this.doctorID = doctorID;
+    }
+
+    @Override
+    public String toString() {
+        return "Information about room: \n" +
+                "Room name: " + roomName + "\n" +
+                "Doctor name: " + DoctorData.getCertainDoctor(doctorID).getDoctorFullName() + "\n";
     }
 }

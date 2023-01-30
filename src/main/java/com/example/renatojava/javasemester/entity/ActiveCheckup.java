@@ -1,5 +1,9 @@
 package com.example.renatojava.javasemester.entity;
 
+import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.database.ProcedureData;
+import com.example.renatojava.javasemester.util.DateFormatter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -58,5 +62,14 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
 
     public void setRoom(T room) {
         this.room = room;
+    }
+
+    @Override
+    public String toString() {
+        return "Information about checkup:\n" +
+                "Date of checkup: " + DateFormatter.getDateTimeFormatted(dateOfCheckup.toString()) + "\n" +
+                "Patient: " + PatientData.getPatientWithID(patientID).getFullName() + "\n" +
+                "Procedure: " + ProcedureData.getProcedureFromId(procedureID) + "\n" +
+                "Room: " + room.getRoomType();
     }
 }

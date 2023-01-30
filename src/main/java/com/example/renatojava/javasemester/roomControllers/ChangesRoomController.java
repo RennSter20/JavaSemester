@@ -7,12 +7,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChangesRoomController implements DoctorData {
 
@@ -86,6 +88,25 @@ public class ChangesRoomController implements DoctorData {
             oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
             changeTimeText.setText(changesTime.get(selectedRoom));
             role.setText("by role " + rolesList.get(newTable.getSelectionModel().getSelectedIndex()));
+        }
+    }
+
+    public void moreInfo(){
+        Optional<DoctorRoom> selOldRoom = Optional.ofNullable(oldTable.getSelectionModel().getSelectedItem());
+        Optional<DoctorRoom> selNewRoom = Optional.ofNullable(newTable.getSelectionModel().getSelectedItem());
+
+        if(selOldRoom.isPresent() || selNewRoom.isPresent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("More info about room change.");
+            alert.setContentText("OLD VALUE:\n" + selOldRoom.get() + "\n\nNEW VALUE:\n" + selNewRoom.get());
+            alert.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No room change selected!");
+            alert.setContentText("Please select room to show more info!");
+            alert.show();
         }
     }
 

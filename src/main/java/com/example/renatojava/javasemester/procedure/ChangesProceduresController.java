@@ -6,12 +6,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChangesProceduresController {
 
@@ -86,6 +88,25 @@ public class ChangesProceduresController {
 
         newTable.setItems(observableList);
 
+    }
+
+    public void moreInfo(){
+        Optional<Procedure> selOldProcedure = Optional.ofNullable(oldTable.getSelectionModel().getSelectedItem());
+        Optional<Procedure> selNewProcedure = Optional.ofNullable(newTable.getSelectionModel().getSelectedItem());
+
+        if(selOldProcedure.isPresent() || selNewProcedure.isPresent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("More info about procedure change.");
+            alert.setContentText("OLD VALUE:\n" + selOldProcedure.get() + "\n\nNEW VALUE:\n" + selNewProcedure.get());
+            alert.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No procedure change selected!");
+            alert.setContentText("Please select procedure to show more info!");
+            alert.show();
+        }
     }
 
 }

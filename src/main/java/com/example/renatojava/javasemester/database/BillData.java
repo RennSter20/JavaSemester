@@ -32,7 +32,7 @@ public interface BillData {
             conn.close();
 
         } catch (IOException | SQLException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static List<Bill> getAllBills(){
@@ -49,9 +49,9 @@ public interface BillData {
                 billList.add(newBill);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return billList;
     }

@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -48,22 +49,41 @@ public class ChangesCheckupsController {
     public void showInfo(){
         Optional<ActiveCheckup> selectedCheckup = Optional.ofNullable(checkupTable.getSelectionModel().getSelectedItem());
 
-        List<String> checkups = reader.readTimeCheckups();
-        List<String> rolesAndChanges = reader.readRoleChangeCheckups();
+        if(selectedCheckup.isPresent()){
+            List<String> checkups = reader.readTimeCheckups();
+            List<String> rolesAndChanges = reader.readRoleChangeCheckups();
 
-        List<String> roles = new ArrayList<>();
-        List<String> changes = new ArrayList<>();
+            List<String> roles = new ArrayList<>();
+            List<String> changes = new ArrayList<>();
 
-        for(int i = 0;i<rolesAndChanges.size();i+=2){
-            roles.add(rolesAndChanges.get(i));
+            for(int i = 0;i<rolesAndChanges.size();i+=2){
+                roles.add(rolesAndChanges.get(i));
+            }
+            for(int i = 1;i<rolesAndChanges.size();i+=2){
+                changes.add(rolesAndChanges.get(i));
+            }
+
+            if(selectedCheckup.isPresent()){
+                changeText.setText("Changes made: " + checkups.get(checkupTable.getSelectionModel().getSelectedIndex()) + " " + changes.get(checkupTable.getSelectionModel().getSelectedIndex()) + " by " + roles.get(checkupTable.getSelectionModel().getSelectedIndex()));
+            }
         }
-        for(int i = 1;i<rolesAndChanges.size();i+=2){
-            changes.add(rolesAndChanges.get(i));
-        }
+    }
+
+    public void moreInfo(){
+        Optional<ActiveCheckup> selectedCheckup = Optional.ofNullable(checkupTable.getSelectionModel().getSelectedItem());
 
         if(selectedCheckup.isPresent()){
-            String currentText = changeText.getText();
-            changeText.setText("Changes made: " + checkups.get(checkupTable.getSelectionModel().getSelectedIndex()) + " " + changes.get(checkupTable.getSelectionModel().getSelectedIndex()) + " by " + roles.get(checkupTable.getSelectionModel().getSelectedIndex()));
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("More info about checkup change.");
+            alert.setContentText(selectedCheckup.get().toString());
+            alert.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No checkup selected!");
+            alert.setContentText("Please select checkup to show more info!");
+            alert.show();
         }
     }
 

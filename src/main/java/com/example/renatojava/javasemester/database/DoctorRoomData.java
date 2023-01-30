@@ -31,9 +31,9 @@ public interface DoctorRoomData {
                 doctorRoomList.add(newDoctorRoom);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return doctorRoomList;
     }
@@ -59,9 +59,9 @@ public interface DoctorRoomData {
             conn.close();
 
         } catch (IOException | SQLException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
         }catch (ObjectExistsException e){
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setHeaderText(e.getMessage());
@@ -85,9 +85,9 @@ public interface DoctorRoomData {
 
             veza.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static DoctorRoom getRoomWithId(Integer id){
@@ -103,7 +103,7 @@ public interface DoctorRoomData {
             }
 
         } catch (SQLException | IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info(e.getMessage(), e);
         }
         return certainDoctorRoom;
     }
@@ -120,7 +120,7 @@ public interface DoctorRoomData {
             }
 
         } catch (SQLException | IOException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.info(e.getMessage(), e);
         }
         return certainDoctorRoom;
     }
@@ -142,7 +142,7 @@ public interface DoctorRoomData {
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
         } catch (SQLException | IOException e) {
-            System.out.println(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static void unlinkRoomFromDoctor(DoctorRoom doctorRoomToRemove){
@@ -157,9 +157,9 @@ public interface DoctorRoomData {
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static void unlinkDoctorFromRoom(String roomName){
@@ -174,9 +174,9 @@ public interface DoctorRoomData {
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static Boolean hasDoctorRoom(Integer id){

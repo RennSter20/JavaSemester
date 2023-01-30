@@ -70,13 +70,11 @@ public class EditCheckupsController {
     public void search(){
         String searchText = filterField.getText();
 
-        List<ActiveCheckup> filteredCheckups = null;
-
-        filteredCheckups = CheckupData.getAllActiveCheckups().stream()
+        List<ActiveCheckup> filteredCheckups = CheckupData.getAllActiveCheckups().stream()
                 .filter(checkup -> checkup.getDateOfCheckup().toString().toLowerCase().contains(searchText.toLowerCase())
                         || checkup.getRoom().getRoomType().toLowerCase().contains(searchText.toLowerCase())
                         || PatientData.getPatientWithID(checkup.getPatientID()).getFullName().toLowerCase().contains(searchText))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());;
 
         fillCheckupTable(filteredCheckups);
     }

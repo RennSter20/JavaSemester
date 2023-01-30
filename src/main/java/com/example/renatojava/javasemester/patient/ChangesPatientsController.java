@@ -6,12 +6,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChangesPatientsController {
 
@@ -91,6 +93,25 @@ public class ChangesPatientsController {
             oldTable.getSelectionModel().select(newTable.getSelectionModel().getFocusedIndex());
             changeTimeText.setText(changesTime.get(selectedPatient));
             role.setText("by role " + rolesList.get(newTable.getSelectionModel().getSelectedIndex()));
+        }
+    }
+
+    public void moreInfo(){
+        Optional<Patient> selOldPatient = Optional.ofNullable(oldTable.getSelectionModel().getSelectedItem());
+        Optional<Patient> selNewPatient = Optional.ofNullable(newTable.getSelectionModel().getSelectedItem());
+
+        if(selOldPatient.isPresent() || selNewPatient.isPresent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("More info about patient change.");
+            alert.setContentText("OLD VALUE:\n" + selOldPatient.get() + "\n\nNEW VALUE:\n" + selNewPatient.get());
+            alert.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No patient change selected!");
+            alert.setContentText("Please select patient to show more info!");
+            alert.show();
         }
     }
 

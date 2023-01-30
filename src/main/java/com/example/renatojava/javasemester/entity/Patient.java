@@ -19,6 +19,25 @@ public class Patient extends Person {
         this.date = date;
     }
 
+    @Override
+    public String toString() {
+        if(date == null){
+            return "Information about patient: " + "\n" +
+                    "Full name: " + getFullName() + "\n" +
+                    "OIB: " + oib + "\n" +
+                    "Birth date: "+ "-" + "\n" +
+                    "Procedures: " + procedures + "\n" +
+                    "Debt: " + debt;
+        }else{
+            return "Information about patient: " + "\n" +
+                    "Full name: " + getFullName() + "\n" +
+                    "OIB: " + oib + "\n" +
+                    "Birth date: "+ date.toString() + "\n" +
+                    "Procedures: " + procedures + "\n" +
+                    "Debt: " + debt;
+        }
+    }
+
     public static class Builder{
         private Integer id;
         private String name;

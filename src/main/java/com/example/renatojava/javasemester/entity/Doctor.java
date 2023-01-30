@@ -74,4 +74,13 @@ public class Doctor extends Person{
             return this;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Information about doctor: \n" +
+                "Full name: " + title + " " + getDoctorFullName() + "\n" +
+                "Gender: " + getGender() + "\n" +
+                "Room: " + room + "\n";
+
+    }
 }

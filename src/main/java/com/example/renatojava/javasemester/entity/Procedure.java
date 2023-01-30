@@ -23,4 +23,11 @@ public record Procedure(Integer id, String description, Double price) implements
     public Integer id() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Information about procedure:\n" +
+            "Description: " + description + "\n" +
+            "Price: " + price;
+    }
 }

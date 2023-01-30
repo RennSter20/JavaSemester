@@ -70,10 +70,9 @@ public class Application extends javafx.application.Application {
 //TODO data class, implementirati trazenje objekata kao i iz pripreme(Optional)
 
 //TODO threads add second thread
-//TODO fix exceptions everywhere
-//TODO generic hospital rooms
+//TODO more info when clicked
+//TODO change everything to label
 
-//TODO main screen stats
 //TODO calendar
 //TODO main menu todays checkups!!!
 //TODO instructions to use program

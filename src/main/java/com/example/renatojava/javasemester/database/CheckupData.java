@@ -32,7 +32,7 @@ public interface CheckupData {
             conn.close();
 
         } catch (IOException | SQLException e) {
-            System.out.println(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static List<ActiveCheckup> getAllActiveCheckups(){
@@ -49,9 +49,9 @@ public interface CheckupData {
                 activeCheckupList.add(checkup);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return activeCheckupList;
     }
@@ -75,9 +75,9 @@ public interface CheckupData {
 
             veza.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static void removeAllActiveCheckupsFromPatient(Integer patientID){
@@ -89,9 +89,9 @@ public interface CheckupData {
 
             veza.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
     }
     static void updateActiveCheckup(Integer id, LocalDateTime dateTimeValue, PatientRoom selectedItem) {
