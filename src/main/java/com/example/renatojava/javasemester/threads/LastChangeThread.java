@@ -69,7 +69,7 @@ public class LastChangeThread implements Runnable{
                     index = 3;
                 }
             }
-            if(allEmpty) throw new NoRecentChangesException("No recent change!");
+            if(allEmpty) throw new NoRecentChangesException("Hospital Java                                                                  No recent change!");
 
             String change = "";
 
@@ -103,7 +103,7 @@ public class LastChangeThread implements Runnable{
                         }
                         break;
                 }
-                Application.getStage().setTitle("Latest change, " + change + " ---> Time of change: " + latestDate);
+                Application.getStage().setTitle("Hospital Java                                                                                      Latest change, " + change + " ---> Time of change: " + latestDate);
         }catch (NoRecentChangesException e){
             Application.getStage().setTitle(e.getMessage());
         } catch (ParseException e) {

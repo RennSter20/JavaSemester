@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -39,6 +40,7 @@ public class Application extends javafx.application.Application {
             stage.setScene(scene);
             stage.setFullScreen(false);
             stage.setResizable(false);
+            stage.getIcons().add(new Image("/icon.png"));
             stage.show();
 
             Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
@@ -71,9 +73,7 @@ public class Application extends javafx.application.Application {
         launch();
     }
 }
-//TODO data class, implementirati trazenje objekata kao i iz pripreme(Optional)
-
-//TODO threads add second thread
+//TODO threads
 
 //TODO calendar
 //TODO instructions to use program
