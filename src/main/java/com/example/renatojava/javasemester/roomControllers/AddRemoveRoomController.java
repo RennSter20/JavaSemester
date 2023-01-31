@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester.roomControllers;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.database.DoctorRoomData;
 import com.example.renatojava.javasemester.entity.Doctor;
@@ -43,9 +44,9 @@ public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Noti
             fillRoomTable();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -90,8 +91,8 @@ public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Noti
         }
 
         if(errorMessages.size() > 0){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             String error = errorMessages.stream().collect(Collectors.joining("\n"));
             alert.setHeaderText(error);
             alert.show();

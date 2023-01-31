@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.threads.LastChangeThread;
 import javafx.animation.KeyFrame;
@@ -22,6 +23,9 @@ public class Application extends javafx.application.Application {
     public static final Logger logger = LoggerFactory.getLogger(Application.class);
     public static Stage mainStage;
     public static User loggedUser;
+    public static ChangeWriter changeWriter = new ChangeWriter<>();
+
+    public static boolean isWriting = false;
 
     public static Stage getStage() {
         return mainStage;
@@ -29,22 +33,22 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        mainStage = stage;
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/loginScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
-        stage.setScene(scene);
-        stage.setFullScreen(false);
-        stage.setResizable(false);
-        stage.show();
+            mainStage = stage;
+            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/loginScreen.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
+            stage.setScene(scene);
+            stage.setFullScreen(false);
+            stage.setResizable(false);
+            stage.show();
 
-        Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Platform.runLater(new LastChangeThread());
-            }
-        }));
-        latestChange.setCycleCount(Timeline.INDEFINITE);
-        latestChange.play();
+            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Platform.runLater(new LastChangeThread(changeWriter));
+                }
+            }));
+            latestChange.setCycleCount(Timeline.INDEFINITE);
+            latestChange.play();
 
 
     }
@@ -70,9 +74,6 @@ public class Application extends javafx.application.Application {
 //TODO data class, implementirati trazenje objekata kao i iz pripreme(Optional)
 
 //TODO threads add second thread
-//TODO change everything to label
-//TODO fix all alerts
 
 //TODO calendar
-//TODO main menu todays checkups!!!
 //TODO instructions to use program

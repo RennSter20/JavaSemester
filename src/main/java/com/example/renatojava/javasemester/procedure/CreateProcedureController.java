@@ -21,8 +21,8 @@ public class CreateProcedureController implements ProcedureData {
         String priceText = priceField.getText();
 
         if(descText.equals("") || priceText.equals("")){
-            Alert emptyAlert = new Alert(Alert.AlertType.INFORMATION);
-            emptyAlert.setTitle("INFORMATION");
+            Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
+            emptyAlert.setTitle("ERROR");
             emptyAlert.setHeaderText("Empty fields!");
             emptyAlert.setContentText("All fields must be filled!");
             emptyAlert.show();
@@ -37,9 +37,9 @@ public class CreateProcedureController implements ProcedureData {
                 changeWriter.addChange(Application.getLoggedUser().getRole());
 
             }catch (ObjectExistsException e){
-                Alert emptyAlert = new Alert(Alert.AlertType.INFORMATION);
-                emptyAlert.setTitle("INFORMATION");
-                emptyAlert.setHeaderText("Creating procedure error");
+                Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
+                emptyAlert.setTitle("ERROR");
+                emptyAlert.setHeaderText("Error while creating procedure.");
                 emptyAlert.setContentText(e.getMessage());
                 emptyAlert.show();
                 Application.logger.error(e.getMessage(), e);

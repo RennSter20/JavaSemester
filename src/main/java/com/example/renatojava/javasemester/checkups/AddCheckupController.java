@@ -26,7 +26,7 @@ import java.util.List;
 
 public class AddCheckupController implements PatientData,ProcedureData, Notification, CheckupData {
 
-    public static final DateTimeFormatter DATE_TIME_FORMAT_FULL = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMAT_FULL = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     @FXML
     private TableView<Patient> patientsTable;
     @FXML
@@ -96,11 +96,11 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
     }
 
     public void addNewCheckup(){
-        if (CheckObjects.checkIfHospitalHasDoctors() && !CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
+        if (CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
 
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
 
-                if(CheckObjects.checkCheckupTime(datePicker.getDateTimeValue())){
+                if(CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), null)){
                     Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
                     CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());

@@ -10,23 +10,22 @@ import java.util.Date;
 import java.util.List;
 
 public class LastChangeThread implements Runnable{
+
+    private ChangeWriter writer;
+
+    public LastChangeThread(ChangeWriter writer) {
+        this.writer = writer;
+    }
+
     @Override
     public void run() {
-        ChangeWriter writer = new ChangeWriter();
-
         try{
+
             List<String> doctorsTime = writer.readTimeDoctors();
             List<String> patientsTime = writer.readTimePatients();
             List<String> proceduresTime = writer.readTimeProcedures();
             List<String> roomsTime = writer.readTimeRooms();
-
             Boolean allEmpty = true;
-
-            String doctorLatest = null;
-            String patientLatest = null;
-            String procedureLatest = null;
-            String roomLatest = null;
-
 
             SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Integer index = null;
@@ -105,11 +104,10 @@ public class LastChangeThread implements Runnable{
                         break;
                 }
                 Application.getStage().setTitle("Latest change, " + change + " ---> Time of change: " + latestDate);
-
         }catch (NoRecentChangesException e){
             Application.getStage().setTitle(e.getMessage());
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
 
 

@@ -48,9 +48,9 @@ public class AddProcedureController implements Data, PatientData, ProcedureData,
         try{
             procedureList = ProcedureData.getAllProcedures();
         } catch (SQLException | IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }catch (NoProceduresException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
         fillProceduresTable(procedureList);
     }
@@ -118,11 +118,7 @@ public class AddProcedureController implements Data, PatientData, ProcedureData,
             return;
         }else{
             ProcedureData.addProcedureToPatient(patientsTable.getSelectionModel().getSelectedItem().getId(), String.valueOf(procedureTable.getSelectionModel().getSelectedItem().description()));
-            Alert success = new Alert(Alert.AlertType.INFORMATION);
-            success.setTitle("INFORMATION");
-            success.setHeaderText("Success!");
-            success.setContentText("Procedure successfully added to the system!");
-            success.show();
+            Notification.addedSuccessfully("Procedure");
         }
         listView.setItems(null);
         initialize();

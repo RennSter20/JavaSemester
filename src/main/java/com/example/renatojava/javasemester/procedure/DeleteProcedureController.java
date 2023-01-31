@@ -41,9 +41,9 @@ public class DeleteProcedureController implements ProcedureData, Notification {
         try{
             proceduresToShow = ProcedureData.getAllProcedures();
         }catch (SQLException | IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }catch (NoProceduresException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
         fillTable(proceduresToShow);
     }
@@ -91,8 +91,8 @@ public class DeleteProcedureController implements ProcedureData, Notification {
                 initialize();
             }
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("INFORMATION");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             alert.setHeaderText("No procedure selected!");
             alert.setContentText("Please select procedure first.");
             alert.show();

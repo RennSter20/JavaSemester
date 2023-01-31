@@ -99,8 +99,9 @@ public interface DoctorData {
         changesSQL.add("DOCTORS=" + (newCountDoctors));
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(doctor, new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
-        changeWriter.addChange(Application.getLoggedUser().getRole());
+        Application.changeWriter.setOldObject(doctor);
+        Application.changeWriter.setNewObject(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
+        Application.changeWriter.addChange(Application.getLoggedUser().getRole());
 
         Notification.removedSuccessfully("Doctor");
 

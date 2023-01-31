@@ -46,7 +46,7 @@ public class LoginController implements UserData {
 
             }
         } catch (FileNotFoundException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
 
     }
@@ -75,7 +75,7 @@ public class LoginController implements UserData {
                 throw new UserNotFoundException("User not found!");
             }
         }catch (UserNotFoundException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
             errorText.setText("User not found!");
             idTextField.setText("");
             passwordTextField.setText("");
@@ -101,7 +101,7 @@ public class LoginController implements UserData {
             conn.close();
 
         } catch (SQLException e) {
-            Application.logger.info(String.valueOf(e.getStackTrace()));
+            Application.logger.error(e.getMessage(), e);
         }
 
         return userToSet;

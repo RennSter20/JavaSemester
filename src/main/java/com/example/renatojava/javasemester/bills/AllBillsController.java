@@ -77,7 +77,7 @@ public class AllBillsController {
             moreInfo.setContentText(info);
             moreInfo.show();
         }else{
-            Alert notSelected = new Alert(Alert.AlertType.INFORMATION);
+            Alert notSelected = new Alert(Alert.AlertType.ERROR);
             notSelected.setTitle("INFORMATION");
             notSelected.setHeaderText("Please select a bill!");
             notSelected.show();

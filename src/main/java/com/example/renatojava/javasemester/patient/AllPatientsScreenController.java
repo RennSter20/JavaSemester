@@ -109,7 +109,14 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
             String newSurname = surnameEditField.getText();
             String newOib = oibEditField.getText();
 
-            if(!Validator.isNameValid(newName) || !Validator.isNameValid(newSurname) ||!Validator.isOibValid(newOib)) return;
+            if(!Validator.isNameValid(newName) || !Validator.isNameValid(newSurname) ||!Validator.isOibValid(newOib)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Problem with setting new info!");
+                alert.setContentText("NOTE:\nName and surname cannot be empty!\nOib must contain 10 numeric characters!");
+                alert.show();
+                return;
+            }
 
             if(Notification.confirmEdit()){
                 PatientData.updatePatient(newName, newSurname, newOib, selectedPatient);
@@ -131,7 +138,7 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
                 PatientData.removePatient(patientsTable.getSelectionModel().getSelectedItem().getId());
             }
         }catch (SQLException | IOException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
         initialize();
         clearFields();
@@ -148,8 +155,8 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
                 birthDate.setText("");
             }
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("INFORMATION");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             alert.setHeaderText("Error when creating a bill.");
             alert.setContentText("Patient has no debt.");
             alert.show();

@@ -4,6 +4,7 @@ import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.*;
+import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import tornadofx.control.DateTimePicker;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +35,8 @@ public class EditCheckupsController {
 
     @FXML
     private ChoiceBox<PatientRoom> roomChoiceBox;
+
+    public static final DateTimeFormatter DATE_TIME_FORMAT_FULL = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
 
     public void initialize(){
@@ -83,7 +87,9 @@ public class EditCheckupsController {
         Optional<ActiveCheckup> selectedCheckup = Optional.ofNullable(checkupTable.getSelectionModel().getSelectedItem());
 
         if(selectedCheckup.isPresent()){
+            datePicker.setDateTimeValue(null);
             datePicker.setDateTimeValue(selectedCheckup.get().getDateOfCheckup());
+            roomChoiceBox.getSelectionModel().selectFirst();
             roomChoiceBox.getSelectionModel().select(selectedCheckup.get().getRoom());
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -95,7 +101,12 @@ public class EditCheckupsController {
     }
 
     public void apply(){
-        CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), roomChoiceBox.getSelectionModel().getSelectedItem());
+        if(CheckObjects.isValidTime(datePicker.getDateTimeValue().toString(), DATE_TIME_FORMAT_FULL)){
+            if(CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), checkupTable.getSelectionModel().getSelectedItem())){
+                CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), roomChoiceBox.getSelectionModel().getSelectedItem());
+                initialize();
+            }
+        }
     }
 
 }

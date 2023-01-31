@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester.util;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
 
 import java.io.IOException;
@@ -22,9 +23,9 @@ public interface StatsChanger {
 
             veza.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
     }
 

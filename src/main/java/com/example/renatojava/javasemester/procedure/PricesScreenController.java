@@ -37,9 +37,9 @@ public class PricesScreenController implements Data, ProcedureData {
         try{
             proceduresToShow = ProcedureData.getAllProcedures();
         }catch (SQLException | IOException e) {
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }catch (NoProceduresException e){
-            Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+            Application.logger.error(e.getMessage(), e);
         }
         fillTable(proceduresToShow);
     }

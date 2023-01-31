@@ -4,17 +4,17 @@ import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,15 +69,35 @@ public class EditDoctorsController implements DoctorData, Notification {
 
     public void apply(){
 
-        if(Notification.confirmEdit()){
-            String newGender = "";
-            if(maleRadio.isSelected()){
-                newGender = "M";
-            }else{
-                newGender = "F";
-            }
+        String name = nameEditField.getText();
+        String surname = surnameEditField.getText();
+        String title = titleEditField.getText();
+        String gender = "";
 
-            DoctorData.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), newGender, doctorTable.getSelectionModel().getSelectedItem());
+        if(maleRadio.isSelected()){
+            gender = "M";
+        }else if(femaleRadio.isSelected()){
+            gender = "F";
+        }
+
+        List<String> errorMessages = new ArrayList<>();
+        if(!Validator.isNameValid(name) || !Validator.isNameValid(surname) || !Validator.isNameValid(title)){
+            errorMessages.add("Name, surname and title field cannot be empty and need to contain alphabetic characters only!");
+        }
+        if(gender.equals("")){
+            errorMessages.add("Gender must be selected!");
+        }
+        if(errorMessages.size() > 0){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Info");
+            String error = errorMessages.stream().collect(Collectors.joining("\n"));
+            alert.setHeaderText(error);
+            alert.show();
+            return;
+        }
+
+        if(Notification.confirmEdit()){
+            DoctorData.updateDoctor(doctorTable.getSelectionModel().getSelectedItem().getId() ,nameEditField.getText(), surnameEditField.getText(), titleEditField.getText(), gender, doctorTable.getSelectionModel().getSelectedItem());
             initialize();
         }
     }

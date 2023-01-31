@@ -45,15 +45,16 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
     public void accept(){
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
 
+            ProcedureData.addProcedureToPatient(PatientData.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(), ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
+            CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
+
             ChangeWriter writer = new ChangeWriter();
             writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup accepted");
 
-            ProcedureData.addProcedureToPatient(PatientData.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(), ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
-            CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
             initialize();
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("INFORMATION");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             alert.setHeaderText("Error with checkup!");
             alert.setContentText("No checkup selected");
             alert.show();
@@ -63,14 +64,16 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
     public void reject(){
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
 
+            CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
+            initialize();
+
+
             ChangeWriter writer = new ChangeWriter();
             writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup rejected");
 
-            CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
-            initialize();
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("INFORMATION");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             alert.setHeaderText("Error with checkup!");
             alert.setContentText("No checkup selected");
             alert.show();

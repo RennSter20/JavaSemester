@@ -5,6 +5,7 @@ import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.database.DoctorRoomData;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,14 +52,14 @@ public class addRemoveDoctorsController implements DoctorData, Notification, Doc
         }
 
         List<String> errorMessages = new ArrayList<>();
-        if(name.equals("") || surname.equals("") || title.equals("")){
-            errorMessages.add("Name, surname and title field cannot be empty!");
+        if(!Validator.isNameValid(name) || !Validator.isNameValid(surname) || !Validator.isNameValid(title)){
+            errorMessages.add("Name, surname and title field cannot be empty and need to contain alphabetic characters only!");
         }
         if(gender.equals("")){
             errorMessages.add("Gender must be selected!");
         }
         if(errorMessages.size() > 0){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Info");
             String error = errorMessages.stream().collect(Collectors.joining("\n"));
             alert.setHeaderText(error);

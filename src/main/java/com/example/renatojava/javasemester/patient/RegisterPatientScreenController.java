@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,6 +32,8 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
     private RadioButton maleRadio, femaleRadio;
     @FXML
     private DatePicker datePicker;
+
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @FXML
     public void registerPatient() {
@@ -53,23 +56,29 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
         Matcher m = p.matcher(oib);
 
         List<String> errorMessages = new ArrayList<>();
-        if(name.equals("") || surname.equals("")){
-            errorMessages.add("Name and surname field cannot be empty!");
+        if(oib.length() != 10 || !m.matches()){
+            errorMessages.add("OIB must have 10 numeric characters.");
+        }
+
+        regex = "^[a-zA-Z]+$";
+        p = Pattern.compile(regex);
+        m = p.matcher(name);
+        Matcher surnameMatcher = p.matcher(surname);
+        if(!m.matches() || !surnameMatcher.matches()){
+            errorMessages.add("Name and surname field cannot be empty and need to containt only alphabetic characters.");
         }
         if(gender == null){
             errorMessages.add("Gender must be selected!");
         }
-        if(oib.length() != 10 || !m.matches()){
-            errorMessages.add("OIB must have 10 numeric characters.");
-        }
-        if(datePicker.getValue() == null || datePicker.getValue().isAfter(LocalDate.now())){
+
+        if(datePicker.getValue() == null || datePicker.getValue().isAfter(LocalDate.now()) || !CheckObjects.isBirthDateValid(datePicker.getValue().toString(), DATE_TIME_FORMAT)){
             errorMessages.add("Valid date of birth must be selected!");
         }else{
             date = datePicker.getValue();
         }
         if(errorMessages.size() > 0){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             String error = errorMessages.stream().collect(Collectors.joining("\n"));
             alert.setHeaderText(error);
             alert.show();
@@ -89,9 +98,9 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
                 }
 
             }catch (SQLException e){
-                Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+                Application.logger.error(e.getMessage(), e);
             } catch (IOException e) {
-                Application.logger.info("Message: " + e.getMessage() + " Stack trace: " + e.getStackTrace());
+                Application.logger.error(e.getMessage(), e);
             }
     }
 

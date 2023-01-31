@@ -36,7 +36,7 @@ public interface CheckObjects  {
             conn.close();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
 
         if(patientsList.size() > 0){
@@ -62,9 +62,9 @@ public interface CheckObjects  {
             conn.close();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
 
         if(doctorsList.size() > 0){
@@ -90,9 +90,9 @@ public interface CheckObjects  {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -111,9 +111,9 @@ public interface CheckObjects  {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -121,11 +121,26 @@ public interface CheckObjects  {
         try {
             LocalDate time = LocalDate.parse(input, format);
             return true;
-        } catch (DateTimeParseException e) {
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Error while getting new date and time.");
+            alert.setContentText("Please type date and time of checkup in valid format: yyyy-MM-dd HH:ss");
+            alert.show();
+            Application.logger.error(e.getMessage(), e);
             return false;
         }
     }
 
+    static boolean isBirthDateValid(String input, DateTimeFormatter format){
+        try {
+            LocalDate time = LocalDate.parse(input, format);
+            return true;
+        } catch (DateTimeParseException e) {
+            Application.logger.error(e.getMessage(), e);
+            return false;
+        }
+    }
     static Boolean isBeforeToday(LocalDateTime dateTimeValue){
         if(dateTimeValue.isBefore(LocalDateTime.now())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -158,17 +173,31 @@ public interface CheckObjects  {
         return false;
     }
 
-    static Boolean checkCheckupTime(LocalDateTime localDateTime){
+    static Boolean checkCheckupTime(LocalDateTime localDateTime, ActiveCheckup checkupToSkip){
         List<ActiveCheckup> allCheckups = CheckupData.getAllActiveCheckups();
         for(ActiveCheckup checkup : allCheckups){
-            long duration = Duration.between(checkup.getDateOfCheckup(), localDateTime).toMinutes();
-            if(duration < 15 && duration > -15){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("ERROR");
-                alert.setHeaderText("Error while adding checkup");
-                alert.setContentText("Doctors are not available at this time, please select 15 minutes after or before other checkups!");
-                alert.show();
-                return false;
+            if(checkupToSkip != null){
+                if(!checkup.getId().equals(checkupToSkip.getId())){
+                    long duration = Duration.between(checkup.getDateOfCheckup(), localDateTime).toMinutes();
+                    if(duration < 15 && duration > -15){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("ERROR");
+                        alert.setHeaderText("Error while adding checkup");
+                        alert.setContentText("Doctors are not available at this time, please select 15 minutes after or before other checkups!");
+                        alert.show();
+                        return false;
+                    }
+                }
+            }else{
+                long duration = Duration.between(checkup.getDateOfCheckup(), localDateTime).toMinutes();
+                if(duration < 15 && duration > -15){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Error while adding checkup");
+                    alert.setContentText("Doctors are not available at this time, please select 15 minutes after or before other checkups!");
+                    alert.show();
+                    return false;
+                }
             }
         }
         return true;
