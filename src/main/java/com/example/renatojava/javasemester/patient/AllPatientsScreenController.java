@@ -5,6 +5,7 @@ import com.example.renatojava.javasemester.database.BillData;
 import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.threads.FreeBed;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
 import com.example.renatojava.javasemester.util.Validator;
@@ -135,6 +136,7 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
     public void removePatient() {
         try{
             if(Notification.confirmEdit()){
+                Application.executorService.execute(new FreeBed(Application.hospital));
                 PatientData.removePatient(patientsTable.getSelectionModel().getSelectedItem().getId());
             }
         }catch (SQLException | IOException e){

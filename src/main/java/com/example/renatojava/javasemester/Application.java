@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.entity.Hospital;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.threads.APICountries;
-import com.example.renatojava.javasemester.threads.ClockThread;
-import com.example.renatojava.javasemester.util.ChangeWriter;
+import com.example.renatojava.javasemester.threads.ShowInfoTitleThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -19,18 +19,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Application extends javafx.application.Application {
 
     public static final Logger logger = LoggerFactory.getLogger(Application.class);
     public static Stage mainStage;
     public static User loggedUser;
-    public static ChangeWriter changeWriter = new ChangeWriter<>();
+    public static List<String> countries;
+    public static Hospital hospital;
 
-    public static List<String> countries = new ArrayList<>();
-
+    public static ExecutorService executorService;
 
     public static Stage getStage() {
         return mainStage;
@@ -38,6 +39,9 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+            hospital = new Hospital();
+            executorService = Executors.newCachedThreadPool();
+
             mainStage = stage;
             FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/loginScreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
@@ -50,8 +54,7 @@ public class Application extends javafx.application.Application {
             Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    Platform.runLater(new ClockThread());
-                    //Platform.runLater(new LastChangeThread(changeWriter));
+                    Platform.runLater(new ShowInfoTitleThread(hospital));
                 }
             }));
             latestChange.setCycleCount(Timeline.INDEFINITE);

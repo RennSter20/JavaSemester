@@ -16,8 +16,8 @@ module com.example.renatojava.javasemester {
     opens com.example.renatojava.javasemester.patient to javafx.fxml;
     opens com.example.renatojava.javasemester.procedure to javafx.fxml;
     exports com.example.renatojava.javasemester.procedure;
-    opens com.example.renatojava.javasemester.roomControllers to javafx.fxml;
-    exports com.example.renatojava.javasemester.roomControllers;
+    opens com.example.renatojava.javasemester.room to javafx.fxml;
+    exports com.example.renatojava.javasemester.room;
     exports com.example.renatojava.javasemester.checkups;
     opens com.example.renatojava.javasemester.checkups to javafx.fxml;
     exports com.example.renatojava.javasemester.bills;

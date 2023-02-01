@@ -2,6 +2,7 @@ package com.example.renatojava.javasemester.patient;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.threads.OccupyBed;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.fxml.FXML;
@@ -51,12 +52,12 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
         }
 
         String oib = oibField.getText();
-        String regex = "^[0-9]+$";
+        String regex = "^[0-9]{10}+$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(oib);
 
         List<String> errorMessages = new ArrayList<>();
-        if(oib.length() != 10 || !m.matches()){
+        if(!m.matches()){
             errorMessages.add("OIB must have 10 numeric characters.");
         }
 
@@ -92,7 +93,7 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
                     failure.setContentText("Patient is not added to the system!");
                     failure.show();
                 }else{
-
+                    Application.executorService.execute(new OccupyBed(Application.hospital));
                     PatientData.addPatient(name, surname, gender, oib, date);
                     clearFields();
                 }
