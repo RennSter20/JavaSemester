@@ -16,11 +16,12 @@
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="13.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.0" minWidth="10.0" prefWidth="139.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="323.0" minWidth="10.0" prefWidth="172.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="297.0" minWidth="10.0" prefWidth="241.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="102.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="259.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -43,42 +44,42 @@
             <Insets top="80.0" />
          </BorderPane.margin>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Patients:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Patients:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Patient's total debt:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Patient's total debt:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Number of doctors:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Number of doctors:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Number of bills:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Number of bills:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>
             </Text>
-            <Text fx:id="patients" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Text fx:id="patients" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
             </Text>
-            <Text fx:id="debt" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Text fx:id="debt" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
             </Text>
-            <Text fx:id="doctors" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Text fx:id="doctors" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
             </Text>
-            <Text fx:id="bills" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <Text fx:id="bills" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -92,26 +93,26 @@
                   <Insets bottom="10.0" />
                </GridPane.margin>
             </Label>
-            <Label text="STATS" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <Label text="STATS" GridPane.columnIndex="2" GridPane.halignment="CENTER">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="COVID-19 STATS" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+            <Label text="COVID-19 STATS" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="6">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="New daily cases:" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
-            <Label text="Last updated:" GridPane.halignment="RIGHT" GridPane.rowIndex="11" />
-            <Label text="Total cases:" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
-            <Label text="Total deaths:" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
-            <Label text="Country:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-            <Text fx:id="totalCases" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
-            <Text fx:id="totalDeaths" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
-            <Text fx:id="newDailyCases" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
-            <Text fx:id="lastUpdated" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
-            <ComboBox fx:id="countriesChoice" onAction="#onCountryChange" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
+            <Label text="New daily cases:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
+            <Label text="Last updated:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="11" />
+            <Label text="Total cases:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+            <Label text="Total deaths:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
+            <Label text="Country:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+            <Text fx:id="totalCases" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="8" />
+            <Text fx:id="totalDeaths" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
+            <Text fx:id="newDailyCases" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+            <Text fx:id="lastUpdated" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="11" />
+            <ComboBox fx:id="countriesChoice" onAction="#onCountryChange" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
          </children>
       </GridPane>
    </center>

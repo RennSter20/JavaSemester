@@ -39,11 +39,11 @@
             </Label>
             <TableView fx:id="billTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="305.0" text="Name" />
-                <TableColumn fx:id="surnameColumn" prefWidth="387.0" text="Surname" />
-                  <TableColumn fx:id="oibColumn" prefWidth="225.0" text="OIB" />
-                  <TableColumn fx:id="debtColumn" prefWidth="163.0" text="Debt" />
-                  <TableColumn fx:id="dateColumn" prefWidth="199.0" text="Date issued" />
+                <TableColumn fx:id="nameColumn" prefWidth="305.0" style="-fx-alignment: CENTER;" text="Name" />
+                <TableColumn fx:id="surnameColumn" prefWidth="387.0" style="-fx-alignment: CENTER;" text="Surname" />
+                  <TableColumn fx:id="oibColumn" prefWidth="225.0" style="-fx-alignment: CENTER;" text="OIB" />
+                  <TableColumn fx:id="debtColumn" prefWidth="163.0" style="-fx-alignment: CENTER;" text="Debt" />
+                  <TableColumn fx:id="dateColumn" prefWidth="199.0" style="-fx-alignment: CENTER;" text="Date issued" />
               </columns>
             </TableView>
             <TextField fx:id="searchField" maxWidth="300.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />

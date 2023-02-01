@@ -1,4 +1,2 @@
 Admin
 checkup accepted
-Admin
-checkup accepted

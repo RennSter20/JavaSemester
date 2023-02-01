@@ -49,7 +49,9 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
 
             ChangeWriter writer = new ChangeWriter();
-            writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup accepted");
+            ActiveCheckup old = table.getSelectionModel().getSelectedItem();
+            old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
+            writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup accepted");
 
             initialize();
         }else{
@@ -69,7 +71,9 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
 
 
             ChangeWriter writer = new ChangeWriter();
-            writer.addCheckupsChange(table.getSelectionModel().getSelectedItem(), Application.getLoggedUser().getRole(), "checkup rejected");
+            ActiveCheckup old = table.getSelectionModel().getSelectedItem();
+            old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
+            writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup rejected");
 
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);

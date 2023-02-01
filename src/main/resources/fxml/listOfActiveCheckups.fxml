@@ -30,11 +30,11 @@
          <children>
             <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
               <columns>
-                <TableColumn fx:id="dateColumn" prefWidth="280.0" text="Date and time" />
-                <TableColumn fx:id="patientColumn" prefWidth="263.0" text="Patient" />
-                  <TableColumn fx:id="oibColumn" prefWidth="188.0" text="OIB" />
-                  <TableColumn fx:id="procedureColumn" prefWidth="334.6666259765625" text="Procedure" />
-                  <TableColumn fx:id="roomColumn" prefWidth="213.0" text="Room type" />
+                <TableColumn fx:id="dateColumn" prefWidth="280.0" style="-fx-alignment: CENTER;" text="Date and time" />
+                <TableColumn fx:id="patientColumn" prefWidth="263.0" style="-fx-alignment: CENTER;" text="Patient" />
+                  <TableColumn fx:id="oibColumn" prefWidth="188.0" style="-fx-alignment: CENTER;" text="OIB" />
+                  <TableColumn fx:id="procedureColumn" prefWidth="334.6666259765625" style="-fx-alignment: CENTER;" text="Procedure" />
+                  <TableColumn fx:id="roomColumn" prefWidth="213.0" style="-fx-alignment: CENTER;" text="Room type" />
               </columns>
             </TableView>
             <Button mnemonicParsing="false" onAction="#accept" text="Accept" GridPane.halignment="RIGHT" GridPane.rowIndex="2">

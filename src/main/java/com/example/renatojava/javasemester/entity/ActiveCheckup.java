@@ -12,6 +12,7 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
     private Integer id;
     private LocalDateTime dateOfCheckup;
     private Integer patientID;
+    private String patientFullName;
     private Integer procedureID;
     private T room;
 
@@ -23,6 +24,13 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
         this.id = id;
     }
 
+    public String getPatientFullName() {
+        return patientFullName;
+    }
+
+    public void setPatientFullName(String patientFullName) {
+        this.patientFullName = patientFullName;
+    }
 
     public Integer getId() {
         return id;
@@ -69,7 +77,7 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
         return "Information about checkup:\n" +
                 "Date of checkup: " + DateFormatter.getDateTimeFormatted(dateOfCheckup.toString()) + "\n" +
                 "Patient: " + PatientData.getPatientWithID(patientID).getFullName() + "\n" +
-                "Procedure: " + ProcedureData.getProcedureFromId(procedureID) + "\n" +
+                "Procedure: \n" + ProcedureData.getProcedureFromId(procedureID) + "\n" +
                 "Room: " + room.getRoomType();
     }
 }

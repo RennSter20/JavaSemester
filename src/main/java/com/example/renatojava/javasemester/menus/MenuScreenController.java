@@ -61,12 +61,10 @@ public class MenuScreenController implements StatsData {
             checkupsToday.setItems(observableList);
         }
 
-        try{
-            ObservableList<String> countries = FXCollections.observableArrayList(APIManager.avaibleCountries().keySet());
-            countriesChoice.setItems(countries);
-        }catch (IOException e){
-            Application.logger.error(e.getMessage(), e);
-        }
+
+        ObservableList<String> countries = FXCollections.observableArrayList(Application.countries);
+        countriesChoice.setItems(countries);
+
         setInfo("World");
         countriesChoice.getSelectionModel().select("World");
     }

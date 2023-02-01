@@ -2,6 +2,7 @@ package com.example.renatojava.javasemester;
 
 import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.User;
+import com.example.renatojava.javasemester.threads.APICountries;
 import com.example.renatojava.javasemester.threads.LastChangeThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application extends javafx.application.Application {
 
@@ -26,7 +29,8 @@ public class Application extends javafx.application.Application {
     public static User loggedUser;
     public static ChangeWriter changeWriter = new ChangeWriter<>();
 
-    public static boolean isWriting = false;
+    public static List<String> countries = new ArrayList<>();
+
 
     public static Stage getStage() {
         return mainStage;
@@ -51,6 +55,8 @@ public class Application extends javafx.application.Application {
             }));
             latestChange.setCycleCount(Timeline.INDEFINITE);
             latestChange.play();
+
+            Platform.runLater(new APICountries());
     }
 
     public static void setMainPage(BorderPane root) {
@@ -72,6 +78,5 @@ public class Application extends javafx.application.Application {
     }
 }
 //TODO threads
-//TODO covid cases
 
 //TODO instructions to use program
