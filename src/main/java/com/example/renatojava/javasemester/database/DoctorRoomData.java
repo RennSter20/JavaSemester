@@ -1,7 +1,8 @@
 package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -49,7 +50,8 @@ public interface DoctorRoomData {
             stmnt.setInt(2, doctorID);
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(new DoctorRoom("-", -1, -1), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID()));
+            Change change = new Change(new DoctorRoom("-", -1, -1), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID()));
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             linkDoctorWithRoom(DoctorData.getCertainDoctor(doctorID), doctorID, roomName);
@@ -77,7 +79,8 @@ public interface DoctorRoomData {
             PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter( new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID()), new DoctorRoom("-", -1, -1));
+            Change change = new Change(new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID()), new DoctorRoom("-", -1, -1));
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.removedSuccessfully("Room");
@@ -138,7 +141,8 @@ public interface DoctorRoomData {
             PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + roomName + "' WHERE ID=" + doctorID );
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(oldDoctor, DoctorData.getCertainDoctor(doctorID));
+            Change change = new Change(oldDoctor, DoctorData.getCertainDoctor(doctorID));
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
         } catch (SQLException | IOException e) {
@@ -153,7 +157,8 @@ public interface DoctorRoomData {
                 PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + doctorRoomToRemove.getDoctorID());
                 stmnt.executeUpdate();
 
-                ChangeWriter changeWriter = new ChangeWriter(oldDoctor.get(), DoctorData.getCertainDoctor(doctorRoomToRemove.getDoctorID()));
+                Change change = new Change<>(oldDoctor.get(), DoctorData.getCertainDoctor(doctorRoomToRemove.getDoctorID()));
+                ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
         } catch (SQLException e) {
@@ -170,7 +175,8 @@ public interface DoctorRoomData {
                 PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID= -1 WHERE ROOM='" + roomName + "'");
                 stmnt.executeUpdate();
 
-                ChangeWriter changeWriter = new ChangeWriter(oldRoom.get(), getRoomWithName(roomName));
+                Change change = new Change(oldRoom.get(), getRoomWithName(roomName));
+                ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
         } catch (SQLException e) {

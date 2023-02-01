@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.procedure;
 
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

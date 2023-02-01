@@ -2,7 +2,8 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -64,8 +65,8 @@ public class EditProcedureController implements ProcedureData, Notification {
                     CheckObjects.checkIfProcedureExists(descriptionField.getText(), Double.valueOf(priceField.getText()));
                     ProcedureData.updateProcedure(new Procedure(oldProcedure.id(), descriptionField.getText(), Double.valueOf(priceField.getText())));
 
-
-                    ChangeWriter changeWriter = new ChangeWriter(oldProcedure, ProcedureData.getProcedureFromDescription(descriptionField.getText()));
+                    Change change = new Change(oldProcedure, ProcedureData.getProcedureFromDescription(descriptionField.getText()));
+                    ChangeWriter changeWriter = new ChangeWriter(change);
                     changeWriter.addChange(Application.getLoggedUser().getRole());
                     initialize();
                 }

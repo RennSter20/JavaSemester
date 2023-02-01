@@ -2,7 +2,8 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.CheckObjects;
@@ -33,7 +34,8 @@ public class CreateProcedureController implements ProcedureData {
                 descriptionField.setText("");
                 priceField.setText("");
 
-                ChangeWriter changeWriter = new ChangeWriter(new Procedure(0, "-", Double.valueOf(0)), ProcedureData.getProcedureFromDescription(descText));
+                Change change = new Change(new Procedure(0, "-", Double.valueOf(0)), ProcedureData.getProcedureFromDescription(descText));
+                ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
 
             }catch (ObjectExistsException e){

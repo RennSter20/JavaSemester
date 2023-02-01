@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester.roomControllers;
 
 import com.example.renatojava.javasemester.database.DoctorData;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,9 +1,9 @@
 package com.example.renatojava.javasemester;
 
-import com.example.renatojava.javasemester.entity.ChangeWriter;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.threads.APICountries;
-import com.example.renatojava.javasemester.threads.LastChangeThread;
+import com.example.renatojava.javasemester.threads.ClockThread;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -47,10 +47,11 @@ public class Application extends javafx.application.Application {
             stage.getIcons().add(new Image("/icon.png"));
             stage.show();
 
-            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    Platform.runLater(new LastChangeThread(changeWriter));
+                    Platform.runLater(new ClockThread());
+                    //Platform.runLater(new LastChangeThread(changeWriter));
                 }
             }));
             latestChange.setCycleCount(Timeline.INDEFINITE);

@@ -1,6 +1,6 @@
 package com.example.renatojava.javasemester.doctors;
 
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

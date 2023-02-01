@@ -1,7 +1,8 @@
 package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.entity.Stats;
@@ -121,7 +122,8 @@ public interface ProcedureData {
             StatsChanger.changeStats(changesSQL);
 
             Patient newPatient = PatientData.getPatientWithID(id);
-            ChangeWriter changeWriter = new ChangeWriter(oldPatient,newPatient);
+            Change change = new Change(oldPatient, newPatient);
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
 
@@ -159,7 +161,8 @@ public interface ProcedureData {
             StatsChanger.changeStats(changesSQL);
 
             Patient newPatient = PatientData.getPatientWithID(id);
-            ChangeWriter changeWriter = new ChangeWriter(patient,newPatient);
+            Change change = new Change(patient,newPatient);
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
 

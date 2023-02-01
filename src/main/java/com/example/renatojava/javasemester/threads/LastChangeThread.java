@@ -3,6 +3,7 @@ package com.example.renatojava.javasemester.threads;
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoRecentChangesException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

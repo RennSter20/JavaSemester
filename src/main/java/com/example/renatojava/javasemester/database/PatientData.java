@@ -2,7 +2,8 @@ package com.example.renatojava.javasemester.database;
 
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Stats;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -93,7 +94,8 @@ public interface PatientData {
         changesSQL.add("PATIENTS=" + (++currPatients));
         StatsChanger.changeStats(changesSQL);
 
-        ChangeWriter changeWriter = new ChangeWriter(new Patient(-1, "-", "-", "-", 0, "-", "-", null), new Patient(PatientData.getPatientWithOib(oib).getId(), name, surname, gender, 0.0, "", oib, date));
+        Change change = new Change(new Patient(-1, "-", "-", "-", 0, "-", "-", null), new Patient(PatientData.getPatientWithOib(oib).getId(), name, surname, gender, 0.0, "", oib, date));
+        ChangeWriter changeWriter = new ChangeWriter(change);
         changeWriter.addChange(Application.getLoggedUser().getRole());
         Notification.addedSuccessfully("Patient");
 
@@ -156,7 +158,8 @@ public interface PatientData {
 
         CheckupData.removeAllActiveCheckupsFromPatient(id);
 
-        ChangeWriter changeWriter = new ChangeWriter(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), patientToRemove.getOib(), patientToRemove.getDate()), new Patient(-1, "-", "-", "-", 0, "-", "-", null));
+        Change change = new Change(new Patient(patientToRemove.getId(), patientToRemove.getName(), patientToRemove.getSurname(), patientToRemove.getGender(), patientToRemove.getDebt(), patientToRemove.getProcedures(), patientToRemove.getOib(), patientToRemove.getDate()), new Patient(-1, "-", "-", "-", 0, "-", "-", null));
+        ChangeWriter changeWriter = new ChangeWriter(change);
         changeWriter.addChange(Application.getLoggedUser().getRole());
 
         veza.close();
@@ -171,7 +174,8 @@ public interface PatientData {
             stmnt = conn.prepareStatement("UPDATE PATIENTS SET OIB='" + newOib + "' WHERE NAME='" + newName + "' AND SURNAME='" + newSurname + "' AND GENDER='" + oldPatient.getGender() + "'");
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(oldPatient, PatientData.getPatientWithOib(newOib));
+            Change change = new Change(oldPatient, PatientData.getPatientWithOib(newOib));
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.updatedSuccessfully("Patient");

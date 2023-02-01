@@ -1,7 +1,8 @@
 package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.entity.ChangeWriter;
+import com.example.renatojava.javasemester.entity.Change;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.Stats;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
@@ -66,7 +67,8 @@ public interface DoctorData {
             changesSQL.add("DOCTORS=" + (++currDoctors));
             StatsChanger.changeStats(changesSQL);
 
-            ChangeWriter changeWriter = new ChangeWriter(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build(),doctor);
+            Change change = new Change(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build(),doctor);
+            ChangeWriter changeWriter = new ChangeWriter();
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.addedSuccessfully("Doctor");
@@ -99,9 +101,9 @@ public interface DoctorData {
         changesSQL.add("DOCTORS=" + (newCountDoctors));
         StatsChanger.changeStats(changesSQL);
 
-        Application.changeWriter.setOldObject(doctor);
-        Application.changeWriter.setNewObject(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
-        Application.changeWriter.addChange(Application.getLoggedUser().getRole());
+        Change change = new Change(doctor, new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
+        ChangeWriter changeWriter = new ChangeWriter(change);
+        changeWriter.addChange(Application.getLoggedUser().getRole());
 
         Notification.removedSuccessfully("Doctor");
 
@@ -113,7 +115,8 @@ public interface DoctorData {
             PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET NAME='" + newName + "', SURNAME='" + newSurname + "', TITLE='" + newTitle + "', GENDER='" + newGender + "' WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            ChangeWriter changeWriter = new ChangeWriter(oldDoctor, DoctorData.getCertainDoctor(id));
+            Change change = new Change(oldDoctor, DoctorData.getCertainDoctor(id));
+            ChangeWriter changeWriter = new ChangeWriter();
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.updatedSuccessfully("Doctor");

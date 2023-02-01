@@ -6,6 +6,7 @@ import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -105,8 +106,8 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
 
                     CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
 
-                    ChangeWriter writer = new ChangeWriter(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
-
+                    Change change = new Change(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
+                    ChangeWriter writer = new ChangeWriter(change);
                     writer.addChange(Application.getLoggedUser().getRole());
                 }
 
