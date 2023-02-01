@@ -5,6 +5,8 @@ module com.example.renatojava.javasemester {
     requires org.slf4j;
     requires tornadofx.controls;
     requires org.apache.commons.codec;
+    requires okhttp3;
+    requires org.json;
 
 
     opens com.example.renatojava.javasemester to javafx.fxml;

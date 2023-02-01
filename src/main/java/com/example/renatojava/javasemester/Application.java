@@ -51,8 +51,6 @@ public class Application extends javafx.application.Application {
             }));
             latestChange.setCycleCount(Timeline.INDEFINITE);
             latestChange.play();
-
-
     }
 
     public static void setMainPage(BorderPane root) {
@@ -74,6 +72,6 @@ public class Application extends javafx.application.Application {
     }
 }
 //TODO threads
+//TODO covid cases
 
-//TODO calendar
 //TODO instructions to use program
