@@ -219,4 +219,30 @@ public interface CheckObjects  {
         return true;
     }
 
+    static void checkIfUserExists(String id) throws ObjectExistsException {
+        List<User> userList = new ArrayList<>();
+        try(Connection conn = Data.connectingToDatabase()) {
+
+
+            Statement sqlStatement = conn.createStatement();
+            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+                    "SELECT * FROM USERS WHERE ID='" + id + "'"
+            );
+
+            while(proceduresResultSet.next()){
+                User newUser = UserData.getUserFromResult(proceduresResultSet);
+                userList.add(newUser);
+            }
+
+        } catch (SQLException e) {
+            Application.logger.error(e.getMessage(), e);
+        } catch (IOException e) {
+            Application.logger.error(e.getMessage(), e);
+        }
+
+        if(userList.size() > 0){
+            throw new ObjectExistsException("User already exists in system!");
+        }
+    }
+
 }

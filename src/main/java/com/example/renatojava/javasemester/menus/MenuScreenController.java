@@ -11,6 +11,7 @@ import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
@@ -85,10 +86,20 @@ public class MenuScreenController implements StatsData {
             Application.logger.error(e.getMessage(), e);
         }
 
-        totalCases.setText(apiResponse.getTotalCases().toString());
-        totalDeaths.setText(apiResponse.getTotalDeaths().toString());
-        newDailyCases.setText(apiResponse.getNewCasesDay().toString());
-        lastUpdated.setText(apiResponse.getLastUpdatedFullTime());
+
+        try{
+            totalCases.setText(apiResponse.getTotalCases().toString());
+            totalDeaths.setText(apiResponse.getTotalDeaths().toString());
+            newDailyCases.setText(apiResponse.getNewCasesDay().toString());
+            lastUpdated.setText(DateFormatter.getTimeWithSeconds(apiResponse.getLastUpdatedFullTime()));
+        }catch (NullPointerException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Error with gathering newest info.");
+            alert.setContentText("It's not possible to get newest information about COVID-19, please try again later and check your connection.");
+            alert.show();
+            Application.logger.error(e.getMessage(), e);
+        }
 
     }
 }

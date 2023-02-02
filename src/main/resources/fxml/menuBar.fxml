@@ -71,6 +71,12 @@
                         <MenuItem fx:id="editProcedure" mnemonicParsing="false" onAction="#showEditProcedureScreen" text="Edit procedure" />
                      </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Users">
+                     <items>
+                        <MenuItem fx:id="createUser" mnemonicParsing="false" onAction="#showCreateUserScreen" text="Create user" />
+                        <MenuItem fx:id="createUser1" mnemonicParsing="false" onAction="#showEditUserScreen" text="Edit user" />
+                     </items>
+                  </Menu>
                </items>
             </Menu>
         </menus>

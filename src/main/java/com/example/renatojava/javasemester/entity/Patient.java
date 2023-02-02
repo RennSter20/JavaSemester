@@ -1,5 +1,7 @@
 package com.example.renatojava.javasemester.entity;
 
+import com.example.renatojava.javasemester.util.DateFormatter;
+
 import java.time.LocalDate;
 
 public class Patient extends Person {
@@ -32,7 +34,7 @@ public class Patient extends Person {
             return "Information about patient: " + "\n" +
                     "Full name: " + getFullName() + "\n" +
                     "OIB: " + oib + "\n" +
-                    "Birth date: "+ date.toString() + "\n" +
+                    "Birth date: "+ DateFormatter.getDateFormatted(date.toString()) + "\n" +
                     "Procedures: " + procedures + "\n" +
                     "Debt: " + debt;
         }

@@ -301,5 +301,28 @@ public class MenuBarController {
         }
     }
 
+    public void showCreateUserScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/createUserScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public void showEditUserScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/editUserScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 }

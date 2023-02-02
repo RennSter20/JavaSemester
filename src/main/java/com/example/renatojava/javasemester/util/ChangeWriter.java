@@ -74,7 +74,7 @@ public class ChangeWriter<T>{
 
                 FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_PATIENTS, true);
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
 
                 timePatientsWriter.write(dtf.format(now) + "\n");
@@ -98,7 +98,7 @@ public class ChangeWriter<T>{
 
                 FileWriter timeDoctorsWriter = new FileWriter(CHANGE_FILE_TIME_DOCTORS, true);
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
 
 
@@ -115,12 +115,11 @@ public class ChangeWriter<T>{
                 for(T object : itemsToWrite){
                     out.writeObject(object);
                 }
-
                 out.close();
 
                 FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_ROOMS, true);
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
 
 
@@ -141,7 +140,7 @@ public class ChangeWriter<T>{
 
                 FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_PROCEDURES, true);
 
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
 
 

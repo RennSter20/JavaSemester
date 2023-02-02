@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 public interface APIManager {
 
-    public static APIResponse getCountryInfo(String country) throws IOException {
+    static APIResponse getCountryInfo(String country) throws IOException {
 
         String url = "https://covid-19-statistics.p.rapidapi.com/reports?region_name=" + country;
 
@@ -42,7 +42,7 @@ public interface APIManager {
         return apiResponse;
     }
 
-    public static APIResponse getWorldInfo() throws IOException{
+    static APIResponse getWorldInfo() throws IOException{
         String url = "https://covid-19-statistics.p.rapidapi.com/reports/total";
 
         OkHttpClient client = new OkHttpClient();

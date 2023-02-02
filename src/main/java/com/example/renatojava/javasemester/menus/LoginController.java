@@ -57,7 +57,6 @@ public class LoginController implements UserData {
 
 
         String hashedPassword = DigestUtils.sha1Hex(inputPasswordText);
-        //System.out.println(hashedPassword);
 
         try{
             if(users.containsKey(inputIdText) && users.get(inputIdText).equals(hashedPassword)){

@@ -2,15 +2,14 @@ package com.example.renatojava.javasemester.entity;
 
 public class User {
 
-    private String id,password,name,surname,role, oib;
+    private String id,password,name,surname,role;
 
-    public User(String id, String password, String name, String surname, String role, String oib) {
+    public User(String id, String password, String name, String surname, String role) {
         this.id = id;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.role = role;
-        this.oib = oib;
     }
 
     public String getId() {
@@ -53,13 +52,6 @@ public class User {
         this.role = role;
     }
 
-    public String getOib() {
-        return oib;
-    }
-
-    public void setOib(String oib) {
-        this.oib = oib;
-    }
 
 
 

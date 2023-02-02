@@ -27,4 +27,6 @@ module com.example.renatojava.javasemester {
     exports com.example.renatojava.javasemester;
     exports com.example.renatojava.javasemester.database;
     opens com.example.renatojava.javasemester.database to javafx.fxml;
+    exports com.example.renatojava.javasemester.user to javafx.fxml;
+    opens com.example.renatojava.javasemester.user to javafx.fxml;
 }

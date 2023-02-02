@@ -81,6 +81,5 @@ public class Application extends javafx.application.Application {
         launch();
     }
 }
-//TODO threads
 
-//TODO instructions to use program
+//TODO add new users

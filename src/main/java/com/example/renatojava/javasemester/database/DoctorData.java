@@ -2,10 +2,10 @@ package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.Change;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.Stats;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import com.example.renatojava.javasemester.util.StatsChanger;
@@ -68,46 +68,40 @@ public interface DoctorData {
             StatsChanger.changeStats(changesSQL);
 
             Change change = new Change(new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build(),doctor);
-            ChangeWriter changeWriter = new ChangeWriter();
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.addedSuccessfully("Doctor");
 
 
         } catch (IOException | SQLException e) {
-
             Application.logger.error(e.getMessage(), e);
-
         }catch (ObjectExistsException e){
-
             Application.logger.error(e.getMessage(), e);
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
             alert.setHeaderText(e.getMessage());
             alert.show();
         }
     }
     static void removeDoctor(Doctor doctor) throws SQLException, IOException {
-        Connection veza = Data.connectingToDatabase();
+        try(Connection conn = Data.connectingToDatabase()){
+            PreparedStatement stmnt = conn.prepareStatement("DELETE FROM DOCTORS WHERE ROOM='" + doctor.getRoom() + "'");
+            stmnt.executeUpdate();
 
-        PreparedStatement stmnt = veza.prepareStatement("DELETE FROM DOCTORS WHERE ROOM='" + doctor.getRoom() + "'");
-        stmnt.executeUpdate();
+            Stats currentStats = StatsData.getCurrentStats();
+            Integer oldCountDoctors = currentStats.doctors();
+            Integer newCountDoctors = oldCountDoctors - 1;
+            List<String> changesSQL = new ArrayList<>();
+            changesSQL.add("DOCTORS=" + (newCountDoctors));
+            StatsChanger.changeStats(changesSQL);
 
-        Stats currentStats = StatsData.getCurrentStats();
-        Integer oldCountDoctors = currentStats.doctors();
-        Integer newCountDoctors = oldCountDoctors - 1;
-        List<String> changesSQL = new ArrayList<>();
-        changesSQL.add("DOCTORS=" + (newCountDoctors));
-        StatsChanger.changeStats(changesSQL);
+            Change change = new Change(doctor, new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
+            ChangeWriter changeWriter = new ChangeWriter(change);
+            changeWriter.addChange(Application.getLoggedUser().getRole());
 
-        Change change = new Change(doctor, new Doctor.Builder().withName("-").withSurname("-").withGender("-").withRoom("-").withTitle("-").build());
-        ChangeWriter changeWriter = new ChangeWriter(change);
-        changeWriter.addChange(Application.getLoggedUser().getRole());
-
-        Notification.removedSuccessfully("Doctor");
-
-        veza.close();
+            Notification.removedSuccessfully("Doctor");
+        }
     }
     static void updateDoctor(Integer id, String newName, String newSurname,String newTitle, String newGender, Doctor oldDoctor){
         try(Connection conn = Data.connectingToDatabase()) {
@@ -116,7 +110,7 @@ public interface DoctorData {
             stmnt.executeUpdate();
 
             Change change = new Change(oldDoctor, DoctorData.getCertainDoctor(id));
-            ChangeWriter changeWriter = new ChangeWriter();
+            ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.updatedSuccessfully("Doctor");
