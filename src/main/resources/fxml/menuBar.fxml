@@ -57,6 +57,7 @@
                         <MenuItem fx:id="procedureChanges" mnemonicParsing="false" onAction="#showChangesProceduresScreen" text="Procedure changes" />
                         <MenuItem fx:id="roomChanges" mnemonicParsing="false" onAction="#showRoomChangesScreen" text="Room changes" />
                         <MenuItem fx:id="checkupChanges" mnemonicParsing="false" onAction="#showCheckupChangesScreen" text="Checkup changes" />
+                        <MenuItem fx:id="checkupChanges1" mnemonicParsing="false" onAction="#showUserChangesScreen" text="User changes" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Rooms">

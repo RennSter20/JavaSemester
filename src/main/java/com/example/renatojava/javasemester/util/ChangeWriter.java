@@ -32,6 +32,12 @@ public class ChangeWriter<T>{
     private static final String CHANGE_FILE_CHECKUPS = "dat\\changes\\checkups\\changesCheckups.dat";
     private static final String CHANGE_FILE_CHECKUPS_ROLE = "dat\\changes\\checkups\\changesCheckupsRole.txt";
     private static final String CHANGE_FILE_TIME_CHECKUPS = "dat\\changes\\checkups\\changesTimeCheckups.txt";
+
+
+    private static final String CHANGE_FILE_USERS = "dat\\changes\\users\\changesUsers.dat";
+    private static final String CHANGE_FILE_TIME_USERS = "dat\\changes\\users\\changesTimeUsers.txt";
+    private static final String CHANGE_FILE_USERS_ROLE = "dat\\changes\\users\\changesUsersRole.txt";
+
     private Change change;
 
 
@@ -187,7 +193,40 @@ public class ChangeWriter<T>{
             roleDoctorsWriter.write(role + "\n" + change + "\n");
             roleDoctorsWriter.close();
         }catch (IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }
+    }
 
+    public void addUserChange(User user, String change){
+        List<User> items = new ArrayList<>(readUsers());
+        items.add(user);
+        writeAllUsers(items, change);
+    }
+
+    public void writeAllUsers(List<User> users, String change){
+        try{
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_USERS, false));
+            for(User object : users){
+                out.writeObject(object);
+            }
+            out.close();
+            out.flush();
+
+
+            FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_USERS, true);
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            timePatientsWriter.write(dtf.format(now) + "\n");
+            timePatientsWriter.close();
+
+
+            FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_USERS_ROLE, true);
+            roleDoctorsWriter.write("Admin" + "\n" + change + "\n");
+            roleDoctorsWriter.close();
+            roleDoctorsWriter.flush();
+        }catch (IOException e){
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -299,6 +338,21 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
+    public List<User> readUsers(){
+        List<User> finalList = new ArrayList<>();
+        try {
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_USERS));
+            while(true){
+                finalList.add((User)input.readObject());
+            }
+
+        } catch (IOException e) {
+            Application.logger.info(e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            Application.logger.info(e.getMessage(), e);
+        }
+        return finalList;
+    }
 
     public List<String> readTimePatients(){
         List<String> changesTime = new ArrayList<>();
@@ -361,11 +415,23 @@ public class ChangeWriter<T>{
                 changesTime.add(time);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
         }
         return changesTime;
     }
+    public List<String> readTimeUsers(){
+        List<String> changesTime = new ArrayList<>();
 
+        try(Scanner scanner = new Scanner(new File(CHANGE_FILE_TIME_USERS))){
+            while(scanner.hasNextLine()){
+                String time = scanner.nextLine();
+                changesTime.add(time);
+            }
+        } catch (FileNotFoundException e) {
+            Application.logger.error(e.getMessage(), e);
+        }
+        return changesTime;
+    }
 
     public List<String> readRoleChangeDoctors(){
         List<String> changesRole = new ArrayList<>();
@@ -428,7 +494,20 @@ public class ChangeWriter<T>{
                 changesRole.add(scan);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.error(e.getMessage(), e);
+        }
+        return changesRole;
+    }
+    public List<String> readRoleChangeUsers(){
+        List<String> changesRole = new ArrayList<>();
+
+        try(Scanner scanner = new Scanner(new File(CHANGE_FILE_USERS_ROLE))){
+            while(scanner.hasNextLine()){
+                String scan = scanner.nextLine();
+                changesRole.add(scan);
+            }
+        } catch (FileNotFoundException e) {
+            Application.logger.error(e.getMessage(), e);
         }
         return changesRole;
     }

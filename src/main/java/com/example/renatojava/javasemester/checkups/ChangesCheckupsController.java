@@ -28,10 +28,11 @@ public class ChangesCheckupsController {
 
     @FXML
     private Label changeText;
-    ChangeWriter reader = new ChangeWriter();
+    ChangeWriter reader;
 
 
     public void initialize(){
+        reader = new ChangeWriter();
         fillCheckupTable(reader.readCheckups());
     }
 

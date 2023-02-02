@@ -3,6 +3,7 @@ package com.example.renatojava.javasemester.database;
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.scene.control.Alert;
@@ -54,6 +55,9 @@ public interface UserData {
             stmnt.executeUpdate();
 
             writeAllUsers(allUsersDatabase());
+            ChangeWriter changeWriter = new ChangeWriter();
+            User addeduser = UserData.getUserFromId(id);
+            changeWriter.addUserChange(addeduser, "user created");
 
             Notification.addedSuccessfully("User");
 
@@ -69,6 +73,8 @@ public interface UserData {
             stmnt.executeUpdate();
 
             writeAllUsers(allUsersDatabase());
+            ChangeWriter changeWriter = new ChangeWriter();
+            changeWriter.addUserChange(UserData.getUserFromId(id), "user updated");
 
             Notification.updatedSuccessfully("User");
 
@@ -80,10 +86,14 @@ public interface UserData {
     static void deleteUser(String id){
         try(Connection conn = Data.connectingToDatabase()) {
 
+            User deletedUser = UserData.getUserFromId(id);
+
             PreparedStatement stmnt = conn.prepareStatement("DELETE FROM USERS WHERE ID='" + id + "'");
             stmnt.executeUpdate();
 
             writeAllUsers(allUsersDatabase());
+            ChangeWriter changeWriter = new ChangeWriter();
+            changeWriter.addUserChange(deletedUser, "user deleted");
 
             Notification.removedSuccessfully("User");
 
@@ -134,7 +144,7 @@ public interface UserData {
 
             Statement sqlStatement = conn.createStatement();
             ResultSet resultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM USERS WHERE ID=" + id
+                    "SELECT * FROM USERS WHERE ID='" + id +"'"
             );
 
             while(resultSet.next()){

@@ -322,7 +322,15 @@ public class MenuBarController {
         }
     }
 
-
+    public void showUserChangesScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/changesUsersScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
 
 }

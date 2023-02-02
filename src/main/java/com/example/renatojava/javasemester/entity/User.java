@@ -1,6 +1,8 @@
 package com.example.renatojava.javasemester.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String id,password,name,surname,role;
 

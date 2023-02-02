@@ -46,18 +46,23 @@ public class EditUserController {
         Optional<User> selectedUser = Optional.ofNullable(userTableView.getSelectionModel().getSelectedItem());
         if(selectedUser.isPresent()){
             if(!selectedUser.get().getRole().equals("Admin")){
+                idLabel.setText(selectedUser.get().getId());
                 passwordField.setText(selectedUser.get().getPassword());
                 nameField.setText(selectedUser.get().getName());
                 surnameField.setText(selectedUser.get().getSurname());
                 roleField.getSelectionModel().select(selectedUser.get().getRole());
+            }else{
+                clearFields();
             }
         }
     }
 
     public void update(){
         if(Validator.isNameValid(nameField.getText()) && Validator.isNameValid(surnameField.getText()) && Notification.confirmEdit()){
-            UserData.updateUser(userTableView.getSelectionModel().getSelectedItem().getId(), passwordField.getText(), nameField.getText(), surnameField.getText(), roleField.getSelectionModel().getSelectedItem());
-            initialize();
+            if(!userTableView.getSelectionModel().getSelectedItem().getRole().equals("Admin")){
+                UserData.updateUser(userTableView.getSelectionModel().getSelectedItem().getId(), passwordField.getText(), nameField.getText(), surnameField.getText(), roleField.getSelectionModel().getSelectedItem());
+                initialize();
+            }
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
@@ -70,8 +75,10 @@ public class EditUserController {
     public void delete(){
         Optional<User> selectedUser = Optional.ofNullable(userTableView.getSelectionModel().getSelectedItem());
         if(selectedUser.isPresent() && Notification.confirmEdit()){
-            UserData.deleteUser(selectedUser.get().getId());
-            initialize();
+            if(!userTableView.getSelectionModel().getSelectedItem().getRole().equals("Admin")){
+                UserData.deleteUser(selectedUser.get().getId());
+                initialize();
+                }
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
