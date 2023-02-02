@@ -22,13 +22,11 @@ public class ChangesCheckupsController {
 
     @FXML
     private TableView<ActiveCheckup> checkupTable;
-
     @FXML
     private TableColumn<ActiveCheckup, String> dateColumn, patientColumn, procedureColumn;
-
     @FXML
     private Label changeText;
-    ChangeWriter reader;
+    private ChangeWriter reader;
 
 
     public void initialize(){
@@ -44,7 +42,6 @@ public class ChangesCheckupsController {
         procedureColumn.setCellValueFactory(checkup -> new SimpleStringProperty(ProcedureData.getProcedureFromId(checkup.getValue().getProcedureID()).description()));
 
         checkupTable.setItems(list);
-
     }
 
     public void showInfo(){
@@ -64,28 +61,26 @@ public class ChangesCheckupsController {
                 changes.add(rolesAndChanges.get(i));
             }
 
-            if(selectedCheckup.isPresent()){
-                changeText.setText("Changes made: " + checkups.get(checkupTable.getSelectionModel().getSelectedIndex()) + " " + changes.get(checkupTable.getSelectionModel().getSelectedIndex()) + " by " + roles.get(checkupTable.getSelectionModel().getSelectedIndex()));
-            }
+            changeText.setText("Changes made: " + checkups.get(checkupTable.getSelectionModel().getSelectedIndex()) + " " + changes.get(checkupTable.getSelectionModel().getSelectedIndex()) + " by " + roles.get(checkupTable.getSelectionModel().getSelectedIndex()));
         }
     }
 
     public void moreInfo(){
         Optional<ActiveCheckup> selectedCheckup = Optional.ofNullable(checkupTable.getSelectionModel().getSelectedItem());
 
+        Alert alert;
         if(selectedCheckup.isPresent()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("INFORMATION");
             alert.setHeaderText("More info about checkup change.");
             alert.setContentText(selectedCheckup.get().toString());
-            alert.show();
         }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("No checkup selected!");
             alert.setContentText("Please select checkup to show more info!");
-            alert.show();
         }
+        alert.show();
     }
 
 }

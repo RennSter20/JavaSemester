@@ -23,16 +23,12 @@ public class EditCheckupsController {
 
     @FXML
     private TableView<ActiveCheckup> checkupTable;
-
     @FXML
     private TableColumn<ActiveCheckup, String> dateColumn, patientColumn, procedureColumn;
-
     @FXML
     private TextField filterField;
-
     @FXML
     private DateTimePicker datePicker;
-
     @FXML
     private ChoiceBox<PatientRoom> roomChoiceBox;
 
@@ -45,7 +41,7 @@ public class EditCheckupsController {
         ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(rooms);
         roomChoiceBox.setItems(observableList);
         roomChoiceBox.getSelectionModel().selectFirst();
-        roomChoiceBox.setConverter(new StringConverter<PatientRoom>() {
+        roomChoiceBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(PatientRoom patientRoom) {
                 return patientRoom.getRoomType();

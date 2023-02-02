@@ -7,8 +7,6 @@ import com.example.renatojava.javasemester.threads.ShowInfoTitleThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -51,16 +49,12 @@ public class Application extends javafx.application.Application {
             stage.getIcons().add(new Image("/icon.png"));
             stage.show();
 
-            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    Platform.runLater(new ShowInfoTitleThread(hospital));
-                }
-            }));
+            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
             latestChange.setCycleCount(Timeline.INDEFINITE);
             latestChange.play();
 
-            Platform.runLater(new APICountries());
+            Thread thread = new Thread(new APICountries());
+            thread.start();
     }
 
     public static void setMainPage(BorderPane root) {
@@ -82,4 +76,4 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO add new users
+//TODO annotation

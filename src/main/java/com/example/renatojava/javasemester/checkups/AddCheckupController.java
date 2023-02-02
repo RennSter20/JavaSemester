@@ -22,7 +22,6 @@ import tornadofx.control.DateTimePicker;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddCheckupController implements PatientData,ProcedureData, Notification, CheckupData {
@@ -42,19 +41,18 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
     @FXML
     private ChoiceBox<PatientRoom> roomChoiceBox;
 
-    private List<Patient> patientList = new ArrayList<>();
-    private List<Procedure> procedureList = new ArrayList<>();
+    private List<Patient> patientList;
+    private List<Procedure> procedureList;
 
     @FXML
     public void initialize(){
         patientList = PatientData.getAllPatients();
         fillPatientsTable(patientList);
 
-        List<PatientRoom> rooms = List.of(new RoomA("A"), new RoomB("B"), new RoomC("C"));
-        ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(rooms);
+        ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(List.of(new RoomA("A"), new RoomB("B"), new RoomC("C")));
         roomChoiceBox.setItems(observableList);
         roomChoiceBox.getSelectionModel().selectFirst();
-        roomChoiceBox.setConverter(new StringConverter<PatientRoom>() {
+        roomChoiceBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(PatientRoom patientRoom) {
                 return patientRoom.getRoomType();
@@ -65,8 +63,7 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
                 return null;
             }
         });
-
-
+        
         try{
             procedureList = ProcedureData.getAllProcedures();
         } catch (SQLException | IOException e) {

@@ -121,7 +121,7 @@ public interface CheckObjects  {
         try {
             LocalDate time = LocalDate.parse(input, format);
             return true;
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Error while getting new date and time.");
@@ -174,7 +174,9 @@ public interface CheckObjects  {
     }
 
     static Boolean checkCheckupTime(LocalDateTime localDateTime, ActiveCheckup checkupToSkip){
+
         List<ActiveCheckup> allCheckups = CheckupData.getAllActiveCheckups();
+
         for(ActiveCheckup checkup : allCheckups){
             if(checkupToSkip != null){
                 if(!checkup.getId().equals(checkupToSkip.getId())){

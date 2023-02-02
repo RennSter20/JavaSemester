@@ -10,7 +10,7 @@ public class APICountries implements Runnable{
     @Override
     public void run() {
         try {
-            Application.countries = APIManager.avaibleCountries().keySet().stream().toList();
+            Application.countries = APIManager.avaibleCountries();
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
         }

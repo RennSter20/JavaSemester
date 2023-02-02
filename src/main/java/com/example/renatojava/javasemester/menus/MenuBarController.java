@@ -1,11 +1,12 @@
 package com.example.renatojava.javasemester.menus;
 
-import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.entity.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 
@@ -15,35 +16,32 @@ import java.util.Optional;
 public class MenuBarController {
 
     @FXML
-    private MenuItem addCheckup, removeCheckup, registerPatient, allPatients, allDoctors, procedures, addRemoveDoctors, editDoctors, addRemoveRoom, activeProcedures, doctorChanges, patientChanges, procedureChanges, createProcedure, deleteProcedure, editProcedure, roomChanges;
+    private Menu procedures;
+    @FXML
+    private MenuItem addProcedure, removeProcedure;
+    @FXML
+    private MenuItem addCheckup, allCheckups, editCheckup;
+    @FXML
+    private Menu patients;
+    @FXML
+    private MenuItem registerPatient, allPatients;
+    @FXML
+    private MenuItem allBills, procedurePrices;
+    @FXML
+    private Menu admin;
+    @FXML
+    private Menu doctors;
+
 
     public void initialize(){
         User currentUser = Application.getLoggedUser();
         if(currentUser.getRole().equals("Doctor")){
-            addCheckup.setDisable(true);
-            removeCheckup.setDisable(true);
-            registerPatient.setDisable(true);
-            addRemoveDoctors.setDisable(true);
-            editDoctors.setDisable(true);
-            addRemoveRoom.setDisable(true);
-            doctorChanges.setDisable(true);
-            patientChanges.setDisable(true);
-            roomChanges.setDisable(true);
-            procedureChanges.setDisable(true);
-            createProcedure.setDisable(true);
-            deleteProcedure.setDisable(true);
-            editProcedure.setDisable(true);
+            procedures.setDisable(true);
+            patients.setDisable(true);
+            doctors.setDisable(true);
+            admin.setDisable(true);
         }else if(currentUser.getRole().equals("Receptionist")){
-            addRemoveDoctors.setDisable(true);
-            editDoctors.setDisable(true);
-            addRemoveRoom.setDisable(true);
-            doctorChanges.setDisable(true);
-            patientChanges.setDisable(true);
-            procedureChanges.setDisable(true);
-            roomChanges.setDisable(true);
-            createProcedure.setDisable(true);
-            deleteProcedure.setDisable(true);
-            editProcedure.setDisable(true);
+            admin.setDisable(true);
         }
     }
 

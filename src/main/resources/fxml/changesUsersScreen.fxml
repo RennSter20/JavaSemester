@@ -35,11 +35,11 @@
             </Label>
             <TableView fx:id="tableView" onMouseClicked="#onSelect" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
               <columns>
-                <TableColumn fx:id="idColumn" prefWidth="208.0" style="-fx-alignment: CENTER;" text="ID" />
-                <TableColumn fx:id="passwordColumn" prefWidth="215.0" style="-fx-alignment: CENTER;" text="Password" />
-                  <TableColumn fx:id="nameColumn" prefWidth="283.0" style="-fx-alignment: CENTER;" text="Name" />
-                  <TableColumn fx:id="surnameColumn" prefWidth="310.0" style="-fx-alignment: CENTER;" text="Surname" />
-                  <TableColumn fx:id="roleColumn" prefWidth="263.0" style="-fx-alignment: CENTER;" text="Role" />
+                <TableColumn fx:id="idColumn" prefWidth="208.0" sortable="false" style="-fx-alignment: CENTER;" text="ID" />
+                <TableColumn fx:id="passwordColumn" prefWidth="215.0" sortable="false" style="-fx-alignment: CENTER;" text="Password" />
+                  <TableColumn fx:id="nameColumn" prefWidth="283.0" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
+                  <TableColumn fx:id="surnameColumn" prefWidth="310.0" sortable="false" style="-fx-alignment: CENTER;" text="Surname" />
+                  <TableColumn fx:id="roleColumn" prefWidth="263.0" sortable="false" style="-fx-alignment: CENTER;" text="Role" />
               </columns>
             </TableView>
             <Label fx:id="changeLabel" text="Change made:" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">

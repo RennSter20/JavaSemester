@@ -75,6 +75,41 @@ public class MenuScreenController implements StatsData {
     }
 
     public void setInfo(String country){
+        totalCases.setText("...");
+        totalDeaths.setText("...");
+        newDailyCases.setText("...");
+        lastUpdated.setText("...");
+        /*
+        AtomicReference<APIResponse> apiResponse = new AtomicReference<>();
+        Thread thread = new Thread(() -> {
+            try{
+                if(country.equals("World")){
+                    apiResponse.set(APIManager.getWorldInfo());
+                }else{
+                    apiResponse.set(APIManager.getCountryInfo(country));
+                }
+            }catch (IOException e){
+                Application.logger.error(e.getMessage(), e);
+            }
+
+            Platform.runLater(() -> {
+                try{
+                    totalCases.setText(apiResponse.get().getTotalCases().toString());
+                    totalDeaths.setText(apiResponse.get().getTotalDeaths().toString());
+                    newDailyCases.setText(apiResponse.get().getNewCasesDay().toString());
+                    lastUpdated.setText(DateFormatter.getTimeWithSeconds(apiResponse.get().getLastUpdatedFullTime()));
+                }catch (NullPointerException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("ERROR");
+                    alert.setHeaderText("Error with gathering newest info.");
+                    alert.setContentText("It's not possible to get newest information about COVID-19, please try again later and check your connection.");
+                    alert.show();
+                    Application.logger.error(e.getMessage(), e);
+                }
+            });
+        });
+        thread.start();
+        */
         APIResponse apiResponse = null;
         try{
             if(country.equals("World")){
@@ -85,8 +120,6 @@ public class MenuScreenController implements StatsData {
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
         }
-
-
         try{
             totalCases.setText(apiResponse.getTotalCases().toString());
             totalDeaths.setText(apiResponse.getTotalDeaths().toString());
@@ -100,6 +133,5 @@ public class MenuScreenController implements StatsData {
             alert.show();
             Application.logger.error(e.getMessage(), e);
         }
-
     }
 }

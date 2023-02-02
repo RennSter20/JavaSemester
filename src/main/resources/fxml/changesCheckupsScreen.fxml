@@ -47,9 +47,9 @@
          <children>
             <TableView fx:id="checkupTable" maxHeight="-Infinity" onMouseClicked="#showInfo" prefHeight="500.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowSpan="3">
                <columns>
-                  <TableColumn fx:id="dateColumn" prefWidth="364.0" style="-fx-alignment: CENTER;" text="Date and time" />
-                  <TableColumn fx:id="patientColumn" prefWidth="568.0" style="-fx-alignment: CENTER;" text="Patient" />
-                  <TableColumn fx:id="procedureColumn" prefWidth="347.0" style="-fx-alignment: CENTER;" text="Procedure" />
+                  <TableColumn fx:id="dateColumn" prefWidth="364.0" sortable="false" style="-fx-alignment: CENTER;" text="Date and time" />
+                  <TableColumn fx:id="patientColumn" prefWidth="568.0" sortable="false" style="-fx-alignment: CENTER;" text="Patient" />
+                  <TableColumn fx:id="procedureColumn" prefWidth="347.0" sortable="false" style="-fx-alignment: CENTER;" text="Procedure" />
                </columns>
             </TableView>
             <Button mnemonicParsing="false" onAction="#moreInfo" text="Info" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">

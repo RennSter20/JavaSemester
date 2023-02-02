@@ -7,8 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface APIManager {
 
@@ -71,7 +71,7 @@ public interface APIManager {
         return apiResponse;
     }
 
-    public static Map<String, Integer> avaibleCountries() throws IOException{
+    static List<String> avaibleCountries() throws IOException{
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -86,12 +86,11 @@ public interface APIManager {
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONArray mainJSON = jsonObject.getJSONArray("data");
 
-        Map<String, Integer> countries = new TreeMap<>();
+        List<String> countries = new ArrayList<>();
         for(int i = 0;i< mainJSON.length();i++){
-            countries.put(mainJSON.getJSONObject(i).getJSONObject("region").getString("name"), 0);
-
+            countries.add(mainJSON.getJSONObject(i).getJSONObject("region").getString("name"));
         }
-        countries.put("World", 0);
+        countries.add("World");
         return countries;
     }
 

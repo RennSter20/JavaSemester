@@ -63,18 +63,20 @@ public class AllBillsController {
             Alert moreInfo = new Alert(Alert.AlertType.INFORMATION);
             moreInfo.setTitle("Bill");
             moreInfo.setHeaderText("Information about this bill:");
-            String info = "";
-            info += "Full name: " + selectedBill.get().getPatient().getFullName() + "\n";
-            info += "OIB: " + selectedBill.get().getPatient().getOib() + "\n";
-            info += "Birth date: " + DateFormatter.getDateFormatted(selectedBill.get().getPatient().getDate().toString()) + "\n";
+            StringBuilder info = new StringBuilder();
+            info.append("Full name: " + selectedBill.get().getPatient().getFullName() + "\n");
+            info.append("OIB: " + selectedBill.get().getPatient().getOib() + "\n");
+            info.append("Birth date: " + DateFormatter.getDateFormatted(selectedBill.get().getPatient().getDate().toString()) + "\n");
+
+            info.append("Procedures: \n");
             List<String> currentProceduresSplitted = List.of(selectedBill.get().getPatient().getProcedures().split(","));
-            info += "Procedures: \n";
             for(String s : currentProceduresSplitted){
-                info += s + "\n";
+                info.append(s + "\n");
             }
-            info += "Total: " + selectedBill.get().getPatient().getDebt() + "\n";
-            info += "Date issued: " + DateFormatter.getDateTimeFormatted(selectedBill.get().getTime().toString());
-            moreInfo.setContentText(info);
+
+            info.append("Total: " + selectedBill.get().getPatient().getDebt() + "\n");
+            info.append("Date issued: " + DateFormatter.getDateTimeFormatted(selectedBill.get().getTime().toString()));
+            moreInfo.setContentText(info.toString());
             moreInfo.show();
         }else{
             Alert notSelected = new Alert(Alert.AlertType.ERROR);
