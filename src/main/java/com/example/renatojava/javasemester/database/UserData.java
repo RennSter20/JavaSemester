@@ -1,6 +1,7 @@
 package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.entity.Change;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.ChangeWriter;
@@ -55,9 +56,10 @@ public interface UserData {
             stmnt.executeUpdate();
 
             writeAllUsers(allUsersDatabase());
-            ChangeWriter changeWriter = new ChangeWriter();
-            User addeduser = UserData.getUserFromId(id);
-            changeWriter.addUserChange(addeduser, "user created");
+
+            Change change = new Change(new User("-", "-", "-", "-", "-"), UserData.getUserFromId(id));
+            ChangeWriter writer = new ChangeWriter(change);
+            writer.addChange(Application.getLoggedUser().getRole());
 
             Notification.addedSuccessfully("User");
 
@@ -69,12 +71,16 @@ public interface UserData {
     static void updateUser(String id, String password, String name, String surname, String role){
         try(Connection conn = Data.connectingToDatabase()) {
 
+            User oldUser = UserData.getUserFromId(id);
+
             PreparedStatement stmnt = conn.prepareStatement("UPDATE USERS SET PASSWORD='" + password + "', NAME='" + name + "', SURNAME='" + surname + "', ROLE='" + role + "' WHERE ID='" + id + "'");
             stmnt.executeUpdate();
 
+            Change change = new Change(oldUser, UserData.getUserFromId(id));
+            ChangeWriter writer = new ChangeWriter(change);
+            writer.addChange(Application.getLoggedUser().getRole());
+
             writeAllUsers(allUsersDatabase());
-            ChangeWriter changeWriter = new ChangeWriter();
-            changeWriter.addUserChange(UserData.getUserFromId(id), "user updated");
 
             Notification.updatedSuccessfully("User");
 
@@ -91,9 +97,11 @@ public interface UserData {
             PreparedStatement stmnt = conn.prepareStatement("DELETE FROM USERS WHERE ID='" + id + "'");
             stmnt.executeUpdate();
 
+            Change change = new Change(deletedUser, new User("-", "-", "-", "-", "-"));
+            ChangeWriter writer = new ChangeWriter(change);
+            writer.addChange(Application.getLoggedUser().getRole());
+
             writeAllUsers(allUsersDatabase());
-            ChangeWriter changeWriter = new ChangeWriter();
-            changeWriter.addUserChange(deletedUser, "user deleted");
 
             Notification.removedSuccessfully("User");
 

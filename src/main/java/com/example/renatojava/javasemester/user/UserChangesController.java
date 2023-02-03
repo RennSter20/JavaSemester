@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,7 +31,13 @@ public class UserChangesController {
     @FXML
     public void initialize(){
         reader = new ChangeWriter();
-        ObservableList<User> userObservableList = FXCollections.observableList(reader.readUsers());
+        List<User> allChanges = reader.readUsers();
+        List<User> newUsers = new ArrayList<>();
+        for(int i = 1;i<allChanges.size();i+=2){
+            newUsers.add(allChanges.get(i));
+        }
+
+        ObservableList<User> userObservableList = FXCollections.observableList(newUsers);
 
         idColumn.setCellValueFactory(user -> new SimpleStringProperty(user.getValue().getId()));
         passwordColumn.setCellValueFactory(user -> new SimpleStringProperty(user.getValue().getPassword()));
@@ -45,22 +52,35 @@ public class UserChangesController {
         Optional<User> selectedUser = Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
 
         if(selectedUser.isPresent()){
-            List<String> users = reader.readTimeUsers();
-            List<String> rolesAndChanges = reader.readRoleChangeUsers();
+            List<String> times = reader.readTimeUsers();
+            List<String> roles = reader.readRoleChangeUsers();
 
-            List<String> roles = new ArrayList<>();
-            List<String> changes = new ArrayList<>();
+            changeLabel.setText("Changes made: " + times.get(tableView.getSelectionModel().getSelectedIndex()) + " " + " by " + roles.get(tableView.getSelectionModel().getSelectedIndex()));
 
-            for(int i = 0;i<rolesAndChanges.size();i+=2){
-                roles.add(rolesAndChanges.get(i));
-            }
-            for(int i = 1;i<rolesAndChanges.size();i+=2){
-                changes.add(rolesAndChanges.get(i));
-            }
+        }
+    }
 
+    public void moreInfo(){
+        Optional<User> selectedUser = Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
 
-            changeLabel.setText("Changes made: " + users.get(tableView.getSelectionModel().getSelectedIndex()) + ", " + changes.get(tableView.getSelectionModel().getSelectedIndex()) + " by " + roles.get(tableView.getSelectionModel().getSelectedIndex()));
+        List<User> allChanges = reader.readUsers();
+        List<User> oldUsers = new ArrayList<>();
+        for(int i = 0;i<allChanges.size();i+=2){
+            oldUsers.add(allChanges.get(i));
+        }
 
+        if(selectedUser.isPresent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("INFORMATION");
+            alert.setHeaderText("More info about user change.");
+            alert.setContentText("OLD VALUE:\n" + oldUsers.get(tableView.getSelectionModel().getSelectedIndex()) + "\n\nNEW VALUE:\n" + selectedUser.get());
+            alert.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No user change selected!");
+            alert.setContentText("Please select user to show more info!");
+            alert.show();
         }
     }
 

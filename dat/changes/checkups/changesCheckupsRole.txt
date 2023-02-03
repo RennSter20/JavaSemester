@@ -6,3 +6,5 @@ Admin
 checkup rejected
 Admin
 checkup rejected
+Doctor
+checkup rejected

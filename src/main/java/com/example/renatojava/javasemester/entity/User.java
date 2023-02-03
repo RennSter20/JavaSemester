@@ -14,6 +14,15 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "Information about user:\nID: " + id +
+                "\nPassword: " + password +
+                "\nName: " + name +
+                "\nSurname: " + surname +
+                "\nRole: " + role;
+    }
+
     public String getId() {
         return id;
     }

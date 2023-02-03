@@ -65,6 +65,7 @@ public class EditRoomController {
         if(selectedRoom.isPresent()){
             if(!nameField.equals("")){
                 DoctorRoomData.updateRoom(nameField.getText(), newDoctor.get(), selectedRoom.get());
+                nameField.setText("");
                 initialize();
             }else{
                 Alert alert = new Alert(Alert.AlertType.ERROR);

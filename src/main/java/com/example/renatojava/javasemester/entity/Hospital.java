@@ -8,27 +8,16 @@ public class Hospital {
 
     public Hospital() {
         occupiedBeds = PatientData.getAllPatients().size();
-        System.out.println("Occupied beds: " + occupiedBeds);
     }
 
-    public void occupyBed() {
-        synchronized (this){
-            occupiedBeds++;
-        }
-        System.out.println("After occupying");
-        System.out.println("Occupied beds: " + occupiedBeds);
+    public synchronized void occupyBed() {
+        occupiedBeds++;
     }
-    public void freeBed() {
-        synchronized (this){
-            occupiedBeds--;
-        }
-        System.out.println("After freeing");
-        System.out.println("Occupied beds: " + occupiedBeds);
+    public synchronized void freeBed() {
+        occupiedBeds--;
     }
 
-    public Integer getOccupiedBeds(){
-        synchronized (this){
-            return occupiedBeds;
-        }
+    public synchronized Integer getOccupiedBeds(){
+        return occupiedBeds;
     }
 }

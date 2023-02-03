@@ -59,6 +59,8 @@ public class ChangeWriter<T>{
             items = (List<T>) readRooms();
         }else if(change.getOldObject() instanceof Procedure){
             items = (List<T>) readProcedures();
+        }else if(change.getOldObject() instanceof User){
+            items = (List<T>) readUsers();
         }
 
         items.add((T) change.getOldObject());
@@ -140,6 +142,23 @@ public class ChangeWriter<T>{
                 FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_PROCEDURES_ROLE, true);
                 roleDoctorsWriter.write(role + "\n");
                 roleDoctorsWriter.close();
+
+            }else if(itemsToWrite.get(0) instanceof User){
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_USERS, false));
+                for(T object : itemsToWrite){
+                    out.writeObject(object);
+                }
+                out.close();
+
+                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_USERS, true);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+                timeRoomsWriter.write(dtf.format(now) + "\n");
+                timeRoomsWriter.close();
+
+                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_USERS_ROLE, true);
+                roleDoctorsWriter.write(role + "\n");
+                roleDoctorsWriter.close();
             }
 
         } catch (IOException e) {
@@ -176,48 +195,14 @@ public class ChangeWriter<T>{
         }
     }
 
-    public void addUserChange(User user, String change){
-        List<User> items = new ArrayList<>(readUsers());
-        items.add(user);
-        writeAllUsers(items, change);
-    }
-
-    public void writeAllUsers(List<User> users, String change){
-        try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_USERS, false));
-            for(User object : users){
-                out.writeObject(object);
-            }
-            out.close();
-            out.flush();
-
-
-            FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_USERS, true);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            timePatientsWriter.write(dtf.format(now) + "\n");
-            timePatientsWriter.close();
-
-
-            FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_USERS_ROLE, true);
-            roleDoctorsWriter.write("Admin" + "\n" + change + "\n");
-            roleDoctorsWriter.close();
-            roleDoctorsWriter.flush();
-        }catch (IOException e){
-            Application.logger.error(e.getMessage(), e);
-        }
-    }
-
 
     public List<Patient> readPatients(){
-        List<Patient> first = new ArrayList<>();
-        List<Patient> second = new ArrayList<>();
         List<Patient> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PATIENTS));
             while(true){
-                first.add((Patient)input.readObject());
-                second.add((Patient)input.readObject());
+                finalList.add((Patient)input.readObject());
+                finalList.add((Patient)input.readObject());
             }
 
 
@@ -225,22 +210,16 @@ public class ChangeWriter<T>{
             Application.logger.info(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
-        }
-        for(int i = 0;i< first.size();i++){
-            finalList.add(first.get(i));
-            finalList.add(second.get(i));
         }
         return finalList;
     }
     public List<Doctor> readDoctors(){
-        List<Doctor> first = new ArrayList<>();
-        List<Doctor> second = new ArrayList<>();
         List<Doctor> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_DOCTORS));
             while(true){
-                first.add((Doctor)input.readObject());
-                second.add((Doctor)input.readObject());
+                finalList.add((Doctor)input.readObject());
+                finalList.add((Doctor)input.readObject());
             }
 
         } catch (IOException e) {
@@ -248,22 +227,15 @@ public class ChangeWriter<T>{
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
         }
-        for(int i = 0;i< first.size();i++){
-            finalList.add(first.get(i));
-            finalList.add(second.get(i));
-        }
-
         return finalList;
     }
     public List<DoctorRoom> readRooms(){
-        List<DoctorRoom> first = new ArrayList<>();
-        List<DoctorRoom> second = new ArrayList<>();
         List<DoctorRoom> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_ROOMS));
             while(true){
-                first.add((DoctorRoom)input.readObject());
-                second.add((DoctorRoom)input.readObject());
+                finalList.add((DoctorRoom)input.readObject());
+                finalList.add((DoctorRoom)input.readObject());
             }
 
 
@@ -271,33 +243,21 @@ public class ChangeWriter<T>{
             Application.logger.info(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
-        }
-        for(int i = 0;i< first.size();i++){
-            finalList.add(first.get(i));
-            finalList.add(second.get(i));
         }
         return finalList;
     }
     public List<Procedure> readProcedures(){
-        List<Procedure> first = new ArrayList<>();
-        List<Procedure> second = new ArrayList<>();
         List<Procedure> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PROCEDURES));
             while(true){
-                first.add((Procedure)input.readObject());
-                second.add((Procedure)input.readObject());
+                finalList.add((Procedure)input.readObject());
+                finalList.add((Procedure)input.readObject());
             }
-
-
         } catch (IOException e) {
             Application.logger.info(e.getMessage(), e);
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
-        }
-        for(int i = 0;i< first.size();i++){
-            finalList.add(first.get(i));
-            finalList.add(second.get(i));
         }
         return finalList;
     }
@@ -317,10 +277,12 @@ public class ChangeWriter<T>{
         return finalList;
     }
     public List<User> readUsers(){
+
         List<User> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_USERS));
             while(true){
+                finalList.add((User)input.readObject());
                 finalList.add((User)input.readObject());
             }
 
@@ -329,6 +291,7 @@ public class ChangeWriter<T>{
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
         }
+
         return finalList;
     }
 
