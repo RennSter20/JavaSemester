@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.checkups.ChangesCheckupsController">
-    <fx:include source="menuBar.fxml" />
+    <fx:include source="../menus/menuBar.fxml" />
    <top>
       <Label text="Checkup changes" BorderPane.alignment="CENTER">
          <BorderPane.margin>

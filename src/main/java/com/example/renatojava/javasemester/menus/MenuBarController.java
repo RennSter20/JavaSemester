@@ -51,7 +51,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/editCheckups.fxml"));
+                    getClass().getResource("/fxml/checkups/editCheckups.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -62,7 +62,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/proceduresScreen.fxml"));
+                    getClass().getResource("/fxml/bills/proceduresScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -83,7 +83,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/registerPatientScreen.fxml"));
+                    getClass().getResource("/fxml/patients/registerPatientScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -94,7 +94,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/allPatientsScreen.fxml"));
+                    getClass().getResource("/fxml/patients/allPatientsScreen.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -112,7 +112,7 @@ public class MenuBarController {
             BorderPane root;
             try {
                 root = FXMLLoader.load(
-                        getClass().getResource("/fxml/loginScreen.fxml"));
+                        getClass().getResource("/fxml/menus/loginScreen.fxml"));
                 Application.setMainPage(root);
             } catch (IOException e) {
                 Application.logger.error(e.getMessage(), e);
@@ -124,7 +124,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/addProcedures.fxml"));
+                    getClass().getResource("/fxml/procedures/addProcedures.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -135,7 +135,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/removeProcedure.fxml"));
+                    getClass().getResource("/fxml/procedures/removeProcedure.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -146,7 +146,7 @@ public class MenuBarController {
         BorderPane root;
         try {
             root = FXMLLoader.load(
-                    getClass().getResource("/fxml/allDoctors.fxml"));
+                    getClass().getResource("/fxml/doctors/allDoctors.fxml"));
             Application.setMainPage(root);
         } catch (IOException e) {
             Application.logger.error(e.getMessage(), e);
@@ -156,7 +156,7 @@ public class MenuBarController {
     public void showChangesPatientsScreen() {
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesPatientsScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/patients/changesPatientsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -166,7 +166,7 @@ public class MenuBarController {
     public void showStatsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/menuScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/menus/menuScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -176,7 +176,7 @@ public class MenuBarController {
     public void showAddRemoveDoctorsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/addRemoveDoctors.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/doctors/addRemoveDoctors.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -186,7 +186,7 @@ public class MenuBarController {
     public void showEditDoctorsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/editDoctors.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/doctors/editDoctors.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -196,7 +196,7 @@ public class MenuBarController {
     public void showChangesDoctorsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesDoctorsScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/doctors/changesDoctorsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -206,7 +206,7 @@ public class MenuBarController {
     public void showAddRemoveRoomScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/addRemoveRoom.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/rooms/addRemoveRoom.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -216,7 +216,7 @@ public class MenuBarController {
     public void showAddCheckupScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/addCheckup.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/checkups/addCheckup.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -226,7 +226,7 @@ public class MenuBarController {
     public void showAllCheckupsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/listOfActiveCheckups.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/checkups/listOfActiveCheckups.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -237,7 +237,7 @@ public class MenuBarController {
     public void showAllBillsScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/allBills.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/bills/allBills.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -248,7 +248,7 @@ public class MenuBarController {
     public void showChangesProceduresScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesProceduresScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/procedures/changesProceduresScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -258,7 +258,7 @@ public class MenuBarController {
     public void showCreateProcedureScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/createProcedureScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/procedures/createProcedureScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -268,7 +268,7 @@ public class MenuBarController {
     public void showDeleteProcedureScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/deleteProcedureScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/procedures/deleteProcedureScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -278,7 +278,7 @@ public class MenuBarController {
     public void showEditProcedureScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/editProcedureScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/procedures/editProcedureScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -288,7 +288,7 @@ public class MenuBarController {
     public void showRoomChangesScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesRoomScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/rooms/changesRoomScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -298,7 +298,7 @@ public class MenuBarController {
     public void showCheckupChangesScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesCheckupsScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/checkups/changesCheckupsScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -308,7 +308,7 @@ public class MenuBarController {
     public void showCreateUserScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/createUserScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/users/createUserScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -319,7 +319,7 @@ public class MenuBarController {
     public void showEditUserScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/editUserScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/users/editUserScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -329,7 +329,7 @@ public class MenuBarController {
     public void showUserChangesScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/changesUsersScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/users/changesUsersScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);
@@ -339,7 +339,7 @@ public class MenuBarController {
     public void showEditRoomScreen(){
         BorderPane root;
         try {
-            root = FXMLLoader.load(getClass().getResource("/fxml/editRoomScreen.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/rooms/editRoomScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
             Application.logger.error(e.getMessage(), e);

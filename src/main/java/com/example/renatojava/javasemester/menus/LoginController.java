@@ -63,7 +63,7 @@ public class LoginController implements UserData {
                 BorderPane root;
                 try {
                     root = FXMLLoader.load(
-                            getClass().getResource("/fxml/menuScreen.fxml"));
+                            getClass().getResource("/fxml/menus/menuScreen.fxml"));
                     Application.setMainPage(root);
                 } catch (IOException e) {
                     Application.logger.error(e.getMessage(), e);

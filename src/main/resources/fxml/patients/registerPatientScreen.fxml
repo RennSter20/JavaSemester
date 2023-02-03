@@ -34,7 +34,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
         </GridPane>
-      <fx:include source="menuBar.fxml" />
+      <fx:include source="../menus/menuBar.fxml" />
     </children>
    <center>
       <GridPane prefHeight="352.0" prefWidth="600.0" BorderPane.alignment="CENTER">

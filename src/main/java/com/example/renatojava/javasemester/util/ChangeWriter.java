@@ -72,112 +72,55 @@ public class ChangeWriter<T>{
     }
     public void writeAll(List<T> itemsToWrite, String role) {
         try{
-            if(itemsToWrite.get(0) instanceof Patient){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PATIENTS, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-                out.flush();
+            String first = null;
+            String second = null;
+            String third = null;
 
-                FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_PATIENTS, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timePatientsWriter.write(dtf.format(now) + "\n");
-                timePatientsWriter.close();
-
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_PATIENTS_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
-
-
+            T objectToCheck = itemsToWrite.get(0);
+            if(objectToCheck instanceof Patient){
+                first = CHANGE_FILE_PATIENTS;
+                second = CHANGE_FILE_TIME_PATIENTS;
+                third = CHANGE_FILE_PATIENTS_ROLE;
+            }else if(objectToCheck instanceof Doctor){
+                first = CHANGE_FILE_DOCTORS;
+                second = CHANGE_FILE_TIME_DOCTORS;
+                third = CHANGE_FILE_DOCTORS_ROLE;
+            }else if(objectToCheck instanceof DoctorRoom){
+                first = CHANGE_FILE_ROOMS;
+                second = CHANGE_FILE_TIME_ROOMS;
+                third = CHANGE_FILE_ROOMS_ROLE;
+            }else if(objectToCheck instanceof Procedure){
+                first = CHANGE_FILE_TIME_PROCEDURES;
+                second = CHANGE_FILE_PROCEDURES_ROLE;
+                third = CHANGE_FILE_USERS;
+            }else if(objectToCheck instanceof User){
+                first = CHANGE_FILE_USERS;
+                second = CHANGE_FILE_TIME_USERS;
+                third = CHANGE_FILE_USERS_ROLE;
+            }else if(objectToCheck instanceof ActiveCheckup){
+                first = CHANGE_FILE_CHECKUPS;
+                second = CHANGE_FILE_TIME_CHECKUPS;
+                third = CHANGE_FILE_CHECKUPS_ROLE;
             }
-            else if( itemsToWrite.get(0) instanceof Doctor){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_DOCTORS, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-                out.flush();
 
-                FileWriter timeDoctorsWriter = new FileWriter(CHANGE_FILE_TIME_DOCTORS, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timeDoctorsWriter.write(dtf.format(now) + "\n");
-                timeDoctorsWriter.close();
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_DOCTORS_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
-
-            }else if(itemsToWrite.get(0) instanceof DoctorRoom){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_ROOMS, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-
-                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_ROOMS, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timeRoomsWriter.write(dtf.format(now) + "\n");
-                timeRoomsWriter.close();
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_ROOMS_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
-
-            }else if(itemsToWrite.get(0) instanceof Procedure){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_PROCEDURES, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-
-                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_PROCEDURES, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timeRoomsWriter.write(dtf.format(now) + "\n");
-                timeRoomsWriter.close();
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_PROCEDURES_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
-
-            }else if(itemsToWrite.get(0) instanceof User){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_USERS, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-
-                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_USERS, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timeRoomsWriter.write(dtf.format(now) + "\n");
-                timeRoomsWriter.close();
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_USERS_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
-            }else if(itemsToWrite.get(0) instanceof ActiveCheckup){
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_CHECKUPS, false));
-                for(T object : itemsToWrite){
-                    out.writeObject(object);
-                }
-                out.close();
-
-                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_CHECKUPS, true);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                timeRoomsWriter.write(dtf.format(now) + "\n");
-                timeRoomsWriter.close();
-
-                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_CHECKUPS_ROLE, true);
-                roleDoctorsWriter.write(role + "\n");
-                roleDoctorsWriter.close();
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(first, false));
+            for(T object : itemsToWrite){
+                out.writeObject(object);
             }
+            out.close();
+            out.flush();
+
+            FileWriter timePatientsWriter = new FileWriter(second, true);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            timePatientsWriter.write(dtf.format(now) + "\n");
+            timePatientsWriter.close();
+
+
+            FileWriter roleDoctorsWriter = new FileWriter(third, true);
+            roleDoctorsWriter.write(role + "\n");
+            roleDoctorsWriter.close();
+
 
         } catch (IOException e) {
             Application.logger.info(e.getMessage(), e);

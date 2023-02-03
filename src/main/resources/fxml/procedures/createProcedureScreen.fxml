@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.renatojava.javasemester.procedure.CreateProcedureController">
-    <fx:include source="menuBar.fxml" />
+    <fx:include source="../menus/menuBar.fxml" />
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>

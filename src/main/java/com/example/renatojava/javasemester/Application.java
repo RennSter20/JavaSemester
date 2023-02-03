@@ -42,12 +42,12 @@ public class Application extends javafx.application.Application {
             executorService = Executors.newCachedThreadPool();
 
             mainStage = stage;
-            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/loginScreen.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/fxml/menus/loginScreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
             stage.setScene(scene);
             stage.setFullScreen(false);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/icon.png"));
+            stage.getIcons().add(new Image("/drawables/icon.png"));
             stage.show();
 
             Timeline latestChange = new Timeline(new KeyFrame(Duration.millis(1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
@@ -78,6 +78,4 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO dodati checkup update staru i novu vrijednost
 //TODO thread za API
-//TODO u changewriteru staviti try catch i smanjiti instance of
