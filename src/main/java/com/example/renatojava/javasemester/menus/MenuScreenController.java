@@ -1,7 +1,6 @@
 package com.example.renatojava.javasemester.menus;
 
 import com.example.renatojava.javasemester.Application;
-import com.example.renatojava.javasemester.api.APIManager;
 import com.example.renatojava.javasemester.api.APIResponse;
 import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.StatsData;
@@ -16,7 +15,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +61,11 @@ public class MenuScreenController implements StatsData {
         }
 
 
-        ObservableList<String> countries = FXCollections.observableArrayList(Application.countries);
-        countriesChoice.setItems(countries);
+        //ObservableList<String> countries = FXCollections.observableArrayList(Application.responseMap.keySet());
+        //countriesChoice.setItems(countries);
 
-        setInfo("World");
-        countriesChoice.getSelectionModel().select("World");
+        //setInfo("World");
+        //countriesChoice.getSelectionModel().select("World");
     }
 
     public void onCountryChange(){
@@ -110,16 +108,7 @@ public class MenuScreenController implements StatsData {
         });
         thread.start();
         */
-        APIResponse apiResponse = null;
-        try{
-            if(country.equals("World")){
-                apiResponse = APIManager.getWorldInfo();
-            }else{
-                apiResponse = APIManager.getCountryInfo(country);
-            }
-        }catch (IOException e){
-            Application.logger.error(e.getMessage(), e);
-        }
+        APIResponse apiResponse = Application.responseMap.get(country);
         try{
             totalCases.setText(apiResponse.getTotalCases().toString());
             totalDeaths.setText(apiResponse.getTotalDeaths().toString());

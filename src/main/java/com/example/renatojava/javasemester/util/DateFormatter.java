@@ -49,7 +49,7 @@ public interface DateFormatter {
     }
 
     static boolean isEqualToday(String date){
-         String today = LocalDate.now().toString();
+         String today = getDateFormatted(LocalDate.now().toString());
          String dateToCheck = getDateFormatted(date);
         return dateToCheck.equals(today);
     }

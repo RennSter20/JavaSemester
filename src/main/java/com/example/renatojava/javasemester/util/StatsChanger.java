@@ -22,9 +22,7 @@ public interface StatsChanger {
             stmnt.executeUpdate();
 
             veza.close();
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }

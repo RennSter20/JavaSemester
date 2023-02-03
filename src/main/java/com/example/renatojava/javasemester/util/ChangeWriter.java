@@ -73,16 +73,12 @@ public class ChangeWriter<T>{
                 for(T object : itemsToWrite){
                     out.writeObject(object);
                 }
-
                 out.close();
                 out.flush();
 
-
                 FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_PATIENTS, true);
-
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-
                 timePatientsWriter.write(dtf.format(now) + "\n");
                 timePatientsWriter.close();
 
@@ -98,19 +94,14 @@ public class ChangeWriter<T>{
                 for(T object : itemsToWrite){
                     out.writeObject(object);
                 }
-
                 out.close();
                 out.flush();
 
                 FileWriter timeDoctorsWriter = new FileWriter(CHANGE_FILE_TIME_DOCTORS, true);
-
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-
-
                 timeDoctorsWriter.write(dtf.format(now) + "\n");
                 timeDoctorsWriter.close();
-
 
                 FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_DOCTORS_ROLE, true);
                 roleDoctorsWriter.write(role + "\n");
@@ -124,11 +115,8 @@ public class ChangeWriter<T>{
                 out.close();
 
                 FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_ROOMS, true);
-
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-
-
                 timeRoomsWriter.write(dtf.format(now) + "\n");
                 timeRoomsWriter.close();
 
@@ -141,15 +129,11 @@ public class ChangeWriter<T>{
                 for(T object : itemsToWrite){
                     out.writeObject(object);
                 }
-
                 out.close();
 
                 FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_PROCEDURES, true);
-
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-
-
                 timeRoomsWriter.write(dtf.format(now) + "\n");
                 timeRoomsWriter.close();
 
@@ -158,10 +142,8 @@ public class ChangeWriter<T>{
                 roleDoctorsWriter.close();
             }
 
-        } catch (FileNotFoundException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
         } catch (IOException e) {
-            Application.logger.info(e.getMessage(), e.getStackTrace());
+            Application.logger.info(e.getMessage(), e);
         }
     }
 
@@ -180,14 +162,11 @@ public class ChangeWriter<T>{
             out.close();
             out.flush();
 
-
             FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_CHECKUPS, true);
-
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             timePatientsWriter.write(dtf.format(now) + "\n");
             timePatientsWriter.close();
-
 
             FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_CHECKUPS_ROLE, true);
             roleDoctorsWriter.write(role + "\n" + change + "\n");
@@ -214,7 +193,6 @@ public class ChangeWriter<T>{
 
 
             FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_USERS, true);
-
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             timePatientsWriter.write(dtf.format(now) + "\n");
@@ -363,7 +341,7 @@ public class ChangeWriter<T>{
                 changesTime.add(time);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesTime;
     }
@@ -376,7 +354,7 @@ public class ChangeWriter<T>{
                 changesTime.add(time);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesTime;
     }
@@ -389,7 +367,7 @@ public class ChangeWriter<T>{
                 changesTime.add(time);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesTime;
     }
@@ -402,7 +380,7 @@ public class ChangeWriter<T>{
                 changesTime.add(time);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesTime;
     }
@@ -442,7 +420,7 @@ public class ChangeWriter<T>{
                 changesRole.add(role);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesRole;
     }
@@ -455,7 +433,7 @@ public class ChangeWriter<T>{
                 changesRole.add(role);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesRole;
     }
@@ -468,7 +446,7 @@ public class ChangeWriter<T>{
                 changesRole.add(role);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesRole;
     }
@@ -481,7 +459,7 @@ public class ChangeWriter<T>{
                 changesRole.add(role);
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            Application.logger.info(e.getMessage(), e);
         }
         return changesRole;
     }

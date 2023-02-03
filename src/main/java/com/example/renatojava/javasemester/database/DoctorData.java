@@ -109,7 +109,7 @@ public interface DoctorData {
             PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET NAME='" + newName + "', SURNAME='" + newSurname + "', TITLE='" + newTitle + "', GENDER='" + newGender + "' WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            Change change = new Change(oldDoctor, DoctorData.getCertainDoctor(id));
+            Change change = new Change(oldDoctor, DoctorData.getCertainDoctorFromId(id));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
@@ -119,7 +119,7 @@ public interface DoctorData {
             Application.logger.error(e.getMessage(), e);
         }
     }
-    static Doctor getCertainDoctor(Integer id){
+    static Doctor getCertainDoctorFromId(Integer id){
 
         Doctor newDoctor = new Doctor.Builder().withName("-1").withSurname("").build();
 
@@ -139,5 +139,6 @@ public interface DoctorData {
         }
         return newDoctor;
     }
+
 
 }

@@ -8,6 +8,7 @@ import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -88,12 +89,9 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
     }
 
     public void addNewCheckup(){
-        if (CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
-
+        if (CheckObjects.checkIfHospitalHasDoctors() && Validator.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
-
                 if(CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), null)){
-                    Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
                     CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
                 }

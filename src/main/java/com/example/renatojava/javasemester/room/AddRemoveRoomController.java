@@ -33,7 +33,7 @@ public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Noti
     @FXML
     private ChoiceBox<String> doctorChoice;
 
-    Set<Doctor> allDoctors;
+    private Set<Doctor> allDoctors;
     @FXML
     public void initialize(){
         try{
@@ -43,21 +43,17 @@ public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Noti
             doctorChoice.setItems(doctorsList);
             fillRoomTable();
 
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }
 
     public void fillRoomTable(){
         List<DoctorRoom> allDoctorRooms = DoctorRoomData.getAllRooms();
-
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(allDoctorRooms);
 
         roomNameColumn.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
-
-        doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctorFromId(room.getValue().getDoctorID()).getDoctorFullName()));
 
         roomTable.setItems(observableList);
     }

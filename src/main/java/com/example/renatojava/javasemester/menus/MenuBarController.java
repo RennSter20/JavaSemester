@@ -336,5 +336,15 @@ public class MenuBarController {
         }
     }
 
+    public void showEditRoomScreen(){
+        BorderPane root;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/editRoomScreen.fxml"));
+            Application.setMainPage(root);
+        }catch (IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }
+    }
+
 
 }

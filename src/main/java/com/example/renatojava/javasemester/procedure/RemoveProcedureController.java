@@ -23,7 +23,7 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
     @FXML
     private ListView<String> procedureListView;
     @FXML
-    private TableColumn<Patient, String> patientName, patientSurname, patientOIB, procedureDescription;
+    private TableColumn<Patient, String> patientName, patientSurname, patientOIB;
     @FXML
     public void initialize(){
         List<Patient> allPatients = PatientData.getAllPatients();
@@ -44,9 +44,6 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
             ObservableList<String> observableList = FXCollections.observableArrayList(splittedProceduresFromPatient);
 
             if(observableList.size() > 0){
-                procedureListView.setItems(observableList);
-            }else{
-                observableList = FXCollections.observableArrayList("None");
                 procedureListView.setItems(observableList);
             }
         }

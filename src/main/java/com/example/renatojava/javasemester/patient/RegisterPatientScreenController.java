@@ -63,7 +63,7 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
             errorMessages.add("Gender must be selected!");
         }
 
-        if(datePicker.getValue() == null || datePicker.getValue().isAfter(LocalDate.now()) || !CheckObjects.isBirthDateValid(datePicker.getValue().toString(), DATE_TIME_FORMAT)){
+        if(datePicker.getValue() == null || datePicker.getValue().isAfter(LocalDate.now()) || !Validator.isBirthDateValid(datePicker.getValue().toString(), DATE_TIME_FORMAT)){
             errorMessages.add("Valid date of birth must be selected!");
         }else{
             date = datePicker.getValue();

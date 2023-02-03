@@ -1,8 +1,8 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.api.APIResponse;
 import com.example.renatojava.javasemester.entity.Hospital;
 import com.example.renatojava.javasemester.entity.User;
-import com.example.renatojava.javasemester.threads.APICountries;
 import com.example.renatojava.javasemester.threads.ShowInfoTitleThread;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,7 +26,8 @@ public class Application extends javafx.application.Application {
     public static final Logger logger = LoggerFactory.getLogger(Application.class);
     public static Stage mainStage;
     public static User loggedUser;
-    public static List<String> countries;
+
+    public static Map<String, APIResponse> responseMap;
     public static Hospital hospital;
 
     public static ExecutorService executorService;
@@ -49,12 +50,13 @@ public class Application extends javafx.application.Application {
             stage.getIcons().add(new Image("/icon.png"));
             stage.show();
 
-            Timeline latestChange = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
+            Timeline latestChange = new Timeline(new KeyFrame(Duration.millis(1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
             latestChange.setCycleCount(Timeline.INDEFINITE);
             latestChange.play();
 
-            Thread thread = new Thread(new APICountries());
-            thread.start();
+            //Thread thread = new Thread(new APIGetInfo());
+            //thread.start();
+
     }
 
     public static void setMainPage(BorderPane root) {
@@ -76,7 +78,5 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO annotation @FXML
-//TODO REMOVEPROCEDURECONTROLLER (i ovo pogledati)
 //TODO dodati user update staru i novu vrijednost
 //TODO thread za API

@@ -39,16 +39,17 @@ public interface DoctorRoomData {
         try(Connection conn = Data.connectingToDatabase()){
             CheckObjects.checkIfRoomExists(roomName);
 
-            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO HOSPITAL(ROOM, DOCTORID) VALUES(?,?)");
+            PreparedStatement stmnt = conn.prepareStatement("INSERT INTO HOSPITAL(ROOM, DOCTORID, DOCTOR_NAME) VALUES(?,?,?)");
             stmnt.setString(1, roomName);
             stmnt.setInt(2, doctorID);
+            stmnt.setString(3, DoctorData.getCertainDoctorFromId(doctorID).getDoctorFullName());
             stmnt.executeUpdate();
 
-            Change change = new Change(new DoctorRoom("-", -1, -1, "-"), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID(), DoctorData.getCertainDoctor(doctorID).getDoctorFullName()));
+            Change change = new Change(new DoctorRoom("-", -1, -1, "-"), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID(), DoctorData.getCertainDoctorFromId(doctorID).getDoctorFullName()));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
-            linkDoctorWithRoom(DoctorData.getCertainDoctor(doctorID), doctorID, roomName);
+            linkDoctorWithRoom(DoctorData.getCertainDoctorFromId(doctorID), doctorID, roomName);
 
             Notification.addedSuccessfully("Room");
 
@@ -71,7 +72,7 @@ public interface DoctorRoomData {
             PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            Change change = new Change(new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID(), DoctorData.getCertainDoctor(oldDoctorRoom.getDoctorID()).getDoctorFullName()), new DoctorRoom("-", -1, -1, "-"));
+            Change change = new Change(new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID(), DoctorData.getCertainDoctorFromId(oldDoctorRoom.getDoctorID()).getDoctorFullName()), new DoctorRoom("-", -1, -1, "-"));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
@@ -79,6 +80,54 @@ public interface DoctorRoomData {
 
         } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
+        }
+    }
+    static void updateRoom(String newRoomName, Doctor newDoctor, DoctorRoom oldRoom){
+        try(Connection conn = Data.connectingToDatabase()) {
+
+
+            PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET ROOM='" + newRoomName + "', DOCTORID=" + newDoctor.getId() + ", DOCTOR_NAME='" + newDoctor.getDoctorFullName() + "' WHERE ID=" + oldRoom.getRoomID());
+            stmnt.executeUpdate();
+
+            if(!oldRoom.getDoctorName().equals(newDoctor.getDoctorFullName())){
+
+                Doctor oldDoctor = DoctorData.getCertainDoctorFromId(oldRoom.getDoctorID());
+
+                PreparedStatement changeDoctorOld = conn.prepareStatement("UPDATE DOCTORS SET ROOM='Not yet set.' WHERE ID=" + oldRoom.getDoctorID());
+                changeDoctorOld.executeUpdate();
+
+                PreparedStatement changeDoctorNew = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + newRoomName + "' WHERE ID=" + newDoctor.getId());
+                changeDoctorNew.executeUpdate();
+
+
+                Change roomChange = new Change(oldRoom, DoctorRoomData.getRoomWithId(oldRoom.getRoomID()));
+                ChangeWriter roomChangeWriter = new ChangeWriter(roomChange);
+                roomChangeWriter.addChange(Application.getLoggedUser().getRole());
+
+
+                Change doctorChange = new Change(oldDoctor, DoctorData.getCertainDoctorFromId(oldRoom.getDoctorID()));
+                ChangeWriter doctorChangeWriter = new ChangeWriter(doctorChange);
+                doctorChangeWriter.addChange(Application.getLoggedUser().getRole());
+
+                Change newDoctorChange = new Change(newDoctor, DoctorData.getCertainDoctorFromId(newDoctor.getId()));
+                ChangeWriter newDoctorChangeWriter = new ChangeWriter(newDoctorChange);
+                newDoctorChangeWriter.addChange(Application.getLoggedUser().getRole());
+
+            }
+
+            if(!oldRoom.getRoomName().equals(newRoomName)){
+                PreparedStatement updateDoctor = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + newRoomName + "' WHERE ID=" + newDoctor.getId());
+                updateDoctor.executeUpdate();
+
+                Change roomChange = new Change(oldRoom, DoctorRoomData.getRoomWithId(oldRoom.getRoomID()));
+                ChangeWriter roomChangeWriter = new ChangeWriter(roomChange);
+                roomChangeWriter.addChange(Application.getLoggedUser().getRole());
+            }
+
+            Notification.updatedSuccessfully("Room");
+
+        } catch (SQLException | IOException e) {
+            Application.logger.error(e.getMessage(), e);
         }
     }
     static DoctorRoom getRoomWithId(Integer id){
@@ -130,7 +179,7 @@ public interface DoctorRoomData {
             PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + roomName + "' WHERE ID=" + doctorID );
             stmnt.executeUpdate();
 
-            Change change = new Change(oldDoctor, DoctorData.getCertainDoctor(doctorID));
+            Change change = new Change(oldDoctor, DoctorData.getCertainDoctorFromId(doctorID));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
@@ -147,7 +196,7 @@ public interface DoctorRoomData {
                 PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + doctorRoomToRemove.getDoctorID());
                 stmnt.executeUpdate();
 
-                Change change = new Change<>(oldDoctor.get(), DoctorData.getCertainDoctor(doctorRoomToRemove.getDoctorID()));
+                Change change = new Change<>(oldDoctor.get(), DoctorData.getCertainDoctorFromId(doctorRoomToRemove.getDoctorID()));
                 ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
@@ -173,7 +222,7 @@ public interface DoctorRoomData {
     }
     static Boolean hasDoctorRoom(Integer id){
         Doctor doctorToCheck;
-        doctorToCheck = DoctorData.getCertainDoctor(id);
+        doctorToCheck = DoctorData.getCertainDoctorFromId(id);
         if(doctorToCheck.getRoom().equals("Not yet set")){
             return false;
         }else{

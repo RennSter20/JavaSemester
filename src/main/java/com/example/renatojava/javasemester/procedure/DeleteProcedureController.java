@@ -68,7 +68,7 @@ public class DeleteProcedureController implements ProcedureData, Notification {
     }
 
     public void deleteProcedure(){
-        Optional<Procedure> selectedProcedure = Optional.of(priceTable.getSelectionModel().getSelectedItem());
+        Optional<Procedure> selectedProcedure = Optional.ofNullable(priceTable.getSelectionModel().getSelectedItem());
         if(selectedProcedure.isPresent()){
 
             if(Notification.confirmEdit()){

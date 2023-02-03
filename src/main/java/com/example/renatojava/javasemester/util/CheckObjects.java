@@ -9,10 +9,7 @@ import javafx.scene.control.Alert;
 import java.io.IOException;
 import java.sql.*;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +43,7 @@ public interface CheckObjects  {
 
     static void checkIfDoctorExists(Doctor doctor) throws ObjectExistsException{
         List<Doctor> doctorsList = new ArrayList<>();
-        try {
-            Connection conn = Data.connectingToDatabase();
+        try(Connection conn = Data.connectingToDatabase()){
 
             Statement sqlStatement = conn.createStatement();
             ResultSet proceduresResultSet = sqlStatement.executeQuery(
@@ -59,11 +55,7 @@ public interface CheckObjects  {
                 doctorsList.add(newDoctor);
             }
 
-            conn.close();
-
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
 
@@ -89,9 +81,7 @@ public interface CheckObjects  {
                 DoctorRoomData.removeRoom(foundDoctorRoom.getRoomID());
             }
 
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }
@@ -110,37 +100,11 @@ public interface CheckObjects  {
                 throw new ObjectExistsException("Procedure already exists!");
             }
 
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }
 
-    static boolean isValidTime(String input, DateTimeFormatter format) {
-        try {
-            LocalDate time = LocalDate.parse(input, format);
-            return true;
-        } catch (DateTimeParseException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Error while getting new date and time.");
-            alert.setContentText("Please type date and time of checkup in valid format: yyyy-MM-dd HH:ss");
-            alert.show();
-            Application.logger.error(e.getMessage(), e);
-            return false;
-        }
-    }
-
-    static boolean isBirthDateValid(String input, DateTimeFormatter format){
-        try {
-            LocalDate time = LocalDate.parse(input, format);
-            return true;
-        } catch (DateTimeParseException e) {
-            Application.logger.error(e.getMessage(), e);
-            return false;
-        }
-    }
     static Boolean isBeforeToday(LocalDateTime dateTimeValue){
         if(dateTimeValue.isBefore(LocalDateTime.now())){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -236,9 +200,7 @@ public interface CheckObjects  {
                 userList.add(newUser);
             }
 
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
 

@@ -58,6 +58,6 @@ public class DoctorRoom implements Serializable {
     public String toString() {
         return "Information about room: \n" +
                 "Room name: " + roomName + "\n" +
-                "Doctor name: " + DoctorData.getCertainDoctor(doctorID).getDoctorFullName() + "\n";
+                "Doctor name: " + DoctorData.getCertainDoctorFromId(doctorID).getDoctorFullName() + "\n";
     }
 }

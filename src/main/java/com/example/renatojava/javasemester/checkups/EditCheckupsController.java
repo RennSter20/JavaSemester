@@ -8,6 +8,7 @@ import com.example.renatojava.javasemester.entity.PatientRoom;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,7 +85,7 @@ public class EditCheckupsController {
     }
 
     public void apply(){
-        if(CheckObjects.isValidTime(datePicker.getDateTimeValue().toString(), DATE_TIME_FORMAT_FULL)){
+        if(Validator.isValidTime(datePicker.getDateTimeValue().toString(), DATE_TIME_FORMAT_FULL)){
             if(CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), checkupTable.getSelectionModel().getSelectedItem()) && Notification.confirmEdit()){
                 CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), new PatientRoom(roomChoiceBox.getValue()));
                 initialize();
