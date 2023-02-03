@@ -47,7 +47,7 @@ public class Application extends javafx.application.Application {
             stage.setScene(scene);
             stage.setFullScreen(false);
             stage.setResizable(false);
-            stage.getIcons().add(new Image("/drawables/icon.png"));
+            stage.getIcons().add(new Image("icon.png"));
             stage.show();
 
             Timeline latestChange = new Timeline(new KeyFrame(Duration.millis(1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
@@ -79,3 +79,4 @@ public class Application extends javafx.application.Application {
 }
 
 //TODO thread za API
+//TODO sealed interface na APIManager

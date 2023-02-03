@@ -96,7 +96,7 @@ public interface CheckupData {
             Application.logger.info(e.getMessage(), e);
         }
     }
-    static void updateActiveCheckup(Integer id, LocalDateTime dateTimeValue, PatientRoom selectedItem) {
+    static void updateActiveCheckup(Integer id, Integer procedureID, Integer patientID, LocalDateTime time, PatientRoom room, String patientName, String procedure) {
 
         try(Connection conn = Data.connectingToDatabase()){
 
@@ -105,10 +105,10 @@ public interface CheckupData {
             PreparedStatement stmnt = conn.prepareStatement("DELETE FROM ACTIVE_CHECKUPS WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            stmnt = conn.prepareStatement("INSERT INTO ACTIVE_CHECKUPS(PROCEDURE_ID, PATIENT_ID, DATE, ROOM_TYPE) VALUES (" + checkup.getProcedureID() + ", " + checkup.getPatientID() + ",parsedatetime('" + DateFormatter.getDateTimeFormatted(dateTimeValue.toString()) + "', 'dd-MM-yyyy HH:mm'), '" + selectedItem.getRoomType() + "');");
+            stmnt = conn.prepareStatement("INSERT INTO ACTIVE_CHECKUPS(PROCEDURE_ID, PATIENT_ID, DATE, ROOM_TYPE, PATIENT_NAME, PROCEDURE) VALUES (" + checkup.getProcedureID() + ", " + checkup.getPatientID() + ",parsedatetime('" + DateFormatter.getDateTimeFormatted(time.toString()) + "', 'dd-MM-yyyy HH:mm'), '" + room.getRoomType() + "', '" + patientName + "', '" + procedure + "');");
             stmnt.executeUpdate();
 
-            Change change = new Change(checkup, getCheckupFromId(id));
+            Change change = new Change(checkup, new ActiveCheckup(null, time, patientID, procedureID, room, patientName, procedure));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
@@ -117,7 +117,6 @@ public interface CheckupData {
             Application.logger.error(e.getMessage(), e);
         }
     }
-
     static ActiveCheckup getCheckupFromId(Integer id){
         ActiveCheckup checkup = null;
 

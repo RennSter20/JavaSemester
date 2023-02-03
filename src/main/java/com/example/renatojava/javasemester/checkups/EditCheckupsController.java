@@ -87,10 +87,16 @@ public class EditCheckupsController {
     public void apply(){
         if(Validator.isValidTime(datePicker.getDateTimeValue().toString(), DATE_TIME_FORMAT_FULL)){
             if(CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), checkupTable.getSelectionModel().getSelectedItem()) && Notification.confirmEdit()){
-                CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), new PatientRoom(roomChoiceBox.getValue()));
+                CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(),
+                                                checkupTable.getSelectionModel().getSelectedItem().getProcedureID(),
+                                                checkupTable.getSelectionModel().getSelectedItem().getPatientID(),
+                                                datePicker.getDateTimeValue(),
+                                                new PatientRoom(roomChoiceBox.getValue()),
+                                                checkupTable.getSelectionModel().getSelectedItem().getPatientFullName(),
+                                                checkupTable.getSelectionModel().getSelectedItem().getProcedure());
                 initialize();
             }
         }
     }
-
+        //Integer id, Integer procedureID, Integer patientID, LocalDateTime time, PatientRoom room, String patientName, String procedure
 }

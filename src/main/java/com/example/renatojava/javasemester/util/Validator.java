@@ -28,7 +28,7 @@ public sealed interface Validator permits AllPatientsScreenController {
         }
     }
     static Boolean isNameValid(String s){
-        String regex = "^[a-zA-Z]+$";
+        String regex = "^[a-zA-Z\s]+$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(s);
         if(m.matches()){

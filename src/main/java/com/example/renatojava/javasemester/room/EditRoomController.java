@@ -5,6 +5,7 @@ import com.example.renatojava.javasemester.database.DoctorData;
 import com.example.renatojava.javasemester.database.DoctorRoomData;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,7 +64,7 @@ public class EditRoomController {
         Optional<Doctor> newDoctor = allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().contains(doctorChoice.getSelectionModel().getSelectedItem())).findAny();
 
         if(selectedRoom.isPresent()){
-            if(!nameField.equals("")){
+            if(!nameField.equals("") && Notification.confirmEdit()){
                 DoctorRoomData.updateRoom(nameField.getText(), newDoctor.get(), selectedRoom.get());
                 nameField.setText("");
                 initialize();
