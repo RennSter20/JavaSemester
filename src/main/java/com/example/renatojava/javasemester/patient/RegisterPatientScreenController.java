@@ -2,9 +2,9 @@ package com.example.renatojava.javasemester.patient;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.PatientData;
-import com.example.renatojava.javasemester.threads.OccupyBed;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
@@ -17,8 +17,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class RegisterPatientScreenController implements CheckObjects, Notification, PatientData {
@@ -34,7 +32,7 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
     @FXML
     private DatePicker datePicker;
 
-    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @FXML
     public void registerPatient() {
@@ -52,20 +50,13 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
         }
 
         String oib = oibField.getText();
-        String regex = "^[0-9]{10}+$";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(oib);
 
         List<String> errorMessages = new ArrayList<>();
-        if(!m.matches()){
+        if(!Validator.isOibValid(oib)){
             errorMessages.add("OIB must have 10 numeric characters.");
         }
 
-        regex = "^[a-zA-Z]+$";
-        p = Pattern.compile(regex);
-        m = p.matcher(name);
-        Matcher surnameMatcher = p.matcher(surname);
-        if(!m.matches() || !surnameMatcher.matches()){
+        if(!Validator.isNameValid(name) || !Validator.isNameValid(surname)){
             errorMessages.add("Name and surname field cannot be empty and need to containt only alphabetic characters.");
         }
         if(gender == null){
@@ -93,14 +84,11 @@ public final class RegisterPatientScreenController implements CheckObjects, Noti
                     failure.setContentText("Patient is not added to the system!");
                     failure.show();
                 }else{
-                    Application.executorService.execute(new OccupyBed(Application.hospital));
                     PatientData.addPatient(name, surname, gender, oib, date);
                     clearFields();
                 }
 
-            }catch (SQLException e){
-                Application.logger.error(e.getMessage(), e);
-            } catch (IOException e) {
+            }catch (SQLException | IOException e){
                 Application.logger.error(e.getMessage(), e);
             }
     }

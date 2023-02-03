@@ -6,7 +6,6 @@ import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.*;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,15 +40,11 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
     @FXML
     private ChoiceBox<PatientRoom> roomChoiceBox;
 
-    private List<Patient> patientList;
-    private List<Procedure> procedureList;
-
     @FXML
     public void initialize(){
-        patientList = PatientData.getAllPatients();
-        fillPatientsTable(patientList);
+        fillPatientsTable(PatientData.getAllPatients());
 
-        ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(List.of(new RoomA("A"), new RoomB("B"), new RoomC("C")));
+        ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(List.of(new ConsultingRoom("Consulting room"), new Sickroom("Sickroom"), new Casualty("Casualty")));
         roomChoiceBox.setItems(observableList);
         roomChoiceBox.getSelectionModel().selectFirst();
         roomChoiceBox.setConverter(new StringConverter<>() {
@@ -65,13 +60,12 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
         });
         
         try{
-            procedureList = ProcedureData.getAllProcedures();
+            fillProceduresTable(ProcedureData.getAllProcedures());
         } catch (SQLException | IOException e) {
             Application.logger.error("There has been an error while getting all procedures!", e);
         }catch (NoProceduresException e){
             Application.logger.error(e.getMessage(), e);
         }
-        fillProceduresTable(procedureList);
     }
 
     public void fillPatientsTable(List<Patient> list){
@@ -102,10 +96,6 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
                     Patient oldPatient = patientsTable.getSelectionModel().getSelectedItem();
 
                     CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
-
-                    Change change = new Change(oldPatient, PatientData.getPatientWithID(patientsTable.getSelectionModel().getSelectedItem().getId()));
-                    ChangeWriter writer = new ChangeWriter(change);
-                    writer.addChange(Application.getLoggedUser().getRole());
                 }
 
 

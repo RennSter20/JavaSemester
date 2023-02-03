@@ -22,10 +22,9 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
 
     @FXML
     private TableView<ActiveCheckup> table;
-
     @FXML
     private TableColumn<ActiveCheckup, String> dateColumn, patientColumn, procedureColumn, roomColumn, oibColumn;
-
+    @FXML
     public void initialize(){
         fillCheckupTable(CheckupData.getAllActiveCheckups());
     }
@@ -45,20 +44,21 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
     public void accept(){
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
 
-            ProcedureData.addProcedureToPatient(PatientData.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(), ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
+            ProcedureData.addProcedureToPatient(PatientData.getPatientWithID(table.getSelectionModel().getSelectedItem().getPatientID()).getId(),
+                                                                            ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
+
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
 
             ChangeWriter writer = new ChangeWriter();
             ActiveCheckup old = table.getSelectionModel().getSelectedItem();
             old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
             writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup accepted");
-
             initialize();
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Error with checkup!");
-            alert.setContentText("No checkup selected");
+            alert.setContentText("Error while accepting checkup!");
             alert.show();
         }
     }
@@ -67,19 +67,19 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
 
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
-            initialize();
-
 
             ChangeWriter writer = new ChangeWriter();
             ActiveCheckup old = table.getSelectionModel().getSelectedItem();
             old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
             writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup rejected");
 
+            initialize();
+
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Error with checkup!");
-            alert.setContentText("No checkup selected");
+            alert.setContentText("Error while rejecting checkup!");
             alert.show();
         }
     }

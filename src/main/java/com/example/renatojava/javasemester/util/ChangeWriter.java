@@ -52,13 +52,13 @@ public class ChangeWriter<T>{
         List<T> items = null;
 
         if(change.getOldObject() instanceof Patient){
-            items = new ArrayList<>(readPatients());
+            items = (List<T>) readPatients();
         }else if(change.getOldObject() instanceof Doctor){
-            items = new ArrayList<>(readDoctors());
+            items = (List<T>) readDoctors();
         }else if(change.getOldObject() instanceof DoctorRoom){
-            items = new ArrayList<>(readRooms());
+            items = (List<T>) readRooms();
         }else if(change.getOldObject() instanceof Procedure){
-            items = new ArrayList<>(readProcedures());
+            items = (List<T>) readProcedures();
         }
 
         items.add((T) change.getOldObject());
@@ -167,14 +167,14 @@ public class ChangeWriter<T>{
 
 
     public void addCheckupsChange(ActiveCheckup checkup, String role, String change){
-        List<T> items = new ArrayList<>(readCheckups());
-        items.add((T)checkup);
+        List<ActiveCheckup> items = new ArrayList<>(readCheckups());
+        items.add((ActiveCheckup)checkup);
         writeAllCheckups(items, role, change);
     }
-    public void writeAllCheckups(List<T> list, String role, String change){
+    public void writeAllCheckups(List<ActiveCheckup> list, String role, String change){
         try{
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_CHECKUPS, false));
-            for(T object : list){
+            for(ActiveCheckup object : list){
                 out.writeObject(object);
             }
             out.close();
@@ -231,15 +231,15 @@ public class ChangeWriter<T>{
     }
 
 
-    public List<T> readPatients(){
-        List<T> first = new ArrayList<>();
-        List<T> second = new ArrayList<>();
-        List<T> finalList = new ArrayList<>();
+    public List<Patient> readPatients(){
+        List<Patient> first = new ArrayList<>();
+        List<Patient> second = new ArrayList<>();
+        List<Patient> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PATIENTS));
             while(true){
-                first.add((T)input.readObject());
-                second.add((T)input.readObject());
+                first.add((Patient)input.readObject());
+                second.add((Patient)input.readObject());
             }
 
 
@@ -254,15 +254,15 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public List<T> readDoctors(){
-        List<T> first = new ArrayList<>();
-        List<T> second = new ArrayList<>();
-        List<T> finalList = new ArrayList<>();
+    public List<Doctor> readDoctors(){
+        List<Doctor> first = new ArrayList<>();
+        List<Doctor> second = new ArrayList<>();
+        List<Doctor> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_DOCTORS));
             while(true){
-                first.add((T)input.readObject());
-                second.add((T)input.readObject());
+                first.add((Doctor)input.readObject());
+                second.add((Doctor)input.readObject());
             }
 
         } catch (IOException e) {
@@ -277,15 +277,15 @@ public class ChangeWriter<T>{
 
         return finalList;
     }
-    public List<T> readRooms(){
-        List<T> first = new ArrayList<>();
-        List<T> second = new ArrayList<>();
-        List<T> finalList = new ArrayList<>();
+    public List<DoctorRoom> readRooms(){
+        List<DoctorRoom> first = new ArrayList<>();
+        List<DoctorRoom> second = new ArrayList<>();
+        List<DoctorRoom> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_ROOMS));
             while(true){
-                first.add((T)input.readObject());
-                second.add((T)input.readObject());
+                first.add((DoctorRoom)input.readObject());
+                second.add((DoctorRoom)input.readObject());
             }
 
 
@@ -300,15 +300,15 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public List<T> readProcedures(){
-        List<T> first = new ArrayList<>();
-        List<T> second = new ArrayList<>();
-        List<T> finalList = new ArrayList<>();
+    public List<Procedure> readProcedures(){
+        List<Procedure> first = new ArrayList<>();
+        List<Procedure> second = new ArrayList<>();
+        List<Procedure> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_PROCEDURES));
             while(true){
-                first.add((T)input.readObject());
-                second.add((T)input.readObject());
+                first.add((Procedure)input.readObject());
+                second.add((Procedure)input.readObject());
             }
 
 
@@ -323,12 +323,12 @@ public class ChangeWriter<T>{
         }
         return finalList;
     }
-    public List<T> readCheckups(){
-        List<T> finalList = new ArrayList<>();
+    public List<ActiveCheckup> readCheckups(){
+        List<ActiveCheckup> finalList = new ArrayList<>();
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_CHECKUPS));
             while(true){
-                finalList.add((T)input.readObject());
+                finalList.add((ActiveCheckup)input.readObject());
             }
 
         } catch (IOException e) {

@@ -22,16 +22,21 @@ public class EditDoctorsController implements DoctorData, Notification {
 
     @FXML
     private TableView<Doctor> doctorTable;
-
     @FXML
     private TableColumn<Doctor, String> nameColumn, surnameColumn, genderColumn, titleColumn, roomColumn;
-
     @FXML
     private TextField filterField, nameEditField, surnameEditField, titleEditField;
-
     @FXML
     private RadioButton maleRadio, femaleRadio;
-
+    @FXML
+    public void initialize(){
+        try{
+            fillDoctorTable(DoctorData.getAllDoctors());
+            clearFields();
+        } catch (SQLException | IOException e) {
+            Application.logger.error(e.getMessage(), e);
+        }
+    }
     public void search(){
         String filter = filterField.getText();
 
@@ -110,14 +115,7 @@ public class EditDoctorsController implements DoctorData, Notification {
         femaleRadio.setSelected(false);
     }
 
-    public void initialize(){
-        try{
-            fillDoctorTable(DoctorData.getAllDoctors());
-            clearFields();
-        } catch (SQLException | IOException e) {
-            Application.logger.error(e.getMessage(), e);
-        }
-    }
+
 
     public void fillDoctorTable(Set<Doctor> doctorList){
 

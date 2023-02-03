@@ -3,9 +3,9 @@ package com.example.renatojava.javasemester.procedure;
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.Change;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,7 +19,6 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class DeleteProcedureController implements ProcedureData, Notification {
     @FXML
     private TextField searchField;
 
-    List<Procedure> proceduresToShow = new ArrayList<>();
+    private List<Procedure> proceduresToShow;
 
     @FXML
     public void initialize(){

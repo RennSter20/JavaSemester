@@ -27,6 +27,7 @@ public class AllBillsController {
     @FXML
     private TextField searchField;
 
+    @FXML
     public void initialize(){
         fillBillsTable(BillData.getAllBills());
     }

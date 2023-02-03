@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public interface Data {
 
-    String DATABASE_FILE = "database.properties";
+   String DATABASE_FILE = "database.properties";
 
     static Connection connectingToDatabase() throws IOException, SQLException {
         Connection conn;
@@ -20,6 +20,7 @@ public interface Data {
             String user = properties.getProperty("user");
             String pass = properties.getProperty("pass");
             conn = DriverManager.getConnection(url, user,pass);
+
         }catch (IOException e){
             throw new IOException("Error while reading properties file for DB.", e);
         }catch (SQLException e){

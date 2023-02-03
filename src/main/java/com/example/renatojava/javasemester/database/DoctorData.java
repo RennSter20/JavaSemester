@@ -25,12 +25,12 @@ public interface DoctorData {
 
         try(Connection conn = Data.connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+            ResultSet doctorResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM DOCTORS"
             );
 
-            while(proceduresResultSet.next()){
-                Doctor newDoctor = getDoctor(proceduresResultSet);
+            while(doctorResultSet.next()){
+                Doctor newDoctor = getDoctor(doctorResultSet);
                 doctorList.add(newDoctor);
             }
         }
@@ -91,7 +91,7 @@ public interface DoctorData {
 
             Stats currentStats = StatsData.getCurrentStats();
             Integer oldCountDoctors = currentStats.doctors();
-            Integer newCountDoctors = oldCountDoctors - 1;
+            Integer newCountDoctors = --oldCountDoctors;
             List<String> changesSQL = new ArrayList<>();
             changesSQL.add("DOCTORS=" + (newCountDoctors));
             StatsChanger.changeStats(changesSQL);
@@ -125,14 +125,13 @@ public interface DoctorData {
 
         try(Connection conn = Data.connectingToDatabase()) {
 
-
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+            ResultSet doctorsResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM DOCTORS WHERE ID=" + id
             );
 
-            while(proceduresResultSet.next()){
-                newDoctor = getDoctor(proceduresResultSet);
+            while(doctorsResultSet.next()){
+                newDoctor = getDoctor(doctorsResultSet);
             }
 
         } catch (SQLException | IOException e) {

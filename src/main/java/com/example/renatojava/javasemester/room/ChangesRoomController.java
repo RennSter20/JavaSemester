@@ -33,7 +33,7 @@ public class ChangesRoomController implements DoctorData {
 
     List<String> rolesList;
     Integer selectedRoom;
-
+    @FXML
     public void initialize(){
         List<DoctorRoom> roomsList = changer.readRooms();
 
@@ -58,7 +58,7 @@ public class ChangesRoomController implements DoctorData {
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(oldRooms);
 
         roomOld.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
-        doctorOld.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorOld.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getDoctorName()));
 
         oldTable.setItems(observableList);
     }
@@ -68,7 +68,7 @@ public class ChangesRoomController implements DoctorData {
         ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(newRooms);
 
         roomNew.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
-        doctorNew.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctor(room.getValue().getDoctorID()).getDoctorFullName()));
+        doctorNew.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getDoctorName()));
 
         newTable.setItems(observableList);
     }

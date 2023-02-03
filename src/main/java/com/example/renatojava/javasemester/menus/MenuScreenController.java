@@ -57,8 +57,8 @@ public class MenuScreenController implements StatsData {
                 todaysCheckups.add(checkup);
             }
         }
-        ObservableList<ActiveCheckup> observableList = FXCollections.observableArrayList(todaysCheckups);
         if(todaysCheckups.size() > 0){
+            ObservableList<ActiveCheckup> observableList = FXCollections.observableArrayList(todaysCheckups);
             checkupsToday.setItems(observableList);
         }
 

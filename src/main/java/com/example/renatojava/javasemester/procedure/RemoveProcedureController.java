@@ -24,7 +24,7 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
     private ListView<String> procedureListView;
     @FXML
     private TableColumn<Patient, String> patientName, patientSurname, patientOIB, procedureDescription;
-
+    @FXML
     public void initialize(){
         List<Patient> allPatients = PatientData.getAllPatients();
 
@@ -53,7 +53,7 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
     }
 
     public void remove(){
-        if(procedureListView.getSelectionModel().getSelectedItem() != null){
+        if(procedureListView.getSelectionModel().getSelectedItem() != null && patientTable.getSelectionModel().getSelectedItem() != null){
             String selectedProcedure = procedureListView.getSelectionModel().getSelectedItem();
 
             if(!Notification.confirmEdit()){
@@ -64,7 +64,7 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
                 failure.show();
                 return;
             }else{
-                ProcedureData.removeProcedure(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getId(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
+                ProcedureData.removeProcedureFromPatient(selectedProcedure, patientTable.getSelectionModel().getSelectedItem().getId(), patientTable.getSelectionModel().getSelectedItem().getProcedures());
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
                 success.setTitle("INFORMATION");
                 success.setHeaderText("Success!");
@@ -73,6 +73,12 @@ public class RemoveProcedureController implements PatientData, ProcedureData, No
             }
             procedureListView.setItems(null);
             initialize();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("No patient or procedure selected!");
+            alert.setContentText("Please select patient and procedure to continue!");
+            alert.show();
         }
     }
 

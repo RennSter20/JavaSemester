@@ -23,14 +23,18 @@ public class ChangesPatientsController {
     @FXML
     private Text changeTimeText, role;
 
-    ChangeWriter changer = new ChangeWriter();
-    List<String> changesTime = changer.readTimePatients();
-    List<String> rolesList;
-    Integer selectedPatient;
+
+    private List<String> changesTime;
+    private List<String> rolesList;
+    private Integer selectedPatient;
     @FXML
     private TableColumn<Patient, String> nameOld, nameNew, surnameOld, surnameNew, oibOld, oibNew, genderOld, genderNew, debtOld, debtNew, proceduresOld, proceduresNew;
-
+    @FXML
     public void initialize(){
+        ChangeWriter changer = new ChangeWriter();
+
+        changesTime = changer.readTimePatients();
+
         List<Patient> patientList = changer.readPatients();
         rolesList = changer.readRoleChangePatients();
 

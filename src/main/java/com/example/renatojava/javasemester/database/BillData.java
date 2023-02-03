@@ -16,8 +16,7 @@ import java.util.List;
 public interface BillData {
 
     static void createBill(Patient patient, LocalDateTime time){
-        try{
-            Connection conn = Data.connectingToDatabase();
+        try(Connection conn = Data.connectingToDatabase()){
 
             String billCreated = DateFormatter.getDateTimeFormatted(time.toString());
             String birthDay = DateFormatter.getDateFormatted(patient.getDate().toString());
@@ -28,8 +27,6 @@ public interface BillData {
             PatientData.removePatient(patient.getId());
 
             Notification.addedSuccessfully("Bill");
-
-            conn.close();
 
         } catch (IOException | SQLException e) {
             Application.logger.info(e.getMessage(), e);
@@ -48,14 +45,13 @@ public interface BillData {
                 Bill newBill = getBill(proceduresResultSet);
                 billList.add(newBill);
             }
-        } catch (SQLException e) {
-            Application.logger.info(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
         return billList;
     }
     static Bill getBill(ResultSet set) throws SQLException {
+
         String name = set.getString("NAME");
         String surname = set.getString("SURNAME");
         String oib = set.getString("OIB");

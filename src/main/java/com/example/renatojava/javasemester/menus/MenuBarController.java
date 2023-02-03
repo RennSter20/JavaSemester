@@ -32,7 +32,7 @@ public class MenuBarController {
     @FXML
     private Menu doctors;
 
-
+    @FXML
     public void initialize(){
         User currentUser = Application.getLoggedUser();
         if(currentUser.getRole().equals("Doctor")){
@@ -102,15 +102,21 @@ public class MenuBarController {
     }
 
     public void logout() {
-        Application.setLoggedUser(null);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Are you sure you want to logout?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            Application.setLoggedUser(null);
 
-        BorderPane root;
-        try {
-            root = FXMLLoader.load(
-                    getClass().getResource("/fxml/loginScreen.fxml"));
-            Application.setMainPage(root);
-        } catch (IOException e) {
-            Application.logger.error(e.getMessage(), e);
+            BorderPane root;
+            try {
+                root = FXMLLoader.load(
+                        getClass().getResource("/fxml/loginScreen.fxml"));
+                Application.setMainPage(root);
+            } catch (IOException e) {
+                Application.logger.error(e.getMessage(), e);
+            }
         }
     }
 
@@ -213,7 +219,7 @@ public class MenuBarController {
             root = FXMLLoader.load(getClass().getResource("/fxml/addCheckup.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
-            System.out.println(e);
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -305,7 +311,7 @@ public class MenuBarController {
             root = FXMLLoader.load(getClass().getResource("/fxml/createUserScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
-            e.printStackTrace();
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -316,7 +322,7 @@ public class MenuBarController {
             root = FXMLLoader.load(getClass().getResource("/fxml/editUserScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
-            e.printStackTrace();
+            Application.logger.error(e.getMessage(), e);
         }
     }
 
@@ -326,7 +332,7 @@ public class MenuBarController {
             root = FXMLLoader.load(getClass().getResource("/fxml/changesUsersScreen.fxml"));
             Application.setMainPage(root);
         }catch (IOException e){
-            e.printStackTrace();
+            Application.logger.error(e.getMessage(), e);
         }
     }
 

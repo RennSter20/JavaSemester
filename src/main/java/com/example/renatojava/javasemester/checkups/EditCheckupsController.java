@@ -3,15 +3,16 @@ package com.example.renatojava.javasemester.checkups;
 import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.*;
+import com.example.renatojava.javasemester.entity.ActiveCheckup;
+import com.example.renatojava.javasemester.entity.PatientRoom;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.DateFormatter;
+import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
 import tornadofx.control.DateTimePicker;
 
 import java.time.format.DateTimeFormatter;
@@ -30,28 +31,17 @@ public class EditCheckupsController {
     @FXML
     private DateTimePicker datePicker;
     @FXML
-    private ChoiceBox<PatientRoom> roomChoiceBox;
+    private ChoiceBox<String> roomChoiceBox;
 
     public static final DateTimeFormatter DATE_TIME_FORMAT_FULL = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-
+    @FXML
     public void initialize(){
 
-        List<PatientRoom> rooms = List.of(new RoomA("A"), new RoomB("B"), new RoomC("C"));
-        ObservableList<PatientRoom> observableList = FXCollections.observableArrayList(rooms);
+        List<String> rooms = List.of("Consulting room","Sickroom", "Casualty");
+        ObservableList<String> observableList = FXCollections.observableArrayList(rooms);
         roomChoiceBox.setItems(observableList);
         roomChoiceBox.getSelectionModel().selectFirst();
-        roomChoiceBox.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(PatientRoom patientRoom) {
-                return patientRoom.getRoomType();
-            }
-
-            @Override
-            public PatientRoom fromString(String s) {
-                return null;
-            }
-        });
 
         fillCheckupTable(CheckupData.getAllActiveCheckups());
     }
@@ -64,7 +54,6 @@ public class EditCheckupsController {
         procedureColumn.setCellValueFactory(checkup -> new SimpleStringProperty(ProcedureData.getProcedureFromId(checkup.getValue().getProcedureID()).description()));
 
         checkupTable.setItems(list);
-
     }
 
     public void search(){
@@ -83,23 +72,21 @@ public class EditCheckupsController {
         Optional<ActiveCheckup> selectedCheckup = Optional.ofNullable(checkupTable.getSelectionModel().getSelectedItem());
 
         if(selectedCheckup.isPresent()){
-            datePicker.setDateTimeValue(null);
             datePicker.setDateTimeValue(selectedCheckup.get().getDateOfCheckup());
-            roomChoiceBox.getSelectionModel().selectFirst();
-            roomChoiceBox.getSelectionModel().select(selectedCheckup.get().getRoom());
+            roomChoiceBox.getSelectionModel().select(selectedCheckup.get().getRoom().getRoomType());
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("Error while getting selected checkup.");
-            alert.setContentText("To edit a checkup, please select one.");
+            alert.setContentText("To edit a checkup, please select one first.");
             alert.show();
         }
     }
 
     public void apply(){
         if(CheckObjects.isValidTime(datePicker.getDateTimeValue().toString(), DATE_TIME_FORMAT_FULL)){
-            if(CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), checkupTable.getSelectionModel().getSelectedItem())){
-                CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), roomChoiceBox.getSelectionModel().getSelectedItem());
+            if(CheckObjects.checkIfHospitalHasDoctors() && CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), checkupTable.getSelectionModel().getSelectedItem()) && Notification.confirmEdit()){
+                CheckupData.updateActiveCheckup(checkupTable.getSelectionModel().getSelectedItem().getId(), datePicker.getDateTimeValue(), new PatientRoom(roomChoiceBox.getValue()));
                 initialize();
             }
         }

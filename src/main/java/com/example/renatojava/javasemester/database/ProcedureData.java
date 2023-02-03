@@ -9,6 +9,7 @@ import com.example.renatojava.javasemester.entity.Stats;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.util.Notification;
 import com.example.renatojava.javasemester.util.StatsChanger;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 import java.sql.*;
@@ -32,6 +33,11 @@ public interface ProcedureData {
                 procedureList.add(newProcedure);
             }
             if(procedureList.size() == 0){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText("Error with procedures.");
+                alert.setContentText("No procedures found in database, please add one to continue.");
+                alert.show();
                 throw new NoProceduresException("No procedures found in database!");
             }
         }
@@ -44,9 +50,7 @@ public interface ProcedureData {
         String description = procedureSet.getString("description");
         Double price = procedureSet.getDouble("price");
 
-
         return new Procedure(id, description, price);
-
     }
     static Procedure getProcedureFromDescription(String description){
         Procedure procedure = null;
@@ -71,7 +75,7 @@ public interface ProcedureData {
         return procedure;
     }
     static String getAllProceduresFromPatientString(Patient patient){
-        String procedureList = "";
+        StringBuilder procedureList = new StringBuilder("");
 
         if(patient != null){
             try (Connection conn = Data.connectingToDatabase()){
@@ -82,7 +86,7 @@ public interface ProcedureData {
                 );
 
                 while(proceduresResultSet.next()){
-                    procedureList += proceduresResultSet.getString("procedures");
+                    procedureList.append(proceduresResultSet.getString("procedures"));
                 }
 
             } catch (SQLException | IOException e) {
@@ -90,17 +94,18 @@ public interface ProcedureData {
             }
         }
 
-        return procedureList;
+        return procedureList.toString();
     }
     static void addProcedureToPatient(Integer id, String procedure){
 
         Patient patientToUpdate = PatientData.getPatientWithID(id);
-        String procedures = patientToUpdate.getProcedures();
+        StringBuilder procedures = new StringBuilder(patientToUpdate.getProcedures());
 
-        if(procedures.equals("")){
-            procedures = procedure;
+        if(procedures.toString().equals("")){
+            procedures.append(procedure);
         }else{
-            procedures = procedures + "," + procedure;
+            procedures.append(",");
+            procedures.append(procedure);
         }
 
         try(Connection conn = Data.connectingToDatabase()) {
@@ -131,7 +136,7 @@ public interface ProcedureData {
             Application.logger.error(e.getMessage(), e);
         }
     }
-    static void removeProcedure(String procedureDescription, Integer id, String currentProcedures){
+    static void removeProcedureFromPatient(String procedureDescription, Integer id, String currentProcedures){
         Patient patient = PatientData.getPatientWithID(id);
         Procedure procedure = getProcedureFromDescription(procedureDescription);
 
@@ -140,12 +145,14 @@ public interface ProcedureData {
         try (Connection conn = Data.connectingToDatabase()){
 
             Boolean removed = false;
-            String newProcedureString = "";
+            StringBuilder newProcedureString = new StringBuilder("");
+
             for(String proc : currentProceduresSplitted){
                 if(proc.equals(procedureDescription) && !removed){
                     removed = true;
                 }else{
-                    newProcedureString = newProcedureString + proc + ",";
+                    newProcedureString.append(proc);
+                    newProcedureString.append(",");
                 }
             }
 
@@ -174,15 +181,12 @@ public interface ProcedureData {
 
 
     static void createProcedure(String description, String price){
-        try{
-            Connection conn = Data.connectingToDatabase();
+        try(Connection conn = Data.connectingToDatabase()){
 
             PreparedStatement stmnt = conn.prepareStatement("INSERT INTO PROCEDURES(DESCRIPTION, PRICE) VALUES('" + description + "', " + price + ")");
             stmnt.executeUpdate();
 
             Notification.addedSuccessfully("Procedure");
-
-            conn.close();
 
         } catch (IOException | SQLException e) {
             Application.logger.info(e.getMessage(), e.getStackTrace());
@@ -196,7 +200,7 @@ public interface ProcedureData {
 
             Notification.removedSuccessfully("Procedure");
         }catch (IOException | SQLException e){
-
+            Application.logger.error(e.getMessage(), e);
         }
     }
 

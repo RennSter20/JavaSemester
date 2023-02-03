@@ -21,16 +21,18 @@ public class ChangesDoctorsController {
     private TableView<Doctor> oldTable, newTable;
     @FXML
     private TableColumn<Doctor, String> nameOld, nameNew, surnameOld, surnameNew, genderOld, genderNew, titleOld, titleNew, roomOld, roomNew;
-
     @FXML
     private Text changeTimeText,role;
-    ChangeWriter changer = new ChangeWriter();
 
-    List<String> changesTime;
-    List<String> rolesList;
-    Integer selectedDoctor;
 
+    private List<String> changesTime;
+    private List<String> rolesList;
+    private Integer selectedDoctor;
+    @FXML
     public void initialize(){
+
+        ChangeWriter changer = new ChangeWriter();
+
         List<Doctor> doctorsList = changer.readDoctors();
 
         changesTime = changer.readTimeDoctors();
@@ -79,8 +81,6 @@ public class ChangesDoctorsController {
 
 
         oldTable.setItems(observableList);
-
-
     }
 
     public void fillNewTable(List<Doctor> newDoctors){
@@ -93,9 +93,7 @@ public class ChangesDoctorsController {
         titleNew.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getTitle()));
         roomNew.setCellValueFactory(doctor -> new SimpleStringProperty(doctor.getValue().getRoom()));
 
-
         newTable.setItems(observableList);
-
     }
 
     public void moreInfo(){

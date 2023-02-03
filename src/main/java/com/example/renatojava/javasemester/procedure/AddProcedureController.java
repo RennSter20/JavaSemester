@@ -29,7 +29,6 @@ public class AddProcedureController implements Data, PatientData, ProcedureData,
     private TableView<Patient> patientsTable;
     @FXML
     private TableColumn<Patient, String> nameColumn, surnameColumn, oibColumn;
-
     @FXML
     private TableView<Procedure> procedureTable;
     @FXML
@@ -37,17 +36,16 @@ public class AddProcedureController implements Data, PatientData, ProcedureData,
     @FXML
     private ListView<String> listView;
 
-    private List<Patient> patientList = new ArrayList<>();
-    private List<Procedure> procedureList = new ArrayList<>();
+    private List<Procedure> procedureList;
 
     @FXML
     public void initialize(){
-        patientList = PatientData.getAllPatients();
-        fillPatientsTable(patientList);
+
+        fillPatientsTable(PatientData.getAllPatients());
 
         try{
             procedureList = ProcedureData.getAllProcedures();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException | IOException  e) {
             Application.logger.error(e.getMessage(), e);
         }catch (NoProceduresException e){
             Application.logger.error(e.getMessage(), e);

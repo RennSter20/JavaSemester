@@ -20,21 +20,17 @@ public class AllDoctorsController implements DoctorData {
 
     @FXML
     private TableView<Doctor> doctorsTable;
-
     @FXML
     private TableColumn<Doctor, String> nameColumn, surnameColumn, titleColumn, roomColumn;
-
     @FXML
     private TextField searchField;
-
+    @FXML
     public void initialize(){
         try{
             fillDoctorTable(DoctorData.getAllDoctors());
         }catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
-
-
     }
     public void fillDoctorTable(Set<Doctor> doctorList){
 

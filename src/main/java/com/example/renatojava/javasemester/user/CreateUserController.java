@@ -16,7 +16,7 @@ public class CreateUserController {
 
     @FXML
     private ComboBox<String> roleField;
-
+    @FXML
     public void initialize(){
         clearFields();
         roleField.setItems(FXCollections.observableArrayList("Doctor", "Receptionist"));

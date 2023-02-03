@@ -23,34 +23,28 @@ public interface DoctorRoomData {
 
         try(Connection conn = Data.connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
-                    "SELECT * FROM HOSPITAL"
-            );
+            ResultSet roomsResultSet = sqlStatement.executeQuery("SELECT * FROM HOSPITAL");
 
-            while(proceduresResultSet.next()){
-                DoctorRoom newDoctorRoom = getRoom(proceduresResultSet);
+            while(roomsResultSet.next()){
+                DoctorRoom newDoctorRoom = getRoom(roomsResultSet);
                 doctorRoomList.add(newDoctorRoom);
             }
-        } catch (SQLException e) {
-            Application.logger.info(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
         return doctorRoomList;
     }
     static void addRoom(String roomName, Integer doctorID){
 
-        try{
+        try(Connection conn = Data.connectingToDatabase()){
             CheckObjects.checkIfRoomExists(roomName);
-
-            Connection conn = Data.connectingToDatabase();
 
             PreparedStatement stmnt = conn.prepareStatement("INSERT INTO HOSPITAL(ROOM, DOCTORID) VALUES(?,?)");
             stmnt.setString(1, roomName);
             stmnt.setInt(2, doctorID);
             stmnt.executeUpdate();
 
-            Change change = new Change(new DoctorRoom("-", -1, -1), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID()));
+            Change change = new Change(new DoctorRoom("-", -1, -1, "-"), new DoctorRoom(roomName, doctorID, getRoomWithName(roomName).getRoomID(), DoctorData.getCertainDoctor(doctorID).getDoctorFullName()));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
@@ -58,7 +52,6 @@ public interface DoctorRoomData {
 
             Notification.addedSuccessfully("Room");
 
-            conn.close();
 
         } catch (IOException | SQLException e) {
             Application.logger.info(e.getMessage(), e);
@@ -71,25 +64,20 @@ public interface DoctorRoomData {
         }
     }
     static void removeRoom(Integer id){
-        try{
-            Connection veza = Data.connectingToDatabase();
+        try(Connection veza = Data.connectingToDatabase()){
 
             DoctorRoom oldDoctorRoom = getRoomWithId(id);
 
             PreparedStatement stmnt = veza.prepareStatement("DELETE FROM HOSPITAL WHERE ID=" + id);
             stmnt.executeUpdate();
 
-            Change change = new Change(new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID()), new DoctorRoom("-", -1, -1));
+            Change change = new Change(new DoctorRoom(oldDoctorRoom.getRoomName(), oldDoctorRoom.getDoctorID(), oldDoctorRoom.getRoomID(), DoctorData.getCertainDoctor(oldDoctorRoom.getDoctorID()).getDoctorFullName()), new DoctorRoom("-", -1, -1, "-"));
             ChangeWriter changeWriter = new ChangeWriter(change);
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.removedSuccessfully("Room");
 
-
-            veza.close();
-        } catch (SQLException e) {
-            Application.logger.info(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
     }
@@ -98,11 +86,11 @@ public interface DoctorRoomData {
         try(Connection conn = Data.connectingToDatabase()) {
 
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+            ResultSet roomResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM HOSPITAL WHERE ID=" + id
             );
-            while(proceduresResultSet.next()){
-                certainDoctorRoom = getRoom(proceduresResultSet);
+            while(roomResultSet.next()){
+                certainDoctorRoom = getRoom(roomResultSet);
             }
 
         } catch (SQLException | IOException e) {
@@ -115,11 +103,11 @@ public interface DoctorRoomData {
         try(Connection conn = Data.connectingToDatabase()) {
 
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+            ResultSet roomResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM HOSPITAL WHERE ROOM='" + name + "'"
             );
-            while(proceduresResultSet.next()){
-                certainDoctorRoom = getRoom(proceduresResultSet);
+            while(roomResultSet.next()){
+                certainDoctorRoom = getRoom(roomResultSet);
             }
 
         } catch (SQLException | IOException e) {
@@ -132,11 +120,12 @@ public interface DoctorRoomData {
         Integer id = procedureSet.getInt("id");
         String roomName = procedureSet.getString("room");
         Integer doctorID = procedureSet.getInt("doctorid");
+        String doctorName = procedureSet.getString("doctor_name");
 
-        return new DoctorRoom(roomName, doctorID, id);
-
+        return new DoctorRoom(roomName, doctorID, id, doctorName);
     }
     static void linkDoctorWithRoom(Doctor oldDoctor, Integer doctorID, String roomName){
+
         try(Connection conn = Data.connectingToDatabase()) {
             PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + roomName + "' WHERE ID=" + doctorID );
             stmnt.executeUpdate();
@@ -149,10 +138,11 @@ public interface DoctorRoomData {
             Application.logger.info(e.getMessage(), e);
         }
     }
-    static void unlinkRoomFromDoctor(DoctorRoom doctorRoomToRemove){
-        try(Connection conn = Data.connectingToDatabase()){
+    static void unlinkRoomFromDoctor(DoctorRoom doctorRoomToRemove) {
+        try (Connection conn = Data.connectingToDatabase()) {
+
             Optional<Doctor> oldDoctor = DoctorData.getAllDoctors().stream().filter(doctor -> doctor.getRoom().equals(doctorRoomToRemove.getRoomName())).findFirst();
-            if(oldDoctor.isPresent()){
+            if (oldDoctor.isPresent()) {
 
                 PreparedStatement stmnt = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + "Not yet set" + "' WHERE ID=" + doctorRoomToRemove.getDoctorID());
                 stmnt.executeUpdate();
@@ -161,9 +151,7 @@ public interface DoctorRoomData {
                 ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
-        } catch (SQLException e) {
-            Application.logger.info(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
     }
@@ -179,14 +167,12 @@ public interface DoctorRoomData {
                 ChangeWriter changeWriter = new ChangeWriter(change);
                 changeWriter.addChange(Application.getLoggedUser().getRole());
             }
-        } catch (SQLException e) {
-            Application.logger.info(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
     }
     static Boolean hasDoctorRoom(Integer id){
-        Doctor doctorToCheck = null;
+        Doctor doctorToCheck;
         doctorToCheck = DoctorData.getCertainDoctor(id);
         if(doctorToCheck.getRoom().equals("Not yet set")){
             return false;

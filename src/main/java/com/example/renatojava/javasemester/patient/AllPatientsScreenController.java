@@ -4,10 +4,14 @@ import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.BillData;
 import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.database.PatientData;
+import com.example.renatojava.javasemester.database.StatsData;
 import com.example.renatojava.javasemester.entity.Patient;
+import com.example.renatojava.javasemester.entity.Stats;
+import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.threads.FreeBed;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.StatsChanger;
 import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,6 +23,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +52,8 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
         applyButton.setDisable(true);
         removeButton.setDisable(true);
         createBillButton.setDisable(true);
+        clearFields();
+        birthDate.setText("");
     }
 
     public void fillTable(List<Patient> list){
@@ -119,10 +126,18 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
                 return;
             }
 
-            if(Notification.confirmEdit()){
-                PatientData.updatePatient(newName, newSurname, newOib, selectedPatient);
-                clearFields();
-                initialize();
+            try{
+                if(Notification.confirmEdit()){
+                    PatientData.updatePatient(newName, newSurname, newOib, selectedPatient);
+                    initialize();
+                }
+            }catch (ObjectExistsException e){
+                Application.logger.error(e.getMessage(), e);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Info");
+                alert.setHeaderText(e.getMessage());
+                alert.show();
             }
         }
     }
@@ -143,8 +158,6 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
             Application.logger.error(e.getMessage(), e);
         }
         initialize();
-        clearFields();
-        birthDate.setText("");
     }
 
     public void createBill(){
@@ -152,9 +165,14 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
         if(selectedPatient.getDebt() > 0){
             if(Notification.confirmEdit()){
                 BillData.createBill(selectedPatient, LocalDateTime.now());
+
+                Stats currentStats = StatsData.getCurrentStats();
+                Integer currBills = currentStats.bills();
+                List<String> changesSQL = new ArrayList<>();
+                changesSQL.add("BILLS=" + (++currBills));
+                StatsChanger.changeStats(changesSQL);
+
                 initialize();
-                clearFields();
-                birthDate.setText("");
             }
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);

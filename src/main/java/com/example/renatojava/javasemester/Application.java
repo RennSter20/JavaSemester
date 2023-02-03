@@ -76,4 +76,7 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO annotation
+//TODO annotation @FXML
+//TODO REMOVEPROCEDURECONTROLLER (i ovo pogledati)
+//TODO dodati user update staru i novu vrijednost
+//TODO thread za API

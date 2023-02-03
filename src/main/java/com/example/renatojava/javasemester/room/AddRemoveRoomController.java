@@ -34,7 +34,7 @@ public class AddRemoveRoomController implements DoctorData, DoctorRoomData, Noti
     private ChoiceBox<String> doctorChoice;
 
     Set<Doctor> allDoctors;
-
+    @FXML
     public void initialize(){
         try{
             allDoctors = DoctorData.getAllDoctors();

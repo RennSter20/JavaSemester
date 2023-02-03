@@ -34,7 +34,7 @@ public class EditProcedureController implements ProcedureData, Notification {
 
     @FXML
     private TableColumn<Procedure, String> descriptionColumn, priceColumn;
-
+    @FXML
     public void initialize(){
         try{
             fillTable(ProcedureData.getAllProcedures());

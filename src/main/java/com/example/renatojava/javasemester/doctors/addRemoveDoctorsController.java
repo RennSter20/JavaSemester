@@ -29,12 +29,11 @@ public class addRemoveDoctorsController implements DoctorData, Notification, Doc
     private TableView<Doctor> doctorTable;
     @FXML
     private TableColumn<Doctor, String> nameColumn, surnameColumn, genderColumn, titleColumn, roomColumn;
+    @FXML
     public void initialize(){
         try{
             fillDoctorTable(DoctorData.getAllDoctors());
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }
@@ -108,9 +107,7 @@ public class addRemoveDoctorsController implements DoctorData, Notification, Doc
                 DoctorData.removeDoctor(doctorTable.getSelectionModel().getSelectedItem());
                 initialize();
             }
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }

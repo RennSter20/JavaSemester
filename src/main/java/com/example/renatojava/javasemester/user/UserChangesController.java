@@ -27,7 +27,7 @@ public class UserChangesController {
 
     private ChangeWriter reader;
 
-
+    @FXML
     public void initialize(){
         reader = new ChangeWriter();
         ObservableList<User> userObservableList = FXCollections.observableList(reader.readUsers());

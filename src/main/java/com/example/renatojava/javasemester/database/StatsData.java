@@ -20,16 +20,13 @@ public interface StatsData {
                     "SELECT * FROM STATS WHERE ID=0"
             );
 
-
             while(proceduresResultSet.next()){
                 statsToReturn = new Stats(proceduresResultSet.getInt("id"), proceduresResultSet.getInt("patients"), proceduresResultSet.getDouble("debt"), proceduresResultSet.getInt("doctors"), proceduresResultSet.getInt("bills"));
             }
 
             return statsToReturn;
 
-        } catch (SQLException e) {
-            Application.logger.error(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
         return statsToReturn;

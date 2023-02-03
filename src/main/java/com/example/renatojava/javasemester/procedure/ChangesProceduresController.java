@@ -21,16 +21,15 @@ public class ChangesProceduresController {
     private TableView<Procedure> oldTable, newTable;
     @FXML
     private TableColumn<Procedure, String> descriptionOld, priceOld, descriptionNew, priceNew;
-
     @FXML
     private Text changeTimeText,role;
-    ChangeWriter changer = new ChangeWriter();
-
-    List<String> changesTime;
-    List<String> rolesList;
-    Integer selectedProcedure;
-
+    private List<String> changesTime;
+    private List<String> rolesList;
+    private Integer selectedProcedure;
+    @FXML
     public void initialize(){
+        ChangeWriter changer = new ChangeWriter();
+
         List<Procedure> proceduresList = changer.readProcedures();
 
         changesTime = changer.readTimeProcedures();

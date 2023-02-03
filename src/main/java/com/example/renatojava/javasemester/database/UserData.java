@@ -141,7 +141,6 @@ public interface UserData {
 
         try(Connection conn = Data.connectingToDatabase()) {
 
-
             Statement sqlStatement = conn.createStatement();
             ResultSet resultSet = sqlStatement.executeQuery(
                     "SELECT * FROM USERS WHERE ID='" + id +"'"

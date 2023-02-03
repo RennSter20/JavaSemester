@@ -28,7 +28,7 @@ public class ChangesCheckupsController {
     private Label changeText;
     private ChangeWriter reader;
 
-
+    @FXML
     public void initialize(){
         reader = new ChangeWriter();
         fillCheckupTable(reader.readCheckups());

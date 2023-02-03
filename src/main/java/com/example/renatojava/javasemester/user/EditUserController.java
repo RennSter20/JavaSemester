@@ -27,7 +27,7 @@ public class EditUserController {
 
     @FXML
     private TableColumn<User, String> idColumn, nameColumn, surnameColumn, roleColumn;
-
+    @FXML
     public void initialize(){
         ObservableList<User> userObservableList = FXCollections.observableList(UserData.allUsersDatabase());
 

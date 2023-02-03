@@ -24,9 +24,9 @@
             <children>
                 <TableView fx:id="checkupTable" onMouseClicked="#onSelect" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
                     <columns>
-                        <TableColumn fx:id="dateColumn" prefWidth="240.0" text="Date and time" />
-                        <TableColumn fx:id="patientColumn" prefWidth="274.0" text="Patient" />
-                        <TableColumn fx:id="procedureColumn" prefWidth="277.0" text="Procedure" />
+                        <TableColumn fx:id="dateColumn" style="-fx-alignment: CENTER;" prefWidth="240.0" text="Date and time" />
+                        <TableColumn fx:id="patientColumn" style="-fx-alignment: CENTER;" prefWidth="274.0" text="Patient" />
+                        <TableColumn fx:id="procedureColumn" style="-fx-alignment: CENTER;" prefWidth="277.0" text="Procedure" />
                     </columns>
                 </TableView>
                 <TextField fx:id="filterField" prefHeight="25.0" prefWidth="455.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />

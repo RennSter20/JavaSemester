@@ -1,8 +1,8 @@
 package com.example.renatojava.javasemester.entity;
 
-public class RoomC extends PatientRoom{
+public class Sickroom extends PatientRoom{
 
-    public RoomC(String roomType) {
+    public Sickroom(String roomType) {
         super(roomType);
     }
 }

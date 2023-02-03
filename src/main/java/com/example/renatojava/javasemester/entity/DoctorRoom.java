@@ -9,11 +9,21 @@ public class DoctorRoom implements Serializable {
     private String roomName;
     private Integer doctorID;
     private Integer roomID;
+    private String doctorName;
 
-    public DoctorRoom(String roomName, Integer doctorID, Integer roomID) {
+    public DoctorRoom(String roomName, Integer doctorID, Integer roomID, String doctorName) {
         this.roomName = roomName;
         this.doctorID = doctorID;
         this.roomID = roomID;
+        this.doctorName = doctorName;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 
     public void setDoctorID(Integer doctorID) {

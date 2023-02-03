@@ -1,6 +1,7 @@
 package com.example.renatojava.javasemester.menus;
 
 import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.database.UserData;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.exceptions.UserNotFoundException;
@@ -24,7 +25,7 @@ public class LoginController implements UserData {
 
     private static final String USERS_SERIALIZATION_FILE_NAME = "dat\\users.txt";
 
-    Map<String, String> users = new HashMap<>();
+    private Map<String, String> users;
 
     @FXML
     private TextField idTextField;
@@ -35,7 +36,7 @@ public class LoginController implements UserData {
 
     @FXML
     public void initialize(){
-
+        users = new HashMap<>();
         try(Scanner scanner = new Scanner(new File(USERS_SERIALIZATION_FILE_NAME))){
             while(scanner.hasNextLine()){
 
@@ -43,18 +44,15 @@ public class LoginController implements UserData {
             String password = scanner.nextLine();
 
             users.put(id, password);
-
             }
         } catch (FileNotFoundException e) {
             Application.logger.error(e.getMessage(), e);
         }
-
     }
     public void login() {
 
         String inputIdText = idTextField.getText();
         String inputPasswordText = passwordTextField.getText();
-
 
         String hashedPassword = DigestUtils.sha1Hex(inputPasswordText);
 
@@ -68,7 +66,7 @@ public class LoginController implements UserData {
                             getClass().getResource("/fxml/menuScreen.fxml"));
                     Application.setMainPage(root);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Application.logger.error(e.getMessage(), e);
                 }
             }else{
                 throw new UserNotFoundException("User not found!");
@@ -85,21 +83,17 @@ public class LoginController implements UserData {
     }
     public User getUser(String id){
         User userToSet = null;
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/production", "student", "student");
-
+        try(Connection conn = Data.connectingToDatabase()) {
             Statement sqlStatement = conn.createStatement();
-            ResultSet proceduresResultSet = sqlStatement.executeQuery(
+            ResultSet userResultSet = sqlStatement.executeQuery(
                     "SELECT * FROM USERS WHERE ID='" + id + "'"
             );
 
-            while(proceduresResultSet.next()){
-                userToSet = UserData.getUserFromResult(proceduresResultSet);
+            while(userResultSet.next()){
+                userToSet = UserData.getUserFromResult(userResultSet);
             }
 
-            conn.close();
-
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
 
