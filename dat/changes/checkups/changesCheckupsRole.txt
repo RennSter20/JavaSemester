@@ -1,10 +1,3 @@
 Admin
-checkup accepted
 Admin
-checkup rejected
 Admin
-checkup rejected
-Admin
-checkup rejected
-Doctor
-checkup rejected

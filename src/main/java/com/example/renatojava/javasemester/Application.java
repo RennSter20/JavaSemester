@@ -78,6 +78,6 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO dodati user, checkup update staru i novu vrijednost
+//TODO dodati checkup update staru i novu vrijednost
 //TODO thread za API
 //TODO u changewriteru staviti try catch i smanjiti instance of

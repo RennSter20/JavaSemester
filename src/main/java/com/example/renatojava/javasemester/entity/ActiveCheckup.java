@@ -1,7 +1,5 @@
 package com.example.renatojava.javasemester.entity;
 
-import com.example.renatojava.javasemester.database.PatientData;
-import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.util.DateFormatter;
 
 import java.io.Serializable;
@@ -13,15 +11,35 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
     private LocalDateTime dateOfCheckup;
     private Integer patientID;
     private String patientFullName;
+    private String procedure;
     private Integer procedureID;
     private T room;
 
-    public ActiveCheckup(Integer id, LocalDateTime dateOfCheckup, Integer patientID, Integer procedureID, T room) {
+    public ActiveCheckup(Integer id, LocalDateTime dateOfCheckup, Integer patientID, Integer procedureID, T room, String patientFullName, String procedure) {
         this.dateOfCheckup = dateOfCheckup;
         this.patientID = patientID;
         this.procedureID = procedureID;
         this.room = room;
         this.id = id;
+        this.patientFullName = patientFullName;
+        this.procedure = procedure;
+    }
+
+    @Override
+    public String toString() {
+        return "Information about checkup:\n" +
+                "Date of checkup: " + DateFormatter.getDateTimeFormatted(dateOfCheckup.toString()) + "\n" +
+                "Patient: " + patientFullName + "\n" +
+                "Procedure: \n" + procedure + "\n" +
+                "Room: " + room.getRoomType();
+    }
+
+    public String getProcedure() {
+        return procedure;
+    }
+
+    public void setProcedure(String procedure) {
+        this.procedure = procedure;
     }
 
     public String getPatientFullName() {
@@ -72,12 +90,5 @@ public class ActiveCheckup<T extends PatientRoom> implements Serializable {
         this.room = room;
     }
 
-    @Override
-    public String toString() {
-        return "Information about checkup:\n" +
-                "Date of checkup: " + DateFormatter.getDateTimeFormatted(dateOfCheckup.toString()) + "\n" +
-                "Patient: " + PatientData.getPatientWithID(patientID).getFullName() + "\n" +
-                "Procedure: \n" + ProcedureData.getProcedureFromId(procedureID) + "\n" +
-                "Room: " + room.getRoomType();
-    }
+
 }

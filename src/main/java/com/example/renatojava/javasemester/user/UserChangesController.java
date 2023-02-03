@@ -69,19 +69,19 @@ public class UserChangesController {
             oldUsers.add(allChanges.get(i));
         }
 
+        Alert alert;
         if(selectedUser.isPresent()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("INFORMATION");
             alert.setHeaderText("More info about user change.");
             alert.setContentText("OLD VALUE:\n" + oldUsers.get(tableView.getSelectionModel().getSelectedIndex()) + "\n\nNEW VALUE:\n" + selectedUser.get());
-            alert.show();
         }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("No user change selected!");
             alert.setContentText("Please select user to show more info!");
-            alert.show();
         }
+        alert.show();
     }
 
 

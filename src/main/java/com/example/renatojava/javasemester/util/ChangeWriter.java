@@ -49,22 +49,24 @@ public class ChangeWriter<T>{
 
     public void addChange(String role){
 
-        List<T> items = null;
+        List items = null;
 
         if(change.getOldObject() instanceof Patient){
-            items = (List<T>) readPatients();
+            items = readPatients();
         }else if(change.getOldObject() instanceof Doctor){
-            items = (List<T>) readDoctors();
+            items = readDoctors();
         }else if(change.getOldObject() instanceof DoctorRoom){
-            items = (List<T>) readRooms();
+            items = readRooms();
         }else if(change.getOldObject() instanceof Procedure){
-            items = (List<T>) readProcedures();
+            items = readProcedures();
         }else if(change.getOldObject() instanceof User){
-            items = (List<T>) readUsers();
+            items = readUsers();
+        }else if(change.getOldObject() instanceof ActiveCheckup){
+            items = readCheckups();
         }
 
-        items.add((T) change.getOldObject());
-        items.add((T) change.getNewObject());
+        items.add(change.getOldObject());
+        items.add(change.getNewObject());
 
         writeAll(items, role);
     }
@@ -159,42 +161,28 @@ public class ChangeWriter<T>{
                 FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_USERS_ROLE, true);
                 roleDoctorsWriter.write(role + "\n");
                 roleDoctorsWriter.close();
+            }else if(itemsToWrite.get(0) instanceof ActiveCheckup){
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_CHECKUPS, false));
+                for(T object : itemsToWrite){
+                    out.writeObject(object);
+                }
+                out.close();
+
+                FileWriter timeRoomsWriter = new FileWriter(CHANGE_FILE_TIME_CHECKUPS, true);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+                timeRoomsWriter.write(dtf.format(now) + "\n");
+                timeRoomsWriter.close();
+
+                FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_CHECKUPS_ROLE, true);
+                roleDoctorsWriter.write(role + "\n");
+                roleDoctorsWriter.close();
             }
 
         } catch (IOException e) {
             Application.logger.info(e.getMessage(), e);
         }
     }
-
-
-    public void addCheckupsChange(ActiveCheckup checkup, String role, String change){
-        List<ActiveCheckup> items = new ArrayList<>(readCheckups());
-        items.add((ActiveCheckup)checkup);
-        writeAllCheckups(items, role, change);
-    }
-    public void writeAllCheckups(List<ActiveCheckup> list, String role, String change){
-        try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(CHANGE_FILE_CHECKUPS, false));
-            for(ActiveCheckup object : list){
-                out.writeObject(object);
-            }
-            out.close();
-            out.flush();
-
-            FileWriter timePatientsWriter = new FileWriter(CHANGE_FILE_TIME_CHECKUPS, true);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            timePatientsWriter.write(dtf.format(now) + "\n");
-            timePatientsWriter.close();
-
-            FileWriter roleDoctorsWriter = new FileWriter(CHANGE_FILE_CHECKUPS_ROLE, true);
-            roleDoctorsWriter.write(role + "\n" + change + "\n");
-            roleDoctorsWriter.close();
-        }catch (IOException e){
-            Application.logger.error(e.getMessage(), e);
-        }
-    }
-
 
     public List<Patient> readPatients(){
         List<Patient> finalList = new ArrayList<>();
@@ -267,6 +255,7 @@ public class ChangeWriter<T>{
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(CHANGE_FILE_CHECKUPS));
             while(true){
                 finalList.add((ActiveCheckup)input.readObject());
+                finalList.add((ActiveCheckup)input.readObject());
             }
 
         } catch (IOException e) {
@@ -274,6 +263,7 @@ public class ChangeWriter<T>{
         } catch (ClassNotFoundException e) {
             Application.logger.info(e.getMessage(), e);
         }
+
         return finalList;
     }
     public List<User> readUsers(){

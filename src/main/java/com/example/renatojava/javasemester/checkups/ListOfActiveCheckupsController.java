@@ -1,11 +1,9 @@
 package com.example.renatojava.javasemester.checkups;
 
-import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.PatientData;
 import com.example.renatojava.javasemester.database.ProcedureData;
 import com.example.renatojava.javasemester.entity.ActiveCheckup;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,11 +46,6 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
                                                                             ProcedureData.getProcedureFromId(table.getSelectionModel().getSelectedItem().getProcedureID()).description());
 
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
-
-            ChangeWriter writer = new ChangeWriter();
-            ActiveCheckup old = table.getSelectionModel().getSelectedItem();
-            old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
-            writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup accepted");
             initialize();
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -67,11 +60,6 @@ public class ListOfActiveCheckupsController implements CheckupData, PatientData,
         if(table.getSelectionModel().getSelectedItem() != null && Notification.confirmEdit()){
 
             CheckupData.removeActiveCheckup(table.getSelectionModel().getSelectedItem().getId());
-
-            ChangeWriter writer = new ChangeWriter();
-            ActiveCheckup old = table.getSelectionModel().getSelectedItem();
-            old.setPatientFullName(PatientData.getPatientWithID(old.getPatientID()).getFullName());
-            writer.addCheckupsChange(old, Application.getLoggedUser().getRole(), "checkup rejected");
 
             initialize();
 

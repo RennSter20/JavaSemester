@@ -92,8 +92,13 @@ public class AddCheckupController implements PatientData,ProcedureData, Notifica
         if (CheckObjects.checkIfHospitalHasDoctors() && Validator.isValidTime(String.valueOf(datePicker.getDateTimeValue()), DATE_TIME_FORMAT_FULL) && Notification.confirmEdit()) {
             if(!CheckObjects.isBeforeToday(datePicker.getDateTimeValue())){
                 if(CheckObjects.checkCheckupTime(datePicker.getDateTimeValue(), null)){
-
-                    CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(), Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()), datePicker.getDateTimeValue(), roomChoiceBox.getValue());
+                    CheckupData.addNewActiveCheckup(procedureTable.getSelectionModel().getSelectedItem().id(),
+                            Integer.valueOf(patientsTable.getSelectionModel().getSelectedItem().getId()),
+                            datePicker.getDateTimeValue(),
+                            roomChoiceBox.getValue(),
+                            patientsTable.getSelectionModel().getSelectedItem().getFullName(),
+                            ProcedureData.getProcedureFromId(procedureTable.getSelectionModel().getSelectedItem().id()).description()
+                            );
                 }
 
 
