@@ -32,6 +32,8 @@ public class EditRoomController {
 
     @FXML
     private ChoiceBox<String> doctorChoice;
+    @FXML
+    private TextField searchField;
 
     private Set<Doctor> allDoctors;
 
@@ -42,16 +44,26 @@ public class EditRoomController {
 
             ObservableList<String> doctorsList = FXCollections.observableArrayList(allDoctors.stream().map(Doctor::getDoctorFullName).collect(Collectors.toList()));
             doctorChoice.setItems(doctorsList);
-            fillRoomTable();
+            fillRoomTable(DoctorRoomData.getAllRooms());
 
         } catch (SQLException | IOException e) {
             Application.logger.error(e.getMessage(), e);
         }
     }
 
-    public void fillRoomTable(){
-        List<DoctorRoom> allDoctorRooms = DoctorRoomData.getAllRooms();
-        ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(allDoctorRooms);
+    public void search(){
+        String filter = searchField.getText();
+
+        List<DoctorRoom> filteredRooms;
+
+        filteredRooms = DoctorRoomData.getAllRooms().stream().filter(room -> room.getRoomName().toLowerCase().contains(filter.toLowerCase()) ||
+                room.getDoctorName().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
+
+        fillRoomTable(filteredRooms);
+    }
+    public void fillRoomTable(List<DoctorRoom> rooms){
+
+        ObservableList<DoctorRoom> observableList = FXCollections.observableArrayList(rooms);
 
         roomNameColumn.setCellValueFactory(room -> new SimpleStringProperty(room.getValue().getRoomName()));
         doctorColumn.setCellValueFactory(room -> new SimpleStringProperty(DoctorData.getCertainDoctorFromId(room.getValue().getDoctorID()).getDoctorFullName()));
@@ -64,9 +76,15 @@ public class EditRoomController {
         Optional<Doctor> newDoctor = allDoctors.stream().filter(doctor -> doctor.getDoctorFullName().contains(doctorChoice.getSelectionModel().getSelectedItem())).findAny();
 
         if(selectedRoom.isPresent()){
-            if(!nameField.equals("") && Notification.confirmEdit()){
+            if(!nameField.equals("") && !doctorChoice.getSelectionModel().getSelectedItem().equals("-1") && Notification.confirmEdit()){
                 DoctorRoomData.updateRoom(nameField.getText(), newDoctor.get(), selectedRoom.get());
                 nameField.setText("");
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("INFORMATION");
+                alert.setHeaderText("Room updated successfully.");
+                alert.show();
+
                 initialize();
             }else{
                 Alert alert = new Alert(Alert.AlertType.ERROR);

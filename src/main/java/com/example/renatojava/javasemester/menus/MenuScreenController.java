@@ -1,11 +1,13 @@
 package com.example.renatojava.javasemester.menus;
 
 import com.example.renatojava.javasemester.Application;
+import com.example.renatojava.javasemester.api.APIManager;
 import com.example.renatojava.javasemester.api.APIResponse;
 import com.example.renatojava.javasemester.database.CheckupData;
 import com.example.renatojava.javasemester.database.StatsData;
 import com.example.renatojava.javasemester.entity.ActiveCheckup;
 import com.example.renatojava.javasemester.entity.Stats;
+import com.example.renatojava.javasemester.exceptions.NoCountryDataException;
 import com.example.renatojava.javasemester.util.DateFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,41 +64,72 @@ public class MenuScreenController implements StatsData {
         }
 
 
-        //ObservableList<String> countries = FXCollections.observableArrayList(Application.responseMap.keySet());
-        //countriesChoice.setItems(countries);
+        ObservableList<String> countries = FXCollections.observableArrayList(Application.responseMap.keySet());
+        countriesChoice.setItems(countries);
 
-        //setInfo("World");
-        //countriesChoice.getSelectionModel().select("World");
+        countriesChoice.getSelectionModel().select("World");
+        try{
+            setInfo("World");
+        }catch (IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }catch (NoCountryDataException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Error while getting info about COVID-19.");
+            alert.setContentText("Please check your internet connection and try again.");
+            alert.show();
+        }
     }
 
     public void onCountryChange(){
-        setInfo(countriesChoice.getSelectionModel().getSelectedItem());
+        try{
+            setInfo(countriesChoice.getSelectionModel().getSelectedItem());
+        }catch (IOException e){
+            Application.logger.error(e.getMessage(), e);
+        }catch (NoCountryDataException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("ERROR");
+            alert.setHeaderText("Error while getting info about COVID-19.");
+            alert.setContentText("Please check your internet connection and try again.");
+            alert.show();
+        }
     }
 
-    public void setInfo(String country){
+    public void setInfo(String country) throws IOException {
+
         totalCases.setText("...");
         totalDeaths.setText("...");
         newDailyCases.setText("...");
         lastUpdated.setText("...");
-        /*
-        AtomicReference<APIResponse> apiResponse = new AtomicReference<>();
-        Thread thread = new Thread(() -> {
-            try{
-                if(country.equals("World")){
-                    apiResponse.set(APIManager.getWorldInfo());
-                }else{
-                    apiResponse.set(APIManager.getCountryInfo(country));
-                }
-            }catch (IOException e){
-                Application.logger.error(e.getMessage(), e);
-            }
 
-            Platform.runLater(() -> {
+        APIResponse apiResponse;
+
+            if(Application.responseMap.get(country) == null){
+                if(country.equals("World")){
+                    try {
+                        Application.responseMap.put(country, APIManager.getWorldInfo());
+                    } catch (IOException e) {
+                        Application.logger.error(e.getMessage(), e);
+                    }
+                }else{
+                    try {
+                        Application.responseMap.put(country, APIManager.getCountryInfo(country));
+                    } catch (IOException e) {
+                        Application.logger.error(e.getMessage(), e);
+                    }
+                }
+                apiResponse = Application.responseMap.get(country);
+                if(apiResponse == null){
+                    throw new NoCountryDataException("Cannot obtain data for selected country.");
+                }
+            }else{
+                apiResponse = Application.responseMap.get(country);
+            }
                 try{
-                    totalCases.setText(apiResponse.get().getTotalCases().toString());
-                    totalDeaths.setText(apiResponse.get().getTotalDeaths().toString());
-                    newDailyCases.setText(apiResponse.get().getNewCasesDay().toString());
-                    lastUpdated.setText(DateFormatter.getTimeWithSeconds(apiResponse.get().getLastUpdatedFullTime()));
+                    totalCases.setText(apiResponse.getTotalCases().toString());
+                    totalDeaths.setText(apiResponse.getTotalDeaths().toString());
+                    newDailyCases.setText(apiResponse.getNewCasesDay().toString());
+                    lastUpdated.setText(DateFormatter.getTimeWithSeconds(apiResponse.getLastUpdatedFullTime()));
                 }catch (NullPointerException e){
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("ERROR");
@@ -104,23 +138,5 @@ public class MenuScreenController implements StatsData {
                     alert.show();
                     Application.logger.error(e.getMessage(), e);
                 }
-            });
-        });
-        thread.start();
-        */
-        APIResponse apiResponse = Application.responseMap.get(country);
-        try{
-            totalCases.setText(apiResponse.getTotalCases().toString());
-            totalDeaths.setText(apiResponse.getTotalDeaths().toString());
-            newDailyCases.setText(apiResponse.getNewCasesDay().toString());
-            lastUpdated.setText(DateFormatter.getTimeWithSeconds(apiResponse.getLastUpdatedFullTime()));
-        }catch (NullPointerException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Error with gathering newest info.");
-            alert.setContentText("It's not possible to get newest information about COVID-19, please try again later and check your connection.");
-            alert.show();
-            Application.logger.error(e.getMessage(), e);
-        }
     }
 }

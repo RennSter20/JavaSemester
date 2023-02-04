@@ -76,7 +76,7 @@
                   <Insets top="15.0" />
                </GridPane.margin>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="When Doctor value is set to -1, it means that the new doctor needs to be assigned to the doctorRoom." GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="When Doctor value is set to -1, it means that the new doctor needs to be assigned to the doctor room." GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Label text="Remove doctor room" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="18.0" />

@@ -75,6 +75,20 @@
                         <Font size="18.0" />
                     </font>
                 </Label>
+            <TextField fx:id="searchField" maxWidth="-Infinity" prefWidth="300.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
+            <Label text="Search" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+               <GridPane.margin>
+                  <Insets bottom="60.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#search" text="Search" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+               <GridPane.margin>
+                  <Insets top="60.0" />
+               </GridPane.margin>
+            </Button>
             </children>
             <BorderPane.margin>
                 <Insets top="50.0" />

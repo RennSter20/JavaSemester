@@ -1,17 +1,23 @@
 package com.example.renatojava.javasemester.api;
 
+import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
+import com.example.renatojava.javasemester.threads.APIGetInfo;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
+import java.util.TreeMap;
 
-public interface APIManager {
+public sealed interface APIManager permits APIGetInfo {
+
+    String COUNTRIES = "dat\\countries.txt";
 
     static APIResponse getCountryInfo(String country) throws IOException {
 
@@ -63,25 +69,15 @@ public interface APIManager {
     }
 
 
-    static List<String> avaibleCountries() throws IOException{
-        OkHttpClient client = new OkHttpClient();
-
-        String url ="https://covid-19-statistics.p.rapidapi.com/reports";
-
-        Request request = Data.connectingToApi(url);
-
-        Response response = client.newCall(request).execute();
-        String jsonString = response.body().string();
-        JSONObject jsonObject = new JSONObject(jsonString);
-        JSONArray mainJSON = jsonObject.getJSONArray("data");
-
-        List<String> countries = new ArrayList<>();
-        for(int i = 0;i< mainJSON.length();i++){
-            countries.add(mainJSON.getJSONObject(i).getJSONObject("region").getString("name"));
-
+    static void putCountries(){
+        Application.responseMap = new TreeMap<>();
+        try(Scanner scanner = new Scanner(new FileReader(COUNTRIES))){
+            while(scanner.hasNextLine()){
+                Application.responseMap.put(scanner.nextLine(), null);
+            }
+        } catch (FileNotFoundException e) {
+            Application.logger.error(e.getMessage(), e);
         }
-        countries.add("World");
-        return countries;
     }
 
 }

@@ -2,11 +2,10 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.Change;
-import com.example.renatojava.javasemester.util.ChangeWriter;
-import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.CheckObjects;
+import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -21,7 +20,7 @@ public class CreateProcedureController implements ProcedureData {
         String descText = descriptionField.getText();
         String priceText = priceField.getText();
 
-        if(descText.equals("") || priceText.equals("")){
+        if(descText.equals("") || priceText.equals("") || Validator.isPriceValid(priceText)){
             Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
             emptyAlert.setTitle("ERROR");
             emptyAlert.setHeaderText("Empty fields!");
@@ -29,14 +28,12 @@ public class CreateProcedureController implements ProcedureData {
             emptyAlert.show();
         }else{
             try{
-                CheckObjects.checkIfProcedureExists(descText, Double.valueOf(priceText));
-                ProcedureData.createProcedure(descText, priceText);
-                descriptionField.setText("");
-                priceField.setText("");
-
-                Change change = new Change(new Procedure(0, "-", Double.valueOf(0)), ProcedureData.getProcedureFromDescription(descText));
-                ChangeWriter changeWriter = new ChangeWriter(change);
-                changeWriter.addChange(Application.getLoggedUser().getRole());
+                if(Notification.confirmEdit()){
+                    CheckObjects.checkIfProcedureExists(descText, Double.valueOf(priceText));
+                    ProcedureData.createProcedure(descText, priceText);
+                    descriptionField.setText("");
+                    priceField.setText("");
+                }
 
             }catch (ObjectExistsException e){
                 Alert emptyAlert = new Alert(Alert.AlertType.ERROR);

@@ -2,10 +2,10 @@ package com.example.renatojava.javasemester.database;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.entity.Change;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Doctor;
 import com.example.renatojava.javasemester.entity.DoctorRoom;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
+import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.scene.control.Alert;
@@ -85,44 +85,61 @@ public interface DoctorRoomData {
     static void updateRoom(String newRoomName, Doctor newDoctor, DoctorRoom oldRoom){
         try(Connection conn = Data.connectingToDatabase()) {
 
-
-            PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET ROOM='" + newRoomName + "', DOCTORID=" + newDoctor.getId() + ", DOCTOR_NAME='" + newDoctor.getDoctorFullName() + "' WHERE ID=" + oldRoom.getRoomID());
-            stmnt.executeUpdate();
+            Doctor oldDoctor = DoctorData.getCertainDoctorFromId(oldRoom.getDoctorID());
 
             if(!oldRoom.getDoctorName().equals(newDoctor.getDoctorFullName())){
 
-                Doctor oldDoctor = DoctorData.getCertainDoctorFromId(oldRoom.getDoctorID());
+                if(!DoctorRoomData.hasDoctorRoom(newDoctor.getId())){
 
-                PreparedStatement changeDoctorOld = conn.prepareStatement("UPDATE DOCTORS SET ROOM='Not yet set.' WHERE ID=" + oldRoom.getDoctorID());
-                changeDoctorOld.executeUpdate();
+                    Doctor oldVersionOfNewDoctor = DoctorData.getCertainDoctorFromId(newDoctor.getId());
 
-                PreparedStatement changeDoctorNew = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + newRoomName + "' WHERE ID=" + newDoctor.getId());
-                changeDoctorNew.executeUpdate();
+                    PreparedStatement changeDoctorOld = conn.prepareStatement("UPDATE DOCTORS SET ROOM='Not yet set.' WHERE ID=" + oldRoom.getDoctorID());
+                    changeDoctorOld.executeUpdate();
+
+                    PreparedStatement changeDoctorNew = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + newRoomName + "' WHERE ID=" + newDoctor.getId());
+                    changeDoctorNew.executeUpdate();
+
+                    PreparedStatement changeRoom = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID=" + newDoctor.getId() + ", DOCTOR_NAME='" + newDoctor.getDoctorFullName() + "' WHERE ID=" + oldRoom.getRoomID());
+                    changeRoom.executeUpdate();
+
+                    Change roomChange = new Change(oldRoom, DoctorRoomData.getRoomWithId(oldRoom.getRoomID()));
+                    ChangeWriter roomChangeWriter = new ChangeWriter(roomChange);
+                    roomChangeWriter.addChange(Application.getLoggedUser().getRole());
 
 
-                Change roomChange = new Change(oldRoom, DoctorRoomData.getRoomWithId(oldRoom.getRoomID()));
-                ChangeWriter roomChangeWriter = new ChangeWriter(roomChange);
-                roomChangeWriter.addChange(Application.getLoggedUser().getRole());
+                    Change doctorChange = new Change(oldVersionOfNewDoctor, DoctorData.getCertainDoctorFromId(newDoctor.getId()));
+                    ChangeWriter doctorChangeWriter = new ChangeWriter(doctorChange);
+                    doctorChangeWriter.addChange(Application.getLoggedUser().getRole());
 
-
-                Change doctorChange = new Change(oldDoctor, DoctorData.getCertainDoctorFromId(oldRoom.getDoctorID()));
-                ChangeWriter doctorChangeWriter = new ChangeWriter(doctorChange);
-                doctorChangeWriter.addChange(Application.getLoggedUser().getRole());
-
-                Change newDoctorChange = new Change(newDoctor, DoctorData.getCertainDoctorFromId(newDoctor.getId()));
-                ChangeWriter newDoctorChangeWriter = new ChangeWriter(newDoctorChange);
-                newDoctorChangeWriter.addChange(Application.getLoggedUser().getRole());
-
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("ERROR");
+                    alert.setTitle("Error while updating rooms.");
+                    alert.setContentText("Doctor already has a room.");
+                    alert.show();
+                    return;
+                }
             }
 
             if(!oldRoom.getRoomName().equals(newRoomName)){
                 PreparedStatement updateDoctor = conn.prepareStatement("UPDATE DOCTORS SET ROOM='" + newRoomName + "' WHERE ID=" + newDoctor.getId());
                 updateDoctor.executeUpdate();
 
+                PreparedStatement updateRoom = conn.prepareStatement("UPDATE HOSPITAL SET ROOM='" + newRoomName + "' WHERE ID=" + oldRoom.getRoomID());
+                updateRoom.executeUpdate();
+
+
                 Change roomChange = new Change(oldRoom, DoctorRoomData.getRoomWithId(oldRoom.getRoomID()));
                 ChangeWriter roomChangeWriter = new ChangeWriter(roomChange);
                 roomChangeWriter.addChange(Application.getLoggedUser().getRole());
+
+                Change doctorChange = new Change(oldDoctor, DoctorData.getCertainDoctorFromId(newDoctor.getId()));
+                ChangeWriter doctorChangeWriter = new ChangeWriter(doctorChange);
+                doctorChangeWriter.addChange(Application.getLoggedUser().getRole());
+            }else{
+                return;
             }
+
 
             Notification.updatedSuccessfully("Room");
 
@@ -209,7 +226,7 @@ public interface DoctorRoomData {
             Optional<DoctorRoom> oldRoom = getAllRooms().stream().filter(doctorRoom -> doctorRoom.getRoomName().equals(roomName)).findFirst();
             if(oldRoom.isPresent()){
 
-                PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID= -1 WHERE ROOM='" + roomName + "'");
+                PreparedStatement stmnt = conn.prepareStatement("UPDATE HOSPITAL SET DOCTORID= -1, DOCTOR_NAME='-1' WHERE ROOM='" + roomName + "'");
                 stmnt.executeUpdate();
 
                 Change change = new Change(oldRoom.get(), getRoomWithName(roomName));
@@ -223,7 +240,7 @@ public interface DoctorRoomData {
     static Boolean hasDoctorRoom(Integer id){
         Doctor doctorToCheck;
         doctorToCheck = DoctorData.getCertainDoctorFromId(id);
-        if(doctorToCheck.getRoom().equals("Not yet set")){
+        if(doctorToCheck.getRoom().equals("Not yet set") || doctorToCheck.getRoom().equals("-1")){
             return false;
         }else{
             return true;

@@ -19,16 +19,11 @@ public sealed interface Validator permits AllPatientsScreenController {
         if(m.matches()){
             return true;
         }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setHeaderText("Problem with setting new info!");
-            alert.setContentText("NOTE:\nName and surname cannot be empty!\nOib must contain 10 numeric characters!");
-            alert.show();
             return false;
         }
     }
     static Boolean isNameValid(String s){
-        String regex = "^[a-zA-Z\s]+$";
+        String regex = "^[a-zA-Z\s\\.]+$";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(s);
         if(m.matches()){
@@ -59,6 +54,17 @@ public sealed interface Validator permits AllPatientsScreenController {
             return true;
         } catch (DateTimeParseException e) {
             Application.logger.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    static boolean isPriceValid(String input) {
+        String regex = "[0-9]{10}+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(input);
+        if (m.matches()) {
+            return true;
+        } else {
             return false;
         }
     }

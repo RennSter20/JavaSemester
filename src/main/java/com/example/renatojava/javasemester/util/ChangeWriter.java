@@ -90,9 +90,9 @@ public class ChangeWriter<T>{
                 second = CHANGE_FILE_TIME_ROOMS;
                 third = CHANGE_FILE_ROOMS_ROLE;
             }else if(objectToCheck instanceof Procedure){
-                first = CHANGE_FILE_TIME_PROCEDURES;
-                second = CHANGE_FILE_PROCEDURES_ROLE;
-                third = CHANGE_FILE_USERS;
+                first = CHANGE_FILE_PROCEDURES;
+                second = CHANGE_FILE_TIME_PROCEDURES;
+                third = CHANGE_FILE_PROCEDURES_ROLE;
             }else if(objectToCheck instanceof User){
                 first = CHANGE_FILE_USERS;
                 second = CHANGE_FILE_TIME_USERS;

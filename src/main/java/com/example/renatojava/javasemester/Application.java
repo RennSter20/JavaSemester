@@ -1,5 +1,6 @@
 package com.example.renatojava.javasemester;
 
+import com.example.renatojava.javasemester.api.APIManager;
 import com.example.renatojava.javasemester.api.APIResponse;
 import com.example.renatojava.javasemester.entity.Hospital;
 import com.example.renatojava.javasemester.entity.User;
@@ -28,6 +29,7 @@ public class Application extends javafx.application.Application {
     public static User loggedUser;
 
     public static Map<String, APIResponse> responseMap;
+
     public static Hospital hospital;
 
     public static ExecutorService executorService;
@@ -50,12 +52,11 @@ public class Application extends javafx.application.Application {
             stage.getIcons().add(new Image("icon.png"));
             stage.show();
 
-            Timeline latestChange = new Timeline(new KeyFrame(Duration.millis(1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
-            latestChange.setCycleCount(Timeline.INDEFINITE);
-            latestChange.play();
+            Timeline bedsAndClock = new Timeline(new KeyFrame(Duration.millis(1), event -> Platform.runLater(new ShowInfoTitleThread(hospital))));
+            bedsAndClock.setCycleCount(Timeline.INDEFINITE);
+            bedsAndClock.play();
 
-            //Thread thread = new Thread(new APIGetInfo());
-            //thread.start();
+            APIManager.putCountries();
 
     }
 
@@ -78,5 +79,4 @@ public class Application extends javafx.application.Application {
     }
 }
 
-//TODO thread za API
-//TODO sealed interface na APIManager
+//TODO changes procedures double when editing

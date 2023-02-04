@@ -2,13 +2,12 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.Change;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
+import com.example.renatojava.javasemester.util.Validator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,7 +47,7 @@ public class EditProcedureController implements ProcedureData, Notification {
 
     public void editProcedure(){
         try{
-            if(!descriptionField.getText().equals("") && !priceField.getText().equals("")){
+            if(!descriptionField.getText().equals("") && !priceField.getText().equals("") && Validator.isPriceValid(priceField.getText())){
                 if(Notification.confirmEdit()){
 
                     Procedure oldProcedure = proceduresTable.getSelectionModel().getSelectedItem();
@@ -64,17 +63,13 @@ public class EditProcedureController implements ProcedureData, Notification {
 
                     CheckObjects.checkIfProcedureExists(descriptionField.getText(), Double.valueOf(priceField.getText()));
                     ProcedureData.updateProcedure(new Procedure(oldProcedure.id(), descriptionField.getText(), Double.valueOf(priceField.getText())));
-
-                    Change change = new Change(oldProcedure, ProcedureData.getProcedureFromDescription(descriptionField.getText()));
-                    ChangeWriter changeWriter = new ChangeWriter(change);
-                    changeWriter.addChange(Application.getLoggedUser().getRole());
                     initialize();
                 }
             }else{
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("ERROR");
                 alert.setHeaderText("Error while deleting procedure!");
-                alert.setContentText("All fields must be filled.");
+                alert.setContentText("All fields must be filled, price must contain only numbers.");
                 alert.show();
             }
         } catch (ObjectExistsException e) {

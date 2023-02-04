@@ -63,7 +63,7 @@
             </Text>
             <Text fx:id="role" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets right="150.0" />
+                  <Insets right="100.0" />
                </GridPane.margin>
                <font>
                   <Font size="18.0" />

@@ -75,7 +75,7 @@ public interface ProcedureData {
         return procedure;
     }
     static String getAllProceduresFromPatientString(Patient patient){
-        StringBuilder procedureList = new StringBuilder("");
+        StringBuilder procedureList = new StringBuilder();
 
         if(patient != null){
             try (Connection conn = Data.connectingToDatabase()){
@@ -127,8 +127,7 @@ public interface ProcedureData {
             StatsChanger.changeStats(changesSQL);
 
             Patient newPatient = PatientData.getPatientWithID(id);
-            Change change = new Change(oldPatient, newPatient);
-            ChangeWriter changeWriter = new ChangeWriter(change);
+            ChangeWriter changeWriter = new ChangeWriter(new Change(oldPatient, newPatient));
             changeWriter.addChange(Application.getLoggedUser().getRole());
 
 
@@ -186,6 +185,11 @@ public interface ProcedureData {
             PreparedStatement stmnt = conn.prepareStatement("INSERT INTO PROCEDURES(DESCRIPTION, PRICE) VALUES('" + description + "', " + price + ")");
             stmnt.executeUpdate();
 
+            Change change = new Change(new Procedure(0, "-", 0.0), getProcedureFromDescription(description));
+            ChangeWriter changeWriter = new ChangeWriter(change);
+            changeWriter.addChange(Application.getLoggedUser().getRole());
+
+
             Notification.addedSuccessfully("Procedure");
 
         } catch (IOException | SQLException e) {
@@ -195,8 +199,14 @@ public interface ProcedureData {
 
     static void deleteProcedure(String desc){
         try(Connection conn = Data.connectingToDatabase()){
+            Procedure oldProcedure = getProcedureFromDescription(desc);
+
             PreparedStatement stmnt = conn.prepareStatement("DELETE FROM PROCEDURES WHERE DESCRIPTION='" + desc + "'");
             stmnt.executeUpdate();
+
+            Change change = new Change(oldProcedure, new Procedure(0, "-", 0.0));
+            ChangeWriter changeWriter = new ChangeWriter(change);
+            changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.removedSuccessfully("Procedure");
         }catch (IOException | SQLException e){
@@ -207,8 +217,14 @@ public interface ProcedureData {
     static void updateProcedure(Procedure procedure){
         try(Connection conn = Data.connectingToDatabase()) {
 
+            Procedure oldProcedure = getProcedureFromDescription(procedure.description());
+
             PreparedStatement stmnt = conn.prepareStatement("UPDATE PROCEDURES SET DESCRIPTION='" + procedure.description() + "', PRICE=" + procedure.price() + " WHERE ID=" + procedure.id());
             stmnt.executeUpdate();
+
+
+            ChangeWriter changeWriter = new ChangeWriter(new Change(oldProcedure, getProcedureFromDescription(procedure.description())));
+            changeWriter.addChange(Application.getLoggedUser().getRole());
 
             Notification.updatedSuccessfully("Procedure");
 

@@ -9,7 +9,6 @@ import com.example.renatojava.javasemester.entity.Patient;
 import com.example.renatojava.javasemester.entity.Stats;
 import com.example.renatojava.javasemester.exceptions.ObjectExistsException;
 import com.example.renatojava.javasemester.threads.FreeBed;
-import com.example.renatojava.javasemester.util.DateFormatter;
 import com.example.renatojava.javasemester.util.Notification;
 import com.example.renatojava.javasemester.util.StatsChanger;
 import com.example.renatojava.javasemester.util.Validator;
@@ -18,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,8 +34,6 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
     @FXML
     private TextField filterField, nameEditField, surnameEditField, oibEditField;
     @FXML
-    private Text birthDate;
-    @FXML
     private Button editButton, applyButton, removeButton, createBillButton;
 
     private List<Patient> patients;
@@ -53,7 +49,6 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
         removeButton.setDisable(true);
         createBillButton.setDisable(true);
         clearFields();
-        birthDate.setText("");
     }
 
     public void fillTable(List<Patient> list){
@@ -96,7 +91,6 @@ public final class AllPatientsScreenController implements Data, Validator, Patie
             nameEditField.setText(selectedPatient.getName());
             surnameEditField.setText(selectedPatient.getSurname());
             oibEditField.setText(selectedPatient.getOib());
-            birthDate.setText(DateFormatter.getDateFormatted(String.valueOf(selectedPatient.getDate())));
             nameEditField.setEditable(false);
             surnameEditField.setEditable(false);
             oibEditField.setEditable(false);

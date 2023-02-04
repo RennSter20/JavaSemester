@@ -42,6 +42,7 @@ public class MenuBarController {
             admin.setDisable(true);
         }else if(currentUser.getRole().equals("Receptionist")){
             admin.setDisable(true);
+            doctors.setDisable(true);
         }
     }
 

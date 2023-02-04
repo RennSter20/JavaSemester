@@ -2,10 +2,8 @@ package com.example.renatojava.javasemester.procedure;
 
 import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.ProcedureData;
-import com.example.renatojava.javasemester.entity.Change;
 import com.example.renatojava.javasemester.entity.Procedure;
 import com.example.renatojava.javasemester.exceptions.NoProceduresException;
-import com.example.renatojava.javasemester.util.ChangeWriter;
 import com.example.renatojava.javasemester.util.CheckObjects;
 import com.example.renatojava.javasemester.util.Notification;
 import javafx.beans.property.SimpleStringProperty;
@@ -85,9 +83,6 @@ public class DeleteProcedureController implements ProcedureData, Notification {
 
                 ProcedureData.deleteProcedure(procedure.description());
 
-                Change change = new Change<>(procedure, new Procedure(0, "-", Double.valueOf(0)));
-                ChangeWriter writer = new ChangeWriter(change);
-                writer.addChange(Application.getLoggedUser().getRole());
 
                 initialize();
             }
