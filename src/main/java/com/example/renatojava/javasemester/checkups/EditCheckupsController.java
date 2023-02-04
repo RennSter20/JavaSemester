@@ -98,5 +98,4 @@ public class EditCheckupsController {
             }
         }
     }
-        //Integer id, Integer procedureID, Integer patientID, LocalDateTime time, PatientRoom room, String patientName, String procedure
 }
