@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuScreenController implements StatsData {
+public final class MenuScreenController implements StatsData, APIManager {
 
     @FXML
     private Text welcomeText, patients, debt, doctors, bills;
@@ -97,10 +97,12 @@ public class MenuScreenController implements StatsData {
 
     public void setInfo(String country) throws IOException {
 
+        /*
         totalCases.setText("...");
         totalDeaths.setText("...");
         newDailyCases.setText("...");
         lastUpdated.setText("...");
+         */
 
         APIResponse apiResponse;
 

@@ -1,23 +1,16 @@
 package com.example.renatojava.javasemester.api;
 
-import com.example.renatojava.javasemester.Application;
 import com.example.renatojava.javasemester.database.Data;
-import com.example.renatojava.javasemester.threads.APIGetInfo;
+import com.example.renatojava.javasemester.menus.MenuScreenController;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.TreeMap;
 
-public sealed interface APIManager permits APIGetInfo {
-
-    String COUNTRIES = "dat\\countries.txt";
+public sealed interface APIManager permits MenuScreenController {
 
     static APIResponse getCountryInfo(String country) throws IOException {
 
@@ -69,15 +62,6 @@ public sealed interface APIManager permits APIGetInfo {
     }
 
 
-    static void putCountries(){
-        Application.responseMap = new TreeMap<>();
-        try(Scanner scanner = new Scanner(new FileReader(COUNTRIES))){
-            while(scanner.hasNextLine()){
-                Application.responseMap.put(scanner.nextLine(), null);
-            }
-        } catch (FileNotFoundException e) {
-            Application.logger.error(e.getMessage(), e);
-        }
-    }
+
 
 }

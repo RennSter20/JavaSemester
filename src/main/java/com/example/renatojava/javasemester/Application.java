@@ -1,7 +1,7 @@
 package com.example.renatojava.javasemester;
 
-import com.example.renatojava.javasemester.api.APIManager;
 import com.example.renatojava.javasemester.api.APIResponse;
+import com.example.renatojava.javasemester.database.Data;
 import com.example.renatojava.javasemester.entity.Hospital;
 import com.example.renatojava.javasemester.entity.User;
 import com.example.renatojava.javasemester.threads.ShowInfoTitleThread;
@@ -56,7 +56,7 @@ public class Application extends javafx.application.Application {
             bedsAndClock.setCycleCount(Timeline.INDEFINITE);
             bedsAndClock.play();
 
-            APIManager.putCountries();
+            Data.putCountries();
 
     }
 
